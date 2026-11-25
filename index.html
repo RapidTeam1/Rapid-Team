@@ -13,28 +13,30 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
 <style>
-/* VOICE: cruscotto di lavoro, asciutto, da usare col pollice.
-   IDEA: la bacheca dei fogli di marcia: il prossimo giro in evidenza, poi tutti gli altri per stato.
-   PICTURE: la scheda grande del prossimo giro con conto alla rovescia e avanzamento visite.
-   COLOUR and TYPE: nero e rosso RAPID su bianco; Archivo largo per titoli e numeri.
-   LAYOUT: testata nera con i numeri del momento, scheda prossimo giro, filtri, elenco, archivio, installazione. */
+/* VOICE: cruscotto di lavoro, asciutto, da usare col pollice o dal PC.
+   IDEA: la bacheca dei fogli di marcia: il prossimo giro in evidenza, poi tutti gli altri per stato;
+   dal PC il tavolo di lavoro con la mappa per preparare il giro.
+   COLOUR and TYPE: nero e rosso RAPID su bianco (colori modificabili dall'amministratore); Archivo largo. */
 :root{color-scheme:light dark;--bg:#fff;--ink:#111214;--mut:#62646b;--line:#e4e4e7;--card:#f4f4f5;--red:#e41519;--ok:#1d8a4b;--or:#c2410c;--blk:#0c0c0d}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#101012;--ink:#f2f2f3;--mut:#a3a4ab;--line:#2a2a2f;--card:#1a1a1e;--ok:#34c26f;--or:#fb923c}}
-:root[data-theme=dark]{color-scheme:dark;--bg:#101012;--ink:#f2f2f3;--mut:#a3a4ab;--line:#2a2a2f;--card:#1a1a1e;--ok:#34c26f;--or:#fb923c}
-:root[data-theme=light]{color-scheme:light}
 *{box-sizing:border-box;min-width:0}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Archivo,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:clip}
+button,input,select,textarea{font:inherit;color:inherit}
 .w{font-stretch:125%;font-variation-settings:"wdth" 125}
+[hidden]{display:none!important}
+:focus-visible{outline:3px solid var(--red);outline-offset:2px}
 .top{background:var(--blk);color:#fff;padding:max(18px,env(safe-area-inset-top)) max(5vw,18px) 22px}
-.top .lg{height:30px;width:auto;display:block;margin-bottom:20px}
+.top .row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:20px}
+.top .lg{height:30px;width:auto;display:block}
 .top h1{margin:0;font-size:clamp(32px,8vw,46px);line-height:1.05;font-weight:800}
 .top .sub{margin:4px 0 0;color:#c4c5cb;font-size:15px}
 .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:20px;max-width:720px}
-.kpi div{background:#18181b;border-radius:12px;padding:10px 12px}
+.kpi div{background:rgba(255,255,255,.08);border-radius:12px;padding:10px 12px}
 .kpi b{display:block;font-size:26px;line-height:1.1;font-weight:800;font-variant-numeric:tabular-nums}
 .kpi span{font-size:12px;color:#b9bac0}
-.kpi .r b{color:#ff4b4f}
-main{max-width:760px;margin:0 auto;padding:0 max(4vw,16px) max(40px,env(safe-area-inset-bottom))}
+.kpi .r b{color:var(--red);filter:brightness(1.25)}
+.ghost{background:transparent;border:1px solid #55555c;color:#fff;border-radius:10px;padding:8px 12px;font-size:14px;min-height:40px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+main{max-width:860px;margin:0 auto;padding:0 max(4vw,16px) max(40px,env(safe-area-inset-bottom))}
 h2{font-size:14px;color:var(--mut);font-weight:700;margin:26px 0 10px}
 .next{display:block;text-decoration:none;color:inherit;border-radius:18px;background:var(--card);border:1px solid var(--line);padding:18px 18px 16px;position:relative;overflow:hidden}
 .next::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--red)}
@@ -48,13 +50,19 @@ h2{font-size:14px;color:var(--mut);font-weight:700;margin:26px 0 10px}
 .bar i{flex:1;height:8px;border-radius:9px;background:var(--line);overflow:hidden;max-width:360px}
 .bar i s{display:block;height:100%;background:var(--red);text-decoration:none}
 .go{display:inline-flex;align-items:center;justify-content:center;margin-top:14px;min-height:46px;padding:10px 18px;border-radius:12px;background:var(--ink);color:var(--bg);font-weight:700}
+.org{margin-top:22px;border-radius:18px;padding:20px;background:var(--blk);color:#fff;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center}
+.org h3{margin:0;font-size:clamp(20px,4.6vw,25px);line-height:1.2;font-weight:800}
+.org p{margin:6px 0 0;color:#c4c5cb;font-size:14px}
+.org button{min-height:52px;padding:12px 20px;border:0;border-radius:12px;background:var(--red);color:#fff;font-weight:700;font-size:16px;cursor:pointer;white-space:nowrap}
+@media(max-width:560px){.org{grid-template-columns:1fr}.org button{width:100%}}
 .tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:26px 0 4px}
-.tabs button{flex:none;min-height:40px;padding:8px 14px;border-radius:999px;border:0;background:var(--card);color:var(--ink);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.tabs button{flex:none;min-height:40px;padding:8px 14px;border-radius:999px;border:0;background:var(--card);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer}
 .tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
 .tabs em{font-style:normal;opacity:.6;margin-left:4px}
-.srch{width:100%;margin:10px 0 2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:16px}
+.srch{width:100%;margin:10px 0 2px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:16px}
 ul{list-style:none;margin:0;padding:0}
-.g{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 2px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.gw{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.g{flex:1;display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:14px 2px;text-decoration:none;color:var(--ink)}
 .dt{text-align:center;border-radius:12px;background:var(--card);padding:6px 0;line-height:1.1}
 .dt b{display:block;font-size:24px;font-weight:800}
 .dt span{font-size:12px;color:var(--mut);text-transform:uppercase}
@@ -62,35 +70,123 @@ ul{list-style:none;margin:0;padding:0}
 .g p{margin:2px 0 0;font-size:13px;color:var(--mut)}
 .st{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
 .st.c{background:var(--red);color:#fff}.st.p{background:var(--card);color:var(--ink)}.st.f{background:var(--card);color:var(--mut)}
+.ed{flex:none;font-size:13px;font-weight:700;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
 .empty{color:var(--mut);padding:18px 2px}
-.arc{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px;padding:16px 18px;border-radius:14px;background:var(--blk);color:#fff;text-decoration:none}
-.arc b{font-size:17px}.arc span{display:block;font-size:13px;color:#b9bac0}.arc em{font-style:normal;font-weight:700;color:#ff4b4f}
 details.inst{margin-top:24px;border:1px solid var(--line);border-radius:14px;padding:0 16px}
 details.inst summary{cursor:pointer;padding:14px 0;font-weight:700}
 details.inst p{margin:0 0 10px;font-size:15px}
 details.inst b{color:var(--red)}
-#inst-btn{display:none;margin:4px 0 14px;min-height:48px;width:100%;border:0;border-radius:12px;background:var(--red);color:#fff;font:inherit;font-weight:700;font-size:17px;cursor:pointer}
+#inst-btn{display:none;margin:4px 0 14px;min-height:48px;width:100%;border:0;border-radius:12px;background:var(--red);color:#fff;font-weight:700;font-size:17px;cursor:pointer}
 .note{font-size:13px;color:var(--mut);margin-top:20px}
-:focus-visible{outline:3px solid var(--red);outline-offset:2px}
 #lock{min-height:100vh;min-height:100dvh;background:var(--blk);color:#fff;display:grid;place-items:center;padding:32px 20px}
-#lock form{width:min(360px,100%);display:grid;gap:16px;text-align:center}
+#lock form{width:min(380px,100%);display:grid;gap:16px;text-align:center}
 #lock img{width:min(260px,80%);height:auto;margin:0 auto 8px}
 #lock h1{margin:0;font-size:26px;font-weight:800}
 #lock p{margin:0;color:#b9bac0;font-size:14px}
-#pw{width:100%;padding:14px 16px;border-radius:12px;border:2px solid #3a3a40;background:#18181b;color:#fff;font:inherit;font-size:20px;text-align:center}
+#pw{width:100%;padding:14px 16px;border-radius:12px;border:2px solid #3a3a40;background:#18181b;color:#fff;font-size:20px;text-align:center}
 #pw:focus{border-color:var(--red);outline:0}
 .who{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
-.who button{min-height:52px;border-radius:12px;border:2px solid #3a3a40;background:#18181b;color:#fff;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+.who button{min-height:52px;border-radius:12px;border:2px solid #3a3a40;background:#18181b;color:#fff;font-weight:700;font-size:16px;cursor:pointer}
 .who button[aria-pressed=true]{border-color:var(--red);background:#2a0d0e}
-#pw[hidden],#lb[hidden],.rem[hidden]{display:none}
-#lb{min-height:52px;border:0;border-radius:12px;background:var(--red);color:#fff;font:inherit;font-weight:700;font-size:17px;cursor:pointer}
+#lb{min-height:52px;border:0;border-radius:12px;background:var(--red);color:#fff;font-weight:700;font-size:17px;cursor:pointer}
 #lb:disabled{opacity:.6}
 #lock #err{color:#ff8a8a;min-height:21px}
 .rem{display:flex;gap:10px;align-items:center;justify-content:center;font-size:14px;color:#d4d4d8}
 .rem input{width:20px;height:20px;accent-color:var(--red)}
-#off{position:sticky;top:0;z-index:5;background:#b45309;color:#fff;font-size:14px;font-weight:600;padding:10px max(4vw,16px)}
-.out{background:transparent;border:1px solid #45454c;color:#fff;border-radius:10px;padding:8px 12px;font:inherit;font-size:14px;min-height:40px;cursor:pointer;float:right}
+#off{position:sticky;top:0;z-index:50;background:#b45309;color:#fff;font-size:14px;font-weight:600;padding:10px max(4vw,16px)}
+#toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:90;max-width:min(560px,92vw);background:#111214;color:#fff;border-radius:12px;padding:12px 16px;font-size:15px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+#toast.err{background:#9f1239}
 @media(max-width:420px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- barra delle viste di lavoro ---------- */
+.wb{position:sticky;top:0;z-index:30;background:var(--blk);color:#fff;display:flex;align-items:center;gap:10px;padding:10px max(2vw,12px);min-height:62px}
+.wb h1{margin:0 auto 0 4px;font-size:19px;font-weight:800;line-height:1.2}
+.wb .msg{font-size:13px;color:#c4c5cb}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-weight:700;font-size:14px;text-decoration:none;cursor:pointer}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}
+.btn.dk{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn.sm{min-height:34px;padding:5px 10px;font-size:13px;font-weight:600}
+.btn:disabled{opacity:.55;cursor:default}
+.btn.dang{color:#b91c1c;border-color:#fecaca}
+/* ---------- pianificatore ---------- */
+.pl{display:grid;grid-template-columns:minmax(380px,460px) minmax(0,1fr);height:calc(100vh - 62px);height:calc(100dvh - 62px)}
+.pp{overflow:auto;border-right:1px solid var(--line);padding:16px 16px 60px}
+.mw{position:relative;background:var(--card)}
+#map{position:absolute;inset:0}
+.nomap{position:absolute;inset:0;display:grid;place-items:center;padding:30px;text-align:center;color:var(--mut)}
+.nomap div{max-width:420px}
+.sbx{position:absolute;top:12px;left:12px;right:12px;z-index:5;max-width:520px}
+.sbx input{width:100%;padding:13px 16px;border-radius:12px;border:0;background:var(--bg);font-size:16px;box-shadow:0 4px 18px rgba(0,0,0,.25)}
+.sug{margin-top:6px;background:var(--bg);border-radius:12px;box-shadow:0 8px 26px rgba(0,0,0,.25);overflow:auto;max-height:55vh}
+.sug button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:10px 14px;cursor:pointer}
+.sug button:hover,.sug button:focus{background:var(--card)}
+.sug b{display:block;font-size:15px}.sug span{font-size:13px;color:var(--mut)}
+.sug .hd{padding:8px 14px;font-size:12px;color:var(--mut);font-weight:700}
+.pc{position:absolute;left:12px;bottom:12px;z-index:6;width:min(420px,calc(100% - 24px));max-height:70%;overflow:auto;background:var(--bg);border-radius:16px;padding:16px;box-shadow:0 10px 34px rgba(0,0,0,.3)}
+.pc h3{margin:0;font-size:20px;line-height:1.2}
+.pc p{margin:6px 0 0;font-size:14px}
+.pc .mut{color:var(--mut)}
+.pc .warn{color:#b45309;font-weight:600}
+.pc .orr{white-space:pre-line;font-size:13px;background:var(--card);border-radius:10px;padding:8px 10px;margin-top:8px}
+.pc .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pc .x{float:right;border:0;background:transparent;font-size:22px;line-height:1;cursor:pointer;color:var(--mut)}
+.bozza{background:#fff7ed;color:#7c2d12;border:1px solid #fed7aa;border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+:root:not([data-theme=light]) .bozza{background:#2a1608;color:#fed7aa;border-color:#7c2d12}
+.fs{border:0;padding:0;margin:0 0 16px}
+.fs legend{font-size:13px;font-weight:700;color:var(--mut);margin-bottom:6px;padding:0}
+.fl{display:grid;gap:4px;margin-bottom:10px}
+.fl>span{font-size:13px;color:var(--mut);font-weight:600}
+.in{width:100%;min-height:42px;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px}
+textarea.in{min-height:64px;resize:vertical;line-height:1.4}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.share{display:flex;flex-wrap:wrap;gap:6px}
+.share label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600;cursor:pointer}
+.share input{width:18px;height:18px;accent-color:var(--red)}
+.share label.on{border-color:var(--red);background:rgba(228,21,25,.08)}
+.hint{font-size:12px;color:var(--mut);margin:4px 0 0}
+.dtabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:6px 0 10px}
+.dtabs button{flex:none;border:0;border-radius:999px;background:var(--card);padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.dtabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.dtabs em{font-style:normal;opacity:.6;margin-left:3px}
+.stp{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
+.stp>.hd{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 10px 10px 12px;cursor:pointer}
+.stp .n{width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
+.stp .tt{font-weight:700;font-size:15px;line-height:1.25}
+.stp .ss{font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stp .mv{display:flex;gap:4px}
+.stp .mv button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-size:14px;line-height:1}
+.stp .bd{padding:4px 12px 12px;border-top:1px solid var(--line);background:var(--card)}
+.stp .bd .in{background:var(--bg)}
+.stp.open{border-color:var(--ink)}
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;margin:4px 0 10px}
+.chk input{width:18px;height:18px;accent-color:var(--red)}
+.addm{width:100%;margin-top:4px}
+.pfoot{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+@media(max-width:900px){
+  .pl{display:flex;flex-direction:column;height:auto}
+  .mw{order:-1;height:46vh;height:46dvh}
+  .pp{border-right:0;padding-bottom:90px}
+  .pc{max-height:60%}
+  .wb h1{font-size:16px}
+}
+/* ---------- amministrazione ---------- */
+.adm{max-width:1100px;margin:0 auto;padding:18px max(3vw,14px) 60px}
+.atabs{display:flex;gap:6px;margin:4px 0 16px;flex-wrap:wrap}
+.atabs button{border:0;border-radius:999px;background:var(--card);padding:9px 16px;font-weight:700;cursor:pointer}
+.atabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th{text-align:left;font-size:12px;color:var(--mut);font-weight:700;padding:8px;border-bottom:2px solid var(--line)}
+table.t td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t td.a{white-space:nowrap;text-align:right}
+table.t td.a .btn{margin:2px}
+.tw{overflow-x:auto}
+.box{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px}
+.box h3{margin:0 0 10px;font-size:17px}
+.box p{margin:0 0 10px;font-size:14px;color:var(--mut)}
+.pwbox{font-size:22px;font-weight:800;letter-spacing:.04em;background:var(--card);border-radius:10px;padding:10px 14px;display:inline-block;margin:6px 0;font-variant-numeric:tabular-nums}
+.sw{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.sw input[type=color]{width:56px;height:40px;border:1px solid var(--line);border-radius:8px;background:none;padding:2px}
+.ok{color:var(--ok);font-weight:700}.no{color:#b45309;font-weight:700}
 </style>
 </head>
 <body>
@@ -100,23 +196,30 @@ details.inst b{color:var(--red)}
   <p id="lh">Chi sei?</p>
   <div class="who" id="who" role="group" aria-label="Scegli il tuo nome"></div>
   <input id="pw" type="password" autocomplete="current-password" aria-label="Password" placeholder="Password" hidden>
-  <label class="rem" id="remw" hidden><input type="checkbox" id="rem"> Ricorda su questo telefono</label>
+  <label class="rem" id="remw" hidden><input type="checkbox" id="rem"> Ricorda su questo dispositivo</label>
   <p id="err" role="alert"></p>
   <button id="lb" type="submit" hidden>Entra</button>
 </form></div>
-<div id="app" hidden>
-<div id="off" hidden>Senza rete: stai usando i giri salvati sul telefono.</div>
+
+<div id="off" hidden>Senza rete: stai usando i giri salvati su questo dispositivo.</div>
+
+<!-- CRUSCOTTO -->
+<div id="v-home" hidden>
 <header class="top">
-  <button class="out" type="button" id="esci">Esci</button>
-  <img class="lg" src="data:image/png;base64,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" alt="RAPID Flood Control Systems">
+  <div class="row"><img class="lg" src="data:image/png;base64,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" alt="RAPID Flood Control Systems"><span style="display:flex;gap:8px"><a class="ghost" href="#admin" id="toadm" hidden>Amministrazione</a><button class="ghost" type="button" id="esci">Esci</button></span></div>
   <h1 class="w">Rapid Team</h1>
   <p class="sub" id="oggi"></p>
   <div class="kpi" id="kpi"></div>
 </header>
 <main>
   <section id="prossimo"></section>
+  <section class="org">
+    <div><h3 class="w">Organizza qui il tuo prossimo giro, Rapid ha bisogno anche di te!</h3>
+    <p>Cerca i clienti sulla mappa, aggiungi note e orari: il giro è subito pronto sul telefono.</p></div>
+    <button type="button" id="nuovo">Crea un nuovo giro</button>
+  </section>
   <div class="tabs" role="group" aria-label="Filtra i giri" id="tabs"></div>
-  <input class="srch" id="q" type="search" placeholder="Cerca giro, zona o provincia" aria-label="Cerca giro">
+  <input class="srch" id="q" type="search" placeholder="Cerca giro, zona, azienda o collega" aria-label="Cerca giro">
   <ul id="lista"></ul>
   <details class="inst" id="inst">
     <summary>Installa l'app sul telefono</summary>
@@ -124,126 +227,556 @@ details.inst b{color:var(--red)}
     <p><b>Android:</b> apri con Chrome, tocca i tre puntini in alto a destra e poi «Installa app».</p>
     <button id="inst-btn" type="button">Installa Rapid Team</button>
   </details>
-  <p class="note">Vedi solo i giri assegnati a te. L'avanzamento delle visite è quello segnato su questo telefono.</p>
+  <p class="note" id="nota"></p>
 </main>
 </div>
-<!-- Elenco dei giri: titolo, date (AAAA-MM-GG), zona, conteggi, file. Nessun dato dei clienti qui. -->
-<script type="application/json" id="dati">{"v":2,"utenti":[{"nome":"Susannah","admin":false,"it":600000,"salt":"rWdvb7g4tlsYFnHrC/qm0A==","iv":"sq0zsjEU1Tt77hW/","ct":"7DfVoSuPJiyPLGugUOJQGQJKvvhiRpS4kl+l8Mb8qzD+QWiiWa7u2LAeEe9V/5RK3m8LlZw2hIu7Krrop7gJOb+gMB5g9SxDe5jlwKriyxekKI1wiOIfcPwjgHXqJmNOlr3YbotiAi+QTBxx/8ITpacUWfv96s6rxyrak5FOq8aOLpVl/6WP8iD348myWKAgxL5fsn7f81pxWf2rjhQA5fZ0z6O3Q0qKy6ODihULk/9/6tl0abYXDGbdJEi9mHyHlhVX5hWI5PHxrQiYKAu7suCaw5befqJ1Hkoj7PlVv4bXwf/TBW/K+SnL4HwXFNnXq339Cc15O6LP+v1EF4wrenIOvCBed7UnuWiRVFx8BA9+Grvc3qulh/aCzx9kNQmp4FCafNKKWIHUsqckrY2SO3XCwVvwVbvbt7Xqh9RFRjbusCDdeZ2DfUIupF7qcakxU7v/sXDWaF1wmqJoNUm+KART0nRxcjNdCTvoNhswHBQgIzkbablQ8GUCKRq32uIwce338lPh/IZ7ykZVHBy1xoHmXP0UpUGyG7bjHI7qouhoC8s/QabAmb11/UMPsgASNZWZMy3adQrd4HDHU/YdZSamqj4WLaI//gqfn/v30HqY0ROwyFPtvSwWEDmeYg03yVtkKV+ROmbegb2e1ScaRtHoByJlG6rJo2j5Ibdk4rAV1HiAvr0cK0PWt5ArZLaPmgZMNNGmyf+aDogYFZLwZ1HM/9BO40WG0d6cq2GPUAa95TmHw2wwgGYKbkO6oYXsd92cFCFduPjtGFB5NNMhT+dHPrUcNGvUQpFIqL0q40sHU+Td/IEmBpXH6/EGILIlJDyFPG2EhyeUbqI+YCdryeaNlSV0n0vwPLFayo3N4B2KniT/R8j1tiuaUJrfJjzMbytDBuOtMF8AV7ZiRfjmnrv7STga1z/0NPR1vAyWgbj6zyB/qWCu9AqC3H0dB6KqW9jzjcsdV0HeacbUOvmOnFkYDYuHyetxHODU0urqsGCdPAQKMUVkEm5v5d6vb1ZGHvB6+dxeuPABzcNNlh0dmcDTn2oZiWr7MD5nqb0TmJZ23WFpHhz8KcbrxErGFqNFqN1u5MXgU1KIhl6tOF4cQ+PrTWFiUDW/+nPr01qJQmI7bgb84nXZ251qLXi0Ip6k/2SdvN35uhFgvFTv2crnjLy5vkZI3RN402yBYnYjg29eFYyw6C+Kn4B0t5PlLFt7Lhlk9FKfdCs462va7xIaxNHHIGENjD7yNiEYqBv7R1JLJ1fAAxxKHQ3DmWqr7Jv2/M8SOF8oknqhoiXc1at0U7RygFI1me5gom7+An9xxu5Hft7Gcq8V3odxjK+yzesbo20toQW6HZGctcdaAQEHmZJjgC4wQoEta81l63UiEFd+8TgQVUumKOSwuMk0jji6+MGjMP+eOxqY324LzSeMc/ZWYjgbMWFxjWSwxm1u7yP46FHt4ig1n++8Sh6cBJora9lmkV7tCby0K8Cx0n8snn3/5JVD4rg85xAFy5hWQHAPftIJ7/2s6FGcLiJj0pZVTnijCA/4nJD57V2+CSTP6xhG8EDjVG8/aQhSLBKZsMiSalCkPBJtqPXGSYlzrVz5NIE04622Mfaqrgg7ti3bQJ7V3WfYfCwPT2b6LlPCRBbYiA=="},{"nome":"Marco","admin":false,"it":600000,"salt":"tTbWOcNHMhgHqIijBoh4dg==","iv":"lrx15gdh944jLGfS","ct":"aSMCxz7dHXvA/LeG1sW4SCLlPcJIgqtqcx34kwPNg/8otd7QuVsmyyKTHNNIKk3FEVhGkeKA5Ff+RBJiJ2DqJtIbJd29//TFGQHB/9fPuWNcC3gcn4vgrwDYLPRASc0HzOl+MNk2fy5LQzGE3Nnox5U/JcK9WTVbd88VbGusBS9dhkNNGb84+//LDAEl24oBOe5rq9IAv4CCjXeJLIhtADrcHdUfi7/TNPJYCkMg8JXG3d0g+JOHM7bPgkctqNFfEygdL12gsKwydvrBHIaWgc4eUMo7/OiqE7qGvNZsju7IbqdLEfWm+1ptAl0dpNE1o/nyX+PUjw8fkvfcTP7HyH+1LRZlX1c0rEuijHLojT/Is5rR6M/7au3UqkTq014Xw06Oy6KxCYg3SRbbSnsL6rX+v7nv0qA7oNvW8egecx8snGzhphSRGThiNcArWM00/A6bd2hUrmKUDxBgP719i3NVEQp/eBP868hjFfz/lVmQCtuXdzW99MPGW/MKbK3dBcj7wmzquguEJX/tulqPlU8v7AL9GjHlUXujp2gOAVVr2aDRSQuqYXHa9aQ2b3+z4vVwMEMkudHpwpdki5nOiUbGm93lIU3jisqkut7NykD3Kd2h48A++QckdMWzpimdSBN6vQmOJX7OsFlLHy55qgsB/qMrUFY5/xMtzPBF1/4SGxV9XK13EV2WGWo2WWokWb8XE2vdWWMojVoaJdCtDGH2xztrXHNzRz300DSKnqreJxnKALfOl9x+E3hZmTrCoO7hzNMZBpXVSoWefMgUvl9PXL2eg+CphxfV3EeCnaVvfKoe8rhdXlpGCq70iQ6Vd2h56DKXeDF7Xew3HDkub2/XGiMgixk/cLfda3BHPWJ80wWA3MTJiL1NU3VtkjIeON5AtH/wEruCcMcpWwPQv92Gai6tWcLWZTalGsSLad/k6DWe0NaJayq498nFdKixD/CpM8SnbX5w2xBSRacnawW2bpfE52yUSRAme4E3Z+0NiDGxq9vl4XZM4Q9qTWreKu9wMd8KY1ajTjl6jU+7zL7hkZcHTm4duVU09yKMKZPiDHynlOICHkUsXsTS5euGipMWW73G2Ogt7E89RzeVCDLpoZ0r9jQ2wFkgUR1uEkKCnTyVsgq01vapQkzgTLYPHrxqmWH6SiNHp7DqFZujTKj0vieP8PS/e1b/poC0uaojfBtf5+QfuGYUI9fzS141ipXBO43nnAmBEIm0OsmRndM35f+ae772vDJ1exULyAlwFVVxK95JS/d0Mo/98SnR8xRkCYNeIF/u6JVo9R0fzz+JsnE1+x93PG50P/42osEAXsRhqOe4YFfUGH1u50GMO2oo489esfH7dis7YpiQixFdJbGTA/NG3zHESxBHbBiHD04AW2xrhy9LxcUvbpwF6MWEvbY5pd9Ct+7hQNjt80vUJyQXOYQhYt58ISozClkXYuV58hk50W2eiR8S9ueKPtU2oJsRUimRG/qDEHfqazPPmjJ+enOZMvSdX/gcq2w4tI9S55/WTcld6TBgcdpWRrgmP/aKIXphXkJGk+MRzFEwFni+G2tIicuorWqDnYK4Ghdg7QN90lA/nX/o0/Qpg2buPDJfz7OZOaS96F7u0OFNaaATQwyiGaA5yvzg4dCcEw=="},{"nome":"Pietro","admin":true,"it":600000,"salt":"SiYYKuQMduL1gWZUYq883Q==","iv":"09iFA23uc/s7KcKs","ct":"5m3V/jZ7iYZAin/0Rknr97pQ5+Bt4AT9JlAVIbOFupgUpr4NUtZrOaMRzZ/ea6IN4K4bs9DTj/CKXZkzVipZpLsviUCoQ7WQ/8KEzHPyZdFUe4a4TCr7c4K93wy839YlbPojzYkpWr6Zne2UFv9zqB/NFLO+8c3sCna37XbMMuVCt43nU54huRgFe+QbQAJrCkTaF/kocZqrbNFS578CZgK/Oc3w+0cMJBiUzW12kchYhDO9MaNMYqhg1fZJvOqkKKD2tDfpy9yJBhNbGhjhorSABG3hhBWfgY/z0+I5q8WqRRc0fSKvNiezSGljy/cUu/466RHy4MLofH18dV68B0x8o7YaLGCKt2IexAae6OrrVrYuu0u2upjxKl8Tor1CZVXFhpp01LI5WeOw3x+C1/0gnQ+4F1LJrDkLFHIY41aNQTlKGOjobpb8lqw6sYrkk6DTBTN7xtZFOrwk7MlXM95Itf+4iA+r9fUrPZX+8ksQmu6SB29MSimfLRG5+wBGGWhWZ+SOmYr1v0zynldrGTBe+EwHdOSj+pz3lIzNd24Cbagq+l4PIrxcBXUmy/P6xYZULE4o/SLvWdWH8yT4OpsJpsnFmxF558cj8lS8sgxroqx8GYoCqO1ETmvXgAZ18UmpTzlIj3Lq6eMbiZhYUCFGWKUrVQAAitzoCvXY2zT7bpcATJB0dqvNuwa5zuee5mJH7bguChAIExoLISfNAstYX8ZvPAF6vauE468lzhYKkIwNoLPGYLZSDKg49R01R1rRqnmS/dQxuGA5KZJDvm65uN8p719J7PW7cQvaGQkwH/fL3dFekfCz7/qO3uNgfrn2aFDAE5m7KVn4gbRx6HzXXuIJfRqios52HtKRy7L37Ro5C3yWg8HN9OsdWbPxrfuHxrfkyJrj2eSPyaAHNcI+Y9xpQExujV74dqCvX05OL5mRBNe+J96/4nfM6Ye4mLgxQIfK78xPL0e4nxJ5UHfvzAJU1hZg7Wh6cInNWpMVgZiTo7MsUpPM7ULyJOL5NeuZNRTK+sXBvtCR9ToYB0oaJ41N9o8mMcE5zeDGaKMILM+M8NUJt4K7CAEuo+wB+WLFlCqOH5az3QBOyaT9kgmgCPH42wHhBq1kMnHNBx0JI0AVuIKwSN0kmO9KYal9e7M5k5nqXjVh0nUxeQ5IcYGxLrrw1nVHTzi2JouPi9cmW9YToMUczOTjkqQGq77746S38223JhfhTzyZd3OpSHvvr3p7tE8xemeP6n6KFHTcD+eVSzn4gJxtMaURKzG1u+gMEzqDAim7jZCFtGLNH3YV2n8/rFaD0h9wfGyUDY0iy1z2nFMtU1CmdJxoa5aM9ytUtVks2UBYXiJOziMZTBPEflt/QUKj0YHd5B7hrXizMR8sq6Ev1vgPmxfoTRU3r6oo8sykwb34PfUHsGlORBtj+25TVcx/wc4v92JXWnkrY3DWfAFnVJbgyGUtJmPQvqcLyfZ9xQm8CS5+Ao7WkezTi91tT5btzajA+spmVQT3jeon5kFhOc7ZFmD7ZSSqT3dnHwnARJWkFmF5uROSWCaUB6tBa2XnNW90ItPG54DR3tz3xex6P31XbVokWjzzncnXuAfXHKSMMtVB3e8qzG3pP8UjGGbWjepHtcHNLUWU"},{"nome":"Andrea","admin":false,"it":600000,"salt":"6MBKPd3g3SzoP1Momn528w==","iv":"t+EKzkhsR464DkKc","ct":"F53pAO/OmeDACY3ZlFOaMPgm4Jc/FTF62nW+sNDHDYBYph9dqsuLApwrOFw/prBZ/1SKMIZ1bIOhDjTpUgZsctmUBsHpy5oHct+bKRjmbnCX9AKsbFktPaE6Z4T6H55wf4zwZYZRJnTCu/6RJR2zykHkujTvB+huJQz/NQ3CpAp3kqpCB+AaYIhf/5t/XSvc6NKXekL8xlI/qBvfhwEdNRenXv/vLud4CyMEGBmKex56ESIrWkEbqsI8HHAJ9StnplSNTr0i7/Qle47yODyOjqEMOgL/UqoMIsvffICmaAPhfFtW0OaDxzdydIZ6+FJ5vMDE5qczNsxduLHvLD8lxfVPshtMRJCGBBaMPebfAORntiblXJ5ocUxKhfdhlNObHSMHgc9wL//NAiQLVHH8Ls6ex4RC7WjxjIBDWD8ILF24Z9o0pwSXv6Ysev0F+r7C0FadywKRQoYt5cVCqw2KG2g5LNtTIVUDmviVpdf9KAWIfE60EWChydrnulFtVYxEbVfXIlxk+XKSmfoNJ5RQ9kfLBN1JKbfVVicnSFr3v2HD4b1t4WO68R4MASRjJ8rE0+dnos4PhKSzY+nbwXfazuGKGN1SaFleycXYCOMbh4M+4o9jUjR5L7KSqKZdpzppuff67kMaFmw6uohVQ8AvBRkjtTYgyUniKeT8NA+Ba3ZVnUM9LoYMuGq9GBh7vd909Jra/M5YEkLBqtxmlUSgOVI6kyRk8JiGuGEoRz0EKqZGhJki4hO/M3kyIEWZ+WiNtuWxJrY18vYLMFq8UTsvhq7opRgiT2bUMPklWo3HubQv16Y+lK4Ua4W0ruz4U2ECVrfgsXqDkgHUhimkGvxZU7tkExLfNvOAg7WbJiMQfqMVvvSKGAzp01ItFK6yJrotH8Aj0oztX15/j4wf3DgYfQ6W0mdWc4WeRmu/qkn1UAe9SBuylrufuHXwHju62nYbe0JBlEClu+F0m1xtyqDy18xXqa5ypjmB/XVV+RRAkrZtNww7CblEVXZgLeFHsLUrI3U3C8kDBPS+dKuxKL3CY1OvIZ/LM6jzVXhMGRfx8RqPEtJdQN9IB4JHDK0QPiX+NEBLFLMdlX6HriS0Zzb4RjeJU5NHTPPcb2oDkSQRg6ixYNbXDaNCHvek6aW2sJwYVrNpMVG46eCglRag+DNbj9BYgbdFUDyBYm3rA9R+N9EA9+VCu3KiBJfMFMQqjQzYVkcNt3T1YA65uredsaPe/+Dl5fIqNLi71Gyp4Rma8UFbbXbCj7b4uqrKHG9Z0Fa60X91PUF2ZJ5UR0rHHI1IRl4B0t+8n7j2KQj0MpUp4c+TQ8vFj80edd9anbcDCkQj5r90PdLi3tG6rtj799XpgfYDOvJmR/cUP+Z8Ic1EQYlU+l1b4QrEnlBXQI31iv+nYNR2th77XqH8EuWT8Ru6+ov6adbYMxf7h0UYrPV3T4osBhId8aC6DU0VwNvB6VlCxgF+uuM7CjSnDoLyHiIjVk0S5HJs6A5jP+5QqH2JRh5MHVtCpiBC1XtyqsIg2NfuFFsgezGF5sX/hcz2zzVPwLwvZAXIGO6kq8LnjgjuiJ5Ch+YmxYvzbpiKVNfqDurzatnkUKhqx2eMtaZfsHzfgkO30L2J94HB+m3XPXFjXyc="},{"nome":"Dana","admin":false,"it":600000,"salt":"UXDR08e6Zn8IQp6y2gGBng==","iv":"vJO2sIeGL9n29Bms","ct":"jv0aiAstARxxRzkg2Z7RQ9r87hoDI7dl0Pj9PYFNHJzVmaQwU4BVYsMiUmgBwIsGQ0T2+Z7o4xeNC9W8ZCixyLlkhXzleHUozpLUxE+7R5CIOk2bZ+QRRVW9vOikS8k5PmCPRcRzib72PuVSW8jUJwBVQmFheJdNjmDtk/OpwIajbI0UfZGUr5a952KBwAa5CXBo4oiycIjxbkBqMeTePrVSQoL2QHdcqb1UnVKENHpDbgTkMJkhZQ6BouB4zwmAjh1b/tQT8grFTN1DrzqmOFqWsbMYZNMzFFMRDQMzv4Ou0tF4nrOJCnbgTxyAgEEwWa7M13tWRBQFQs2m8fWELF4SiZTk+aI8CSdt2ufz2xwlio5vbI0V9nxPpJ38Oe92JBrTyhCS7zetzDawcYW1hjPw6vrX4V36zzNKyYq0Zi4YzGrj+//8yjsWALPQjil20CN8oTAal9565lcQpGx4ndgvjnviOVKbmb5jm9SkXuGvfmtCn+pRv/ByiPBScDjxkKQKo75QgCXStFJEIGk5R84JlymA0IwhJXeOAWgAtA496Sg/BmXyLoJoYBPCjv+qJLd5lFZx6e57OfQwtud8hf9N0GHo92f2l0KkjYDzgLwA9SiM25UXoyJ9J28s0lnDP/tfrXRn+PJcZx9hkolPcF4S5xhaAAZaQ1AoQBqbbKuSAI6d+8uruS2/9pui2LdcULQrfQ6ACW7SC37BemeUJKUKCzBP0p2jcemPksl27UtkZi5eeDM6T5kAqNmD9mwBIbayNVJU1LSs0P7nBQU2k1xWUSoMN9lu1QiYdeJBkPruhc60DwzoICCXXI36lWlNAGnRM4ioOW2Sqz20XSGqTbbfBeaUSp8XqFRBFC+ZFRrxqMCL7tWP5QbOzaX6Q9/w2UUw3EhKsUqlm7iPzKJ/JO3pYMW1rXbW5DWcEzQvaSPfVJAvcWxQk9Xh2MOuiwQoYBfbtRWR4xiYlrXV7Dkj59X0CfKbLnfoiLyq+KVOEBLCP7voik+pz5kLmKLqZ6MJIJxOqPo5bHToEUpDQjiNbjSiuF4zLYdcLwzon77SyK3p6exkGbGgvOQKZx6ATQhmbHpW1cVUyGPIO44hgHrOV7ybQWAqx/mJ4QbVOl5kCnDIjWRCOY18PaCi4R7T7/SXmWJmY/r1cdSUrJAUqyY4sVjBwz/DgK38OzPXR9CEYiRp5lPixB2aKoK+IV51cDY0HK5KAf9HHBKjicumQppT3qgEkjttKZoxGFcoyA6cinpXIVaYdHBnl9YRnC0F2yAfOG2hn565CopIWYzZVVHrdB9WaHvNURHaQAIIz3hI/ZMkAXSMUM5bAIr/Ltq84rL9PAhwfFFN6MrNKxzz88XuVQWNC/1aNESQZV7uDz6iIAMDhAPtUayRwFMpDtY8GVYrnEerTARjskC5juY5MiyDeKypBWuIFzft8gWomBzHPFd9sv4yBv8QsKeBLCmn0R0Ik15LyHGoyvllHFHKwcQ9CCpXj4zyv4YOkEbqH+o2DfmibXfwPtEO7cLomdb5XSGM4dqDxbwv4O2kEncBUEd1tH/GbNSbxUU3mw1SxmBtQeEVs2dg1UhCrp8HS83AZLyEEE3zKSDlzmG/95AhlLndHaSWiSPst+wwJtOYeNTepGA="}],"giri":[{"wraps":{"Susannah":"7YCYDgMjenRgvpenkZn6oJ6gSfhRMdDaS34zTaPNQqDYQSmE2SzuvR7bDl7vz5rsQv9T0P+iy1fXjbZcSziYVuTCgRwUbLrSHgRgdjzkU8RECyiOkPurtlDu++Zc0rN+IpB+ppKepmtELHyXRJvzLKXo2xfNYU1cGf9Q7+GMgRBgODgCJKVBqlyibKswCcq8FmHmzfBp525rAulM1+DY+H/ZifkDvPnADC6VnmBwMLhoo1+V1OzbitqQ9KnTDmVWlM4/pOXBDE2CMg4tEaWUAqxDirzVvhXjsUxbk2WdBG++6wffrBfE50Yz1i1TomV74eJyIN24INipDxf8mxjzgQ==","Marco":"Ee0WD+cGfre4nMM9DEmcwNSJd5PGmbGiPKEFvIqKlUQPYDygjnsFVThkal2UP3ahbOiyYbx1du72fCjvdS1svwjElJMmCxYzSjhDVyMrQkCM9uACDGW70advakwshP1vOQ2vQ1yseEKGGjQakSaiybBHH5KeGNKFD2cdNABsI/2f0zORZrXR3Xy15m/MSvNRWkzxawLMTJ0kFavcalOVTGhLXRw8j4VfJCwuaeZqcMNgcUhoz+Ow91OHJf52nAfSn16JakSLDp9OV5Q2fM9yclN1R9TDixeHF0cDdoVlAa3+dxbPAgD/BORTeKVt8eH+3Csl8fYPmtvdCSY9sDEMfg==","Pietro":"Tc0UFN2RH2ue+tV9ECzgGA8l/TFCYGOPIayurkCszyTWYVbPC5NZcZxnaR7nxSfAUz1Vtnzewaok+xBMB6o55IP/iwbEkPMmGc+LEtvRnm8DISmaVPEogJ1dPAwIjvvgu/gCMpmXEdH4zPsmcot3KfQrpy+lVkgxoNUunlp8FUaz8keZAAwxVrGjpC8FG0a/YWGWVuX/NPcEe4wqGN7l9i7XgSMIWfmVcbTReFqkK6ynWVogu/ukgLkcGLychX/4mAEDzQ0p/RnMX/PzmNfhIWr0Yw0KpY+12F84OqCsyH4C21uuwEs9Ruo8KUPR8w23vKfxBJl9GddHx4H7242y1g==","Andrea":"AQgvF4KjtjIyKH0IgjfsoGIFqcISw17dQ7wquWgWRpVnAX5mpBeReRx6Zp6lULcFCiJ38ezkIy/rlr+K0in8kTcL+0QGeJvPvAg1SlHFkxQUrp6burh5b9zABSBUWC3wK6ZwDfnwaRPSCZrknDC/SRlPGzuu7DJw2yrlDPaI3VGYN8PGmcXMJ0NjF9AgZ08bk/p0fjrEoamrmyWLktTLEJzwm3vEMEGQWpyLGYRTwFmWF3QSTg28bkWbyfiumD8awGxxKswG29ccfKgfc0Gl9666B0z6ClxKOoxMx2fiNPms3EjIpOkkuMTCUcGBKRKPNxSIL+4s7RFHByWtR/Qu7w==","Dana":"lgHUNUVU3+cRek3IW6xlUBFE0vAvsMslhIoQTyoQT+74J8UVUmdud6ha7QL/vDnU2YKSPGQF/F/kgkjre2cMJWSvTBOR8/Gp63aU/nOa20m9qJz0Atxz60aOrq7yCywXL5eZXBJXD+xlkGvWQJLt9jsjKKpBFhI4zucbAB++REz7I5DzjPIyw4VhVz369uycVM+I3rYCs1EWz1OIr/TLcw0OZMb3mIXIjdmPBXcTQa2kUAaYUQ4tZE5jo6sYDdIYond/JQptW4xkP9Wks+9DYCqq4Y8gkFZw3pkbyrroolAOdBPa8+nlnMni//GdW2rg7VQsVEzjFKPNq2C62SnbuQ=="},"iv":"SEfRTliKe0wTDNCD","ct":"5gA0u2CrNdtlapxoW/097Pbaoos0JgJFGsrPDSWi0TdSRhhCH4jyy+bRgci+auDRkf5PxulzPq2ywE7BB/NmMIzEq3Hrz1BRZXEirgTTqXkh6ad4+cFQwu8BhDVJNR/6mqvkJNHp6LM+Tb15cc9yvCpd+pqJTKa8eGSuivcPhNoPh84lvHX6V5/Ge/YYbJXIVhyzbXu7lGLPaWOStRLlU19lEfS+B6CupA0nJsWYcCnE/8RshsGvednucVdofe57d24PyRXVPDbn5F2tfGbmumlwCjFMGiV4NAggsEawIKQHrH4K8MrNsqXE3xt1M1fG/nU4lvNPtlpPNGdGn0gyv4nOC/8GeQ3oLmlk+0NkvtLNTfOb+ZYYniLKVDynARV6I5NBdEQ03AoK413J6PKaK75AOW3/3UmGmpOArfse8Mor3cegyXNCel6wkQKNaBEBdMnt"}]}</script>
+
+<!-- PIANIFICATORE -->
+<div id="v-plan" hidden>
+  <div class="wb"><a class="ghost" href="#" id="pl-back">← Giri</a><h1 id="pl-tit">Nuovo giro</h1><span class="msg" id="pl-msg"></span><button class="btn red" type="button" id="pl-save">Salva giro</button></div>
+  <div class="pl">
+    <div class="pp" id="pp"></div>
+    <div class="mw" id="mw">
+      <div id="map"></div>
+      <div class="nomap" id="nomap" hidden><div id="nomap-t"></div></div>
+      <div class="sbx" id="sbx" hidden><input id="cerca" type="search" autocomplete="off" placeholder="Cerca azienda o indirizzo (Invio = cerca nella zona)" aria-label="Cerca azienda o indirizzo"><div class="sug" id="sug" hidden></div></div>
+      <div class="pc" id="pc" hidden></div>
+    </div>
+  </div>
+</div>
+
+<!-- AMMINISTRAZIONE -->
+<div id="v-adm" hidden>
+  <div class="wb"><a class="ghost" href="#">← Giri</a><h1>Amministrazione</h1><span class="msg" id="adm-msg"></span></div>
+  <div class="adm">
+    <div class="atabs" id="atabs"><button type="button" data-t="giri" aria-pressed="true">Giri</button><button type="button" data-t="team" aria-pressed="false">Team</button><button type="button" data-t="imp" aria-pressed="false">Impostazioni</button></div>
+    <div id="adm-body"></div>
+  </div>
+</div>
+<div id="toast" role="status" hidden></div>
+
+<script src="rt.js"></script>
 <script>{
-const $ = s => document.querySelector(s);
-const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const RAW = JSON.parse($("#dati").textContent), K = "rt-sess";
-const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
-const S = crypto.subtle;
-const st = {get(){ try { return JSON.parse(sessionStorage.getItem(K) || localStorage.getItem(K) || "null"); } catch(e) { return null; } },
-  set(v, ricorda){ try { const j = JSON.stringify(v); sessionStorage.setItem(K, j); if (ricorda) localStorage.setItem(K, j); localStorage.setItem("rt-nome", JSON.stringify(v.nome)); } catch(e) {} },
-  ricordato(){ try { return !!localStorage.getItem(K); } catch(e) { return false; } },
-  del(){ try { sessionStorage.removeItem(K); localStorage.removeItem(K); } catch(e) {} }};
-async function chiave(u, pass){
-  const km = await S.importKey("raw", new TextEncoder().encode(pass), "PBKDF2", false, ["deriveKey"]);
-  const k = await S.deriveKey({name:"PBKDF2", salt:b64(u.salt), iterations:u.it, hash:"SHA-256"}, km, {name:"AES-GCM", length:256}, false, ["decrypt"]);
-  const pk = await S.importKey("pkcs8", await S.decrypt({name:"AES-GCM", iv:b64(u.iv)}, k, b64(u.ct)), {name:"RSA-OAEP", hash:"SHA-256"}, true, ["decrypt"]);
-  return S.exportKey("jwk", pk);
-}
-async function giriDi(sess){
-  const pk = await S.importKey("jwk", sess.jwk, {name:"RSA-OAEP", hash:"SHA-256"}, false, ["decrypt"]);
-  const out = [];
-  for (const v of RAW.giri) {
-    const w = v.wraps && v.wraps[sess.nome]; if (!w) continue;
-    try { const k = await S.importKey("raw", await S.decrypt({name:"RSA-OAEP"}, pk, b64(w)), "AES-GCM", false, ["decrypt"]);
-      out.push(JSON.parse(new TextDecoder().decode(await S.decrypt({name:"AES-GCM", iv:b64(v.iv)}, k, b64(v.ct))))); } catch(e) {}
-  }
-  return out;
-}
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const esc = RT.esc;
+const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+const MESI_L = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+const GIORNI = ["domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato"];
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const dt = s => { const [y,m,d] = String(s).split("-").map(Number); return new Date(y, m-1, d); };
+const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+let CTX = null, GIRI = [];
+
+function toast(t, errore){ const x = $("#toast"); x.textContent = t; x.classList.toggle("err", !!errore); x.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => x.hidden = true, errore ? 9000 : 5000); }
+
+/* ---------------- accesso ---------------- */
 const pw = $("#pw"), lb = $("#lb"), err = $("#err");
-const ok = !!(window.crypto && crypto.subtle);
-let scelto = null;
-$("#who").innerHTML = RAW.utenti.map(u => `<button type="button" data-n="${esc(u.nome)}">${esc(u.nome)}</button>`).join("");
+let UT = [], scelto = null;
+async function avvioLogin(){
+  if (!RT.ok) { err.textContent = "Questo browser non può aprire l'app. Usa Chrome, Edge o Safari aggiornati."; return; }
+  UT = (await RT.daSito("dati/utenti.json")) || [];
+  if (!UT.length) { err.textContent = "Impossibile caricare l'elenco degli utenti: controlla la rete."; return; }
+  $("#who").innerHTML = UT.map(u => `<button type="button" data-n="${esc(u.nome)}">${esc(u.nome)}</button>`).join("");
+  const s = RT.sess.get(); if (s && s.nome && s.jwk) entra(s).catch(() => RT.sess.del());
+}
 $("#who").addEventListener("click", e => { const b = e.target.closest("button[data-n]"); if (!b) return;
-  scelto = RAW.utenti.find(u => u.nome === b.dataset.n);
-  $("#who").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  scelto = UT.find(u => u.nome === b.dataset.n);
+  $$("#who button").forEach(x => x.setAttribute("aria-pressed", x === b));
   $("#lh").textContent = "Ciao " + scelto.nome + ", inserisci la tua password.";
   [pw, $("#remw"), lb].forEach(x => x.hidden = false); err.textContent = ""; pw.value = ""; pw.focus(); });
-if (!ok) { err.textContent = "Questo browser non può aprire l'app. Usa Chrome o Safari aggiornati."; }
-async function mostra(sess){
-  const G = await giriDi(sess);
-  $("#lock").style.display = "none"; $("#app").hidden = false;
-  avvia(G, sess.nome, !!(RAW.utenti.find(u => u.nome === sess.nome) || {}).admin);
-}
-$("#lf").addEventListener("submit", async e => { e.preventDefault(); if (!scelto || !pw.value || !ok) return;
+$("#lf").addEventListener("submit", async e => { e.preventDefault(); if (!scelto || !pw.value) return;
   lb.disabled = true; lb.textContent = "Accesso…"; err.textContent = "";
-  try { const jwk = await chiave(scelto, pw.value); const sess = {nome: scelto.nome, jwk}; st.set(sess, $("#rem").checked); await mostra(sess); }
-  catch(x) { err.textContent = "Password errata."; pw.select(); }
+  let s = null;
+  try { s = { nome: scelto.nome, jwk: await RT.apriChiave(scelto, pw.value) }; }
+  catch(x) { err.textContent = "Password errata."; pw.select(); lb.disabled = false; lb.textContent = "Entra"; return; }
+  RT.sess.set(s, $("#rem").checked);
+  try { await entra(s); } catch(x) { err.textContent = "Accesso riuscito ma i dati non si caricano: controlla la rete e riprova."; }
   lb.disabled = false; lb.textContent = "Entra"; });
-$("#esci").addEventListener("click", () => { st.del(); location.reload(); });
-function avvia(G, IO, ADMIN){
-const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
-const GIORNI = ["domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato"];
+$("#esci").addEventListener("click", () => { RT.sess.del(); location.hash = ""; location.reload(); });
+
+async function entra(s){
+  CTX = await RT.carica(s);
+  if (CTX.pubErrata) await correggiChiave();
+  GIRI = await RT.giri(CTX);
+  $("#lock").style.display = "none";
+  const m = new URLSearchParams(location.search).get("modifica");
+  if (m) { history.replaceState(null, "", location.pathname + "#pianifica/" + encodeURIComponent(m)); }
+  instrada();
+}
+async function ricarica(){ GIRI = await RT.giri(CTX); }
+/* se la chiave pubblica salvata non corrisponde all'account: la corregge (serve la chiave GitHub) e, se admin, riconsegna i giri */
+async function correggiChiave(){
+  if (!CTX.tok) { if (!CTX.admin) toast("Il tuo account va riattivato: chiedi all'amministratore una nuova password.", true); return; }
+  try {
+    const U = CTX.utenti.map(u => u.nome === CTX.nome ? Object.assign({}, u, { pub: CTX.pubGiusta }) : u);
+    if (CTX.admin) await aggiornaTeam(U);
+    else { await RT.modifica("dati/utenti.json", CTX.tok, () => U, "Chiave pubblica corretta (" + CTX.nome + ")"); CTX.utenti = U; }
+    CTX.pubErrata = false;
+  } catch(e) {}
+}
+
+/* ---------------- viste ---------------- */
+let dirty = false;
+addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+addEventListener("hashchange", () => { if (CTX) instrada(); });
+function instrada(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  ["#v-home","#v-plan","#v-adm"].forEach(v => $(v).hidden = true);
+  if (h.startsWith("pianifica")) { const id = h.split("/")[1] || ""; apriPiano(id); $("#v-plan").hidden = false; }
+  else if (h === "admin" && CTX.admin) { $("#v-adm").hidden = false; admin(); }
+  else { $("#v-home").hidden = false; cruscotto(); }
+  scrollTo(0, 0);
+}
+
+/* ---------------- cruscotto ---------------- */
 const d0 = new Date(); d0.setHours(0,0,0,0);
-const dt = s => { const [y,m,d] = String(s).split("-").map(Number); return new Date(y, m-1, d); };
 const gg = (a,b) => Math.round((b - a) / 864e5);
 const periodo = g => { const a = dt(g.dal), b = dt(g.al || g.dal);
   return +a === +b ? `${a.getDate()} ${MESI[a.getMonth()]}` : (a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${MESI[a.getMonth()]}` : `${a.getDate()} ${MESI[a.getMonth()]} – ${b.getDate()} ${MESI[b.getMonth()]}`); };
-const stato = g => g.archiviato ? "f" : (dt(g.al || g.dal) < d0 ? "f" : (dt(g.dal) <= d0 ? "c" : "p"));
+const stato = g => dt(g.al || g.dal) < d0 ? "f" : (dt(g.dal) <= d0 ? "c" : "p");
 const NOMI = {c:"In corso", p:"In programma", f:"Concluso"};
-const fatte = g => { try { const S = JSON.parse(localStorage.getItem("spunte-" + g.id) || "{}"); return Object.keys(S).length; } catch(e) { return 0; } };
-const quando = g => { const s = stato(g); if (s === "c") return "In corso oggi";
-  const n = gg(d0, dt(g.dal)); return n === 1 ? "Domani" : `Tra ${n} giorni · ${GIORNI[dt(g.dal).getDay()]}`; };
-G.forEach(g => g._s = stato(g));
-G.sort((a,b) => (a._s === "f") - (b._s === "f") || (a._s === "f" ? String(b.dal).localeCompare(a.dal) : String(a.dal).localeCompare(b.dal)));
-
-$("#oggi").textContent = "Ciao " + IO + (ADMIN ? " · amministratore" : "") + " · " + GIORNI[d0.getDay()] + " " + d0.getDate() + " " + MESI[d0.getMonth()];
-const conta = s => G.filter(g => g._s === s).length;
-const attivi = G.filter(g => g._s !== "f");
-$("#kpi").innerHTML = [["r", conta("c"), "in corso"], ["", conta("p"), "in programma"], ["", attivi.reduce((n,g) => n + (g.visite||0), 0), "visite da fare"], ["", conta("f"), "conclusi"]]
-  .map(([c,n,l]) => `<div class="${c}"><b>${n}</b><span>${l}</span></div>`).join("");
-
-const prox = attivi[0];
-if (prox) {
-  const f = Math.min(fatte(prox), prox.visite || 0), pc = prox.visite ? Math.round(f / prox.visite * 100) : 0;
-  $("#prossimo").innerHTML = `<h2>${prox._s === "c" ? "Giro in corso" : "Prossimo giro"}</h2>
-  <a class="next" href="${esc(prox.file)}">
-    <span class="when">${esc(quando(prox))}</span>
-    <h3 class="w">${esc(prox.titolo)}</h3>
-    <p>${esc(periodo(prox))}${prox.zona ? " · " + esc(prox.zona) : ""}</p>
-    <div class="chips"><span class="chip">${esc(prox.visite || 0)} visite</span>${prox.appuntamenti ? `<span class="chip ap">${esc(prox.appuntamenti)} appuntamenti</span>` : ""}${prox.prospezioni ? `<span class="chip pz">${esc(prox.prospezioni)} prospezioni</span>` : ""}${prox.giorni ? `<span class="chip">${esc(prox.giorni)} ${prox.giorni === 1 ? "giorno" : "giorni"}</span>` : ""}</div>
-    <div class="bar"><i><s style="width:${pc}%"></s></i>${f} di ${esc(prox.visite || 0)} fatte</div>
-    <span class="go">Apri il giro</span>
-  </a>`;
-} else $("#prossimo").innerHTML = '<h2>Prossimo giro</h2><p class="empty">Nessun giro in programma.</p>';
-
+const tappe = g => (g.giorni || []).flatMap(d => d.tappe || []);
+const conta = (g, e) => tappe(g).filter(t => (t.etichette || []).includes(e)).length;
+const fatte = g => { try { return Object.keys(JSON.parse(localStorage.getItem("spunte-" + g.id) || "{}")).length; } catch(e) { return 0; } };
+const puoModificare = g => CTX.admin || g.autore === CTX.nome;
+const link = g => "giro.html?id=" + encodeURIComponent(g.id);
 let filtro = "tutti";
-const TABS = [["tutti","Tutti",G.length],["c","In corso",conta("c")],["p","In programma",conta("p")],["f","Conclusi",conta("f")]];
-const disegna = () => {
-  $("#tabs").innerHTML = TABS.map(([k,l,n]) => `<button type="button" data-k="${k}" aria-pressed="${filtro === k}">${l}<em>${n}</em></button>`).join("");
-  const q = $("#q").value.trim().toLowerCase();
-  const vis = G.filter(g => (filtro === "tutti" || g._s === filtro) && (!q || [g.titolo, g.zona, g.province].join(" ").toLowerCase().includes(q)));
-  $("#lista").innerHTML = vis.length ? vis.map(g => { const a = dt(g.dal);
-    return `<li><a class="g" href="${esc(g.file)}">
-      <div class="dt"><b>${a.getDate()}</b><span>${MESI[a.getMonth()]}</span></div>
-      <div><h4>${esc(g.titolo)}</h4><p>${esc(periodo(g))}${g.zona ? " · " + esc(g.zona) : ""} · ${esc(g.visite || 0)} visite${g._s !== "f" && fatte(g) ? " · " + Math.min(fatte(g), g.visite||0) + " fatte" : ""}${ADMIN ? " · " + esc((g.utenti || []).join(", ") || "solo admin") : ""}</p></div>
-      <span class="st ${g._s}">${NOMI[g._s]}</span></a></li>`; }).join("")
-    : `<li class="empty">${q ? "Nessun giro trovato." : "Nessun giro in questa sezione."}</li>`;
-};
-$("#tabs").addEventListener("click", e => { const b = e.target.closest("button[data-k]"); if (b) { filtro = b.dataset.k; disegna(); } });
-$("#q").addEventListener("input", disegna);
-disegna();
-/* salva sul telefono i giri attivi, per usarli anche senza rete */
-if (location.protocol === "https:" && navigator.onLine !== false) {
-  G.filter(g => g._s !== "f" && !g.archiviato).map(g => g.file).forEach(f => { try { fetch(f, {cache:"no-cache"}).catch(() => {}); } catch(e) {} });
+function cruscotto(){
+  const G = GIRI.filter(g => !g.archiviato);
+  G.forEach(g => g._s = stato(g));
+  G.sort((a,b) => (a._s === "f") - (b._s === "f") || (a._s === "f" ? String(b.dal).localeCompare(a.dal) : String(a.dal).localeCompare(b.dal)));
+  $("#toadm").hidden = !CTX.admin;
+  $("#oggi").textContent = "Ciao " + CTX.nome + (CTX.admin ? " · amministratore" : "") + " · " + GIORNI[d0.getDay()] + " " + d0.getDate() + " " + MESI[d0.getMonth()];
+  const n = s => G.filter(g => g._s === s).length, attivi = G.filter(g => g._s !== "f");
+  $("#kpi").innerHTML = [["r", n("c"), "in corso"], ["", n("p"), "in programma"], ["", attivi.reduce((k,g) => k + tappe(g).length, 0), "visite da fare"], ["", n("f"), "conclusi"]]
+    .map(([c,k,l]) => `<div class="${c}"><b>${k}</b><span>${l}</span></div>`).join("");
+  const prox = attivi[0];
+  if (prox) {
+    const tot = tappe(prox).length, f = Math.min(fatte(prox), tot), pc = tot ? Math.round(f / tot * 100) : 0, ng = (prox.giorni || []).length;
+    const k = prox._s === "c" ? "In corso oggi" : (gg(d0, dt(prox.dal)) === 1 ? "Domani" : `Tra ${gg(d0, dt(prox.dal))} giorni · ${GIORNI[dt(prox.dal).getDay()]}`);
+    $("#prossimo").innerHTML = `<h2>${prox._s === "c" ? "Giro in corso" : "Prossimo giro"}</h2>
+    <a class="next" href="${esc(link(prox))}"><span class="when">${esc(k)}</span>
+      <h3 class="w">${esc(prox.titolo)}</h3><p>${esc(periodo(prox))}${prox.zona ? " · " + esc(prox.zona) : ""}</p>
+      <div class="chips"><span class="chip">${tot} ${tot === 1 ? "visita" : "visite"}</span>${conta(prox,"appuntamento") ? `<span class="chip ap">${conta(prox,"appuntamento")} appuntamenti</span>` : ""}${conta(prox,"prospezione") ? `<span class="chip pz">${conta(prox,"prospezione")} prospezioni</span>` : ""}<span class="chip">${ng} ${ng === 1 ? "giorno" : "giorni"}</span></div>
+      <div class="bar"><i><s style="width:${pc}%"></s></i>${f} di ${tot} fatte</div><span class="go">Apri il giro</span></a>`;
+  } else $("#prossimo").innerHTML = '<h2>Prossimo giro</h2><p class="empty">Nessun giro in programma.</p>';
+  const TABS = [["tutti","Tutti",G.length],["c","In corso",n("c")],["p","In programma",n("p")],["f","Conclusi",n("f")],["miei","Creati da me",G.filter(g => g.autore === CTX.nome).length]];
+  const disegna = () => {
+    $("#tabs").innerHTML = TABS.map(([k,l,c]) => `<button type="button" data-k="${k}" aria-pressed="${filtro === k}">${l}<em>${c}</em></button>`).join("");
+    const q = $("#q").value.trim().toLowerCase();
+    const vis = G.filter(g => (filtro === "tutti" || g._s === filtro || (filtro === "miei" && g.autore === CTX.nome)) &&
+      (!q || [g.titolo, g.zona, g.autore, (g.condiviso||[]).join(" "), tappe(g).map(t => t.azienda + " " + (t.indirizzo||"")).join(" ")].join(" ").toLowerCase().includes(q)));
+    $("#lista").innerHTML = vis.length ? vis.map(g => { const a = dt(g.dal), tot = tappe(g).length, f = Math.min(fatte(g), tot);
+      const chi = g.autore === CTX.nome ? ((g.condiviso||[]).length ? "condiviso con " + g.condiviso.join(", ") : "creato da te") : "di " + (g.autore || "—");
+      return `<li class="gw"><a class="g" href="${esc(link(g))}"><div class="dt"><b>${a.getDate()}</b><span>${MESI[a.getMonth()]}</span></div>
+        <div><h4>${esc(g.titolo)}</h4><p>${esc(periodo(g))}${g.zona ? " · " + esc(g.zona) : ""} · ${tot} ${tot === 1 ? "visita" : "visite"}${g._s !== "f" && f ? " · " + f + " fatte" : ""} · ${esc(chi)}</p></div>
+        <span class="st ${g._s}">${NOMI[g._s]}</span></a>${puoModificare(g) ? `<a class="ed" href="#pianifica/${esc(encodeURIComponent(g.id))}">Modifica</a>` : ""}</li>`; }).join("")
+      : `<li class="empty">${q ? "Nessun giro trovato." : "Nessun giro in questa sezione."}</li>`;
+  };
+  $("#tabs").onclick = e => { const b = e.target.closest("button[data-k]"); if (b) { filtro = b.dataset.k; disegna(); } };
+  $("#q").oninput = disegna;
+  disegna();
+  $("#nota").textContent = CTX.tutti ? "Vedi tutti i giri del team. L'avanzamento delle visite è quello segnato su questo dispositivo."
+    : "Vedi i giri creati da te e quelli che i colleghi hanno condiviso con te. L'avanzamento delle visite è quello segnato su questo dispositivo.";
+  if (location.protocol === "https:" && navigator.onLine !== false) { try { fetch("giro.html", {cache:"no-cache"}).catch(() => {}); } catch(e) {} }
 }
+$("#nuovo").addEventListener("click", () => { location.hash = "pianifica"; });
 const rete = () => { $("#off").hidden = navigator.onLine !== false; };
 addEventListener("online", rete); addEventListener("offline", rete); rete();
+{ const app = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+  let framed = false; try { framed = window.self !== window.top; } catch(e) { framed = true; }
+  if (app) $("#inst").hidden = true;
+  if (framed) $("#inst").innerHTML = "<summary>Anteprima dell'app</summary><p>Qui l'app si può provare ma non installare: l'installazione funziona dall'indirizzo del sito.</p>";
+  let ev = null; const ib = $("#inst-btn");
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); ev = e; if (ib) ib.style.display = "block"; });
+  if (ib) ib.addEventListener("click", async () => { if (!ev) return; try { ev.prompt(); await ev.userChoice; } catch(e) {} ev = null; ib.style.display = "none"; }); }
 
-const app = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
-let framed = false; try { framed = window.self !== window.top; } catch(e) { framed = true; }
-if (app) $("#inst").hidden = true;
-if (framed) $("#inst").innerHTML = "<summary>Anteprima dell'app</summary><p>Dentro Claude l'app si può provare ma non installare: l'installazione funziona dall'indirizzo del sito.</p>";
-let ev = null; const ib = $("#inst-btn");
-addEventListener("beforeinstallprompt", e => { e.preventDefault(); ev = e; if (ib) ib.style.display = "block"; });
-if (ib) ib.addEventListener("click", async () => { if (!ev) return; try { ev.prompt(); await ev.userChoice; } catch(e) {} ev = null; ib.style.display = "none"; });
+/* ---------------- pianificatore ---------------- */
+let P = null, CUR = 0, OPEN = -1;
+const BOZZA = "rt-bozza-" ;
+function giorniTra(dal, al){
+  if (!dal) return []; const a = dt(dal), b = dt(al && al >= dal ? al : dal), out = [];
+  for (let d = new Date(a); d <= b && out.length < 14; d.setDate(d.getDate() + 1)) out.push(iso(d));
+  return out;
 }
-const sess = st.get(); if (sess && sess.nome && sess.jwk && ok) mostra(sess).catch(() => { st.del(); });
+function allineaGiorni(){
+  const isos = giorniTra(P.dal, P.al); if (!isos.length) { if (!P.giorni.length) P.giorni = [{ iso: "", percorso: "", notte: "", tappe: [] }]; return; }
+  const vecchi = P.giorni, nuovi = isos.map(i => vecchi.find(g => g.iso === i) || { iso: i, percorso: "", notte: "", tappe: [] });
+  const orfani = vecchi.filter(g => !isos.includes(g.iso)).flatMap(g => g.tappe);
+  if (orfani.length) { nuovi[nuovi.length - 1].tappe.push(...orfani); toast(orfani.length + (orfani.length === 1 ? " visita spostata" : " visite spostate") + " all'ultimo giorno del giro."); }
+  P.giorni = nuovi; if (CUR >= P.giorni.length) CUR = P.giorni.length - 1;
+}
+const etDay = g => { if (!g.iso) return "Giorno"; const d = dt(g.iso); return cap(GIORNI[d.getDay()]).slice(0,3) + " " + d.getDate() + " " + MESI[d.getMonth()]; };
+function nuovoP(){
+  const dom = new Date(d0); dom.setDate(dom.getDate() + 1);
+  return { id: "", titolo: "", sottotitolo: "", dal: iso(dom), al: iso(dom), zona: "", prima: "", condiviso: [], giorni: [], autore: CTX.nome, creato: "", archiviato: false };
+}
+function daGiro(G){
+  return { id: G.id, titolo: G.titolo || "", sottotitolo: G.sottotitolo || "", dal: G.dal || "", al: G.al || G.dal || "", zona: G.zona || "", prima: (G.prima_di_partire || []).join("\n"),
+    condiviso: [...(G.condiviso || [])], autore: G.autore || CTX.nome, creato: G.creato || "", archiviato: !!G.archiviato,
+    giorni: (G.giorni || []).map((g, i) => ({ iso: g.iso || (G.dal ? iso(new Date(dt(G.dal).getTime() + i * 864e5)) : ""), percorso: g.percorso || "", notte: g.notte || "", tappe: (g.tappe || []).map(t => Object.assign({}, t)) })) };
+}
+function salvaBozza(){ dirty = true; try { localStorage.setItem(BOZZA + (P.id || "nuovo") + "-" + CTX.nome, JSON.stringify(P)); } catch(e) {} }
+function leggiBozza(id){ try { return JSON.parse(localStorage.getItem(BOZZA + (id || "nuovo") + "-" + CTX.nome) || "null"); } catch(e) { return null; } }
+function togliBozza(id){ try { localStorage.removeItem(BOZZA + (id || "nuovo") + "-" + CTX.nome); } catch(e) {} }
+
+function apriPiano(id){
+  let bozza = null;
+  if (id) { const G = GIRI.find(g => g.id === id);
+    if (!G) { $("#pp").innerHTML = '<p class="empty">Giro non trovato o non visibile per te.</p>'; $("#pl-save").hidden = true; return; }
+    if (!puoModificare(G)) { $("#pp").innerHTML = '<p class="empty">Puoi modificare solo i giri creati da te.</p>'; $("#pl-save").hidden = true; return; }
+    P = daGiro(G); const b = leggiBozza(id); if (b && JSON.stringify(b) !== JSON.stringify(P)) bozza = b;
+  } else { P = nuovoP(); bozza = leggiBozza(""); }
+  $("#pl-save").hidden = false; dirty = false; CUR = 0; OPEN = -1;
+  $("#pl-tit").textContent = id ? "Modifica giro" : "Nuovo giro";
+  allineaGiorni(); pannello(bozza); mappa();
+}
+const TIPI = [["", "—"], ["appuntamento", "Appuntamento"], ["prospezione", "Prospezione"]];
+const tipo = t => (t.etichette || []).includes("appuntamento") ? "appuntamento" : (t.etichette || []).includes("prospezione") ? "prospezione" : "";
+function pannello(bozza){
+  const altri = CTX.utenti.filter(u => u.nome !== P.autore && !u.admin && !u.tutti);
+  const sempre = CTX.utenti.filter(u => u.nome !== P.autore && (u.admin || u.tutti)).map(u => u.nome);
+  const g = P.giorni[CUR] || { tappe: [] };
+  $("#pp").innerHTML = `
+  ${bozza ? `<div class="bozza" id="bz">Hai una bozza non salvata${bozza.titolo ? ": «" + esc(bozza.titolo) + "»" : ""}. <button class="btn sm" type="button" id="bz-si">Riprendi</button><button class="btn sm" type="button" id="bz-no">Scarta</button></div>` : ""}
+  <fieldset class="fs"><legend>Il giro</legend>
+    <label class="fl"><span>Titolo</span><input class="in" data-p="titolo" value="${esc(P.titolo)}" placeholder="Es. Giro Liguria di Ponente"></label>
+    <div class="two"><label class="fl"><span>Dal</span><input class="in" type="date" data-p="dal" value="${esc(P.dal)}"></label><label class="fl"><span>Al</span><input class="in" type="date" data-p="al" value="${esc(P.al)}"></label></div>
+    <label class="fl"><span>Zona</span><input class="in" data-p="zona" value="${esc(P.zona)}" placeholder="Es. Savona, Albenga, Imperia"></label>
+    <label class="fl"><span>Descrizione breve (facoltativa)</span><input class="in" data-p="sottotitolo" value="${esc(P.sottotitolo)}"></label>
+    <label class="fl"><span>Prima di partire (una voce per riga)</span><textarea class="in" data-p="prima" placeholder="Catalogo fotografico&#10;Campione CLICK">${esc(P.prima)}</textarea></label>
+  </fieldset>
+  <fieldset class="fs"><legend>Condividi giro con colleghi</legend>
+    ${altri.length ? `<div class="share" id="share">${altri.map(u => `<label class="${P.condiviso.includes(u.nome) ? "on" : ""}"><input type="checkbox" value="${esc(u.nome)}" ${P.condiviso.includes(u.nome) ? "checked" : ""}>${esc(u.nome)}</label>`).join("")}</div>` : '<p class="hint">Nessun altro collega da scegliere.</p>'}
+    ${sempre.length ? `<p class="hint">${esc(sempre.join(", "))} ${sempre.length === 1 ? "vede" : "vedono"} già tutti i giri.</p>` : ""}
+  </fieldset>
+  <fieldset class="fs"><legend>Visite</legend>
+    <div class="dtabs" id="dtabs">${P.giorni.map((d,i) => `<button type="button" data-d="${i}" aria-pressed="${i === CUR}">${esc(etDay(d))}<em>${d.tappe.length}</em></button>`).join("")}</div>
+    <div class="two"><label class="fl"><span>Percorso del giorno</span><input class="in" data-g="percorso" value="${esc(g.percorso)}" placeholder="Es. Ravenna → Faenza → Forlì"></label><label class="fl"><span>Notte</span><input class="in" data-g="notte" value="${esc(g.notte)}" placeholder="Es. Hotel a Savona"></label></div>
+    <div id="stops">${g.tappe.length ? g.tappe.map((t,i) => scheda(t, i)).join("") : `<p class="hint" style="margin:4px 0 10px">${CTX.config.gmaps_key ? "Cerca un'azienda sulla mappa e premi «Aggiungi»: la visita compare qui." : "Aggiungi le visite a mano con il bottone qui sotto."}</p>`}</div>
+    <button class="btn addm" type="button" id="addm">+ Aggiungi visita a mano</button>
+    <div class="pfoot">${g.tappe.length > 1 ? '<button class="btn sm" type="button" id="ord">Ordina per orario</button>' : ""}</div>
+  </fieldset>`;
+  segnaposti();
+}
+function scheda(t, i){
+  const ap = i === OPEN, alt = P.giorni.map((d,k) => k === CUR ? "" : `<option value="${k}">${esc(etDay(d))}</option>`).join("");
+  return `<div class="stp${ap ? " open" : ""}" data-i="${i}">
+    <div class="hd" data-act="toggle"><span class="n">${i+1}</span><div><div class="tt">${esc(t.ora || "--:--")} · ${esc(t.azienda || "Nuova visita")}</div><div class="ss">${esc(t.indirizzo || t.ricerca || "Indirizzo da inserire")}</div></div>
+      <div class="mv"><button type="button" data-act="su" aria-label="Sposta su" ${i === 0 ? "disabled" : ""}>↑</button><button type="button" data-act="giu" aria-label="Sposta giù" ${i === (P.giorni[CUR].tappe.length - 1) ? "disabled" : ""}>↓</button></div></div>
+    ${ap ? `<div class="bd">
+      <div class="two"><label class="fl"><span>Ora</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>Tipo visita</span><select class="in" data-k="tipo">${TIPI.map(([v,l]) => `<option value="${v}" ${tipo(t) === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
+      <label class="chk"><input type="checkbox" data-k="att" ${(t.etichette||[]).includes("attenzione") ? "checked" : ""}> Attenzione (segnale arancione)</label>
+      <label class="fl"><span>Azienda</span><input class="in" data-k="azienda" value="${esc(t.azienda)}"></label>
+      <label class="fl"><span>Indirizzo</span><input class="in" data-k="indirizzo" value="${esc(t.indirizzo)}"></label>
+      <div class="two"><label class="fl"><span>Telefono</span><input class="in" type="tel" data-k="telefono" value="${esc(t.telefono)}"></label><label class="fl"><span>Referente</span><input class="in" data-k="referente" value="${esc(t.referente)}"></label></div>
+      <label class="fl"><span>Orari di apertura</span><textarea class="in" data-k="orari" rows="2">${esc(t.orari)}</textarea></label>
+      <label class="fl"><span>Note (lette ad alta voce quando si preme Naviga)</span><textarea class="in" data-k="note" rows="3">${esc(t.note)}</textarea></label>
+      <label class="fl"><span>Da portare</span><input class="in" data-k="portare" value="${esc(t.portare)}"></label>
+      <div class="pfoot">${alt ? `<select class="in" data-act="sposta" style="flex:1;min-height:34px"><option value="">Sposta a un altro giorno…</option>${alt}</select>` : ""}
+        <button class="btn sm dang" type="button" data-act="del">${t._del ? "Tocca di nuovo per togliere" : "Togli visita"}</button></div>
+    </div>` : ""}
+  </div>`;
+}
+const oraInput = o => { const m = String(o || "").match(/^(\d{1,2})[:.](\d{2})/); return m ? m[1].padStart(2,"0") + ":" + m[2] : ""; };
+const oraBella = v => { const m = String(v || "").match(/^(\d{2}):(\d{2})/); return m ? String(+m[1]) + ":" + m[2] : ""; };
+const minuti = o => { const m = String(o || "").match(/^(\d{1,2})[:.](\d{2})/); return m ? +m[1] * 60 + +m[2] : 9999; };
+function oraSuccessiva(){ const T = P.giorni[CUR].tappe; if (!T.length) return "9:00";
+  const m = minuti(T[T.length - 1].ora); if (m >= 9999) return ""; const n = Math.min(m + 30, 23 * 60 + 59); return Math.floor(n / 60) + ":" + String(n % 60).padStart(2, "0"); }
+function aggiungi(t){
+  if (!P.giorni.length) allineaGiorni();
+  t.ora = t.ora || oraSuccessiva();
+  P.giorni[CUR].tappe.push(t); OPEN = P.giorni[CUR].tappe.length - 1; salvaBozza(); pannello();
+  const el = $(`.stp[data-i="${OPEN}"]`); if (el) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+$("#pp").addEventListener("input", e => {
+  const x = e.target; if (!P) return;
+  if (x.dataset.p) { P[x.dataset.p] = x.value; if (x.dataset.p === "dal" || x.dataset.p === "al") { if (P.dal && (!P.al || P.al < P.dal)) P.al = P.dal; allineaGiorni(); pannello(); } salvaBozza(); return; }
+  if (x.dataset.g) { P.giorni[CUR][x.dataset.g] = x.value; salvaBozza(); return; }
+  const k = x.dataset.k; if (!k) return;
+  const i = +x.closest(".stp").dataset.i, t = P.giorni[CUR].tappe[i];
+  if (k === "ora") t.ora = oraBella(x.value);
+  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => e !== "appuntamento" && e !== "prospezione"); if (x.value) t.etichette.unshift(x.value); }
+  else if (k === "att") { t.etichette = (t.etichette || []).filter(e => e !== "attenzione"); if (x.checked) t.etichette.push("attenzione"); }
+  else t[k] = x.value;
+  if (k === "ora" || k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
+    hd.querySelector(".tt").textContent = (t.ora || "--:--") + " · " + (t.azienda || "Nuova visita"); hd.querySelector(".ss").textContent = t.indirizzo || t.ricerca || "Indirizzo da inserire"; }
+  salvaBozza();
+});
+$("#pp").addEventListener("change", e => {
+  const x = e.target;
+  if (x.closest("#share")) { P.condiviso = $$("#share input:checked").map(c => c.value); $$("#share label").forEach(l => l.classList.toggle("on", l.querySelector("input").checked)); salvaBozza(); return; }
+  if (x.dataset.act === "sposta" && x.value !== "") { const i = +x.closest(".stp").dataset.i, k = +x.value;
+    const [t] = P.giorni[CUR].tappe.splice(i, 1); P.giorni[k].tappe.push(t); OPEN = -1; salvaBozza(); pannello(); toast("Visita spostata a " + etDay(P.giorni[k]) + "."); }
+});
+$("#pp").addEventListener("click", e => {
+  const b = e.target.closest("button,[data-act=toggle]"); if (!b || !P) return;
+  if (b.id === "bz-si") { const bz = leggiBozza(P.id); if (bz) { P = bz; allineaGiorni(); } dirty = true; pannello(); mappa(); return; }
+  if (b.id === "bz-no") { togliBozza(P.id); $("#bz").remove(); return; }
+  if (b.dataset.d != null) { CUR = +b.dataset.d; OPEN = -1; pannello(); return; }
+  if (b.id === "addm") { aggiungi({ azienda: "", indirizzo: "", etichette: [] }); return; }
+  if (b.id === "ord") { P.giorni[CUR].tappe.sort((a, c) => minuti(a.ora) - minuti(c.ora)); OPEN = -1; salvaBozza(); pannello(); return; }
+  const card = b.closest(".stp"); if (!card) return; const i = +card.dataset.i, T = P.giorni[CUR].tappe;
+  const act = b.dataset.act;
+  if (act === "toggle") { if (e.target.closest(".mv")) return; OPEN = OPEN === i ? -1 : i; pannello(); if (OPEN >= 0 && T[i].pos && MAP) MAP.panTo(T[i].pos); return; }
+  if (act === "su" && i > 0) { [T[i-1], T[i]] = [T[i], T[i-1]]; OPEN = OPEN === i ? i - 1 : OPEN; salvaBozza(); pannello(); }
+  else if (act === "giu" && i < T.length - 1) { [T[i+1], T[i]] = [T[i], T[i+1]]; OPEN = OPEN === i ? i + 1 : OPEN; salvaBozza(); pannello(); }
+  else if (act === "del") { if (T[i]._del) { T.splice(i, 1); OPEN = -1; salvaBozza(); pannello(); } else { T[i]._del = 1; b.textContent = "Tocca di nuovo per togliere"; setTimeout(() => { delete T[i]?._del; }, 4000); } }
+});
+$("#pl-back").addEventListener("click", e => { if (dirty) { e.preventDefault(); if (confirm("Ci sono modifiche non salvate (restano come bozza su questo dispositivo). Uscire?")) { dirty = false; location.hash = ""; } } });
+
+$("#pl-save").addEventListener("click", async () => {
+  const b = $("#pl-save"), msg = $("#pl-msg");
+  const T = P.giorni.flatMap(g => g.tappe);
+  if (!P.titolo.trim()) { toast("Scrivi il titolo del giro.", true); $('[data-p="titolo"]').focus(); return; }
+  if (!P.dal) { toast("Indica la data di inizio del giro.", true); return; }
+  if (!T.length) { toast("Aggiungi almeno una visita.", true); return; }
+  const senza = P.giorni.findIndex(g => g.tappe.some(t => !String(t.azienda || "").trim()));
+  if (senza >= 0) { CUR = senza; OPEN = P.giorni[senza].tappe.findIndex(t => !String(t.azienda || "").trim()); pannello(); toast("C'è una visita senza nome dell'azienda.", true); return; }
+  if (!CTX.tok) { toast("Il salvataggio non è ancora attivo: l'amministratore deve inserire la chiave GitHub nelle impostazioni. Il giro resta come bozza su questo dispositivo.", true); return; }
+  const ora = new Date().toISOString();
+  const G = { id: P.id || ("g-" + P.dal.replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 8)), titolo: P.titolo.trim(), sottotitolo: P.sottotitolo.trim(),
+    dal: P.dal, al: P.al || P.dal, zona: P.zona.trim(), autore: P.autore || CTX.nome, condiviso: P.condiviso, archiviato: !!P.archiviato,
+    creato: P.creato || ora, modificato: ora,
+    prima_di_partire: P.prima.split("\n").map(s => s.trim()).filter(Boolean),
+    giorni: P.giorni.filter(g => g.tappe.length).map(g => { const d = g.iso ? dt(g.iso) : null;
+      return { iso: g.iso, nome: d ? cap(GIORNI[d.getDay()]) : "Giorno", data: d ? d.getDate() + " " + MESI_L[d.getMonth()] : "", percorso: g.percorso.trim(), notte: g.notte.trim(),
+        tappe: g.tappe.map(t => { const o = {}; ["ora","azienda","indirizzo","ricerca","referente","telefono","orari","note","portare","place_id","maps"].forEach(k => { const v = String(t[k] ?? "").trim(); if (v) o[k] = v; });
+          o.etichette = (t.etichette || []).filter(Boolean); if (t.pos) o.pos = t.pos; return o; }) }; }) };
+  if (!P.id) G.creato = G.modificato;
+  b.disabled = true; b.textContent = "Salvataggio…"; msg.textContent = "";
+  try {
+    await RT.salvaGiro(CTX, G);
+    togliBozza(P.id); togliBozza(G.id); dirty = false;
+    const i = GIRI.findIndex(g => g.id === G.id); if (i >= 0) GIRI[i] = G; else GIRI.push(G);
+    toast("Giro salvato: è già visibile a chi lo può vedere.");
+    location.hash = "";
+  } catch(x) { toast(x.message || "Salvataggio non riuscito.", true); }
+  b.disabled = false; b.textContent = "Salva giro";
+});
+
+/* ---------------- mappa Google ---------------- */
+let MAP = null, LIB = null, MK = [], RIS = [], TOKEN = null, SEL = null;
+function caricaMaps(key){
+  if (window.google && google.maps && google.maps.importLibrary) return Promise.resolve();
+  if (caricaMaps.p) return caricaMaps.p;
+  return caricaMaps.p = new Promise((ok, ko) => {
+    window.__rtMaps = ok;
+    window.gm_authFailure = () => noMap("La chiave Google non è valida o non è autorizzata per questo sito. Controlla le restrizioni della chiave in Google Cloud.");
+    const s = document.createElement("script");
+    s.src = "https://maps.googleapis.com/maps/api/js?key=" + encodeURIComponent(key) + "&v=weekly&language=it&region=IT&loading=async&callback=__rtMaps";
+    s.async = true; s.onerror = () => { caricaMaps.p = null; ko(new Error("maps")); }; document.head.appendChild(s);
+  });
+}
+function noMap(t){ $("#nomap").hidden = false; $("#nomap-t").textContent = t; $("#sbx").hidden = true; }
+async function mappa(){
+  const key = CTX.config.gmaps_key;
+  if (!key) { noMap(CTX.admin ? "La mappa non è ancora attiva: inserisci la chiave Google Maps in Amministrazione → Impostazioni. Intanto puoi aggiungere le visite a mano." : "La mappa non è ancora attiva: l'amministratore deve inserire la chiave Google. Intanto puoi aggiungere le visite a mano."); return; }
+  if (navigator.onLine === false) { noMap("Senza rete la mappa non funziona: puoi comunque aggiungere le visite a mano."); return; }
+  try {
+    await caricaMaps(key);
+    if (!MAP) {
+      const [{ Map }, mk, pl] = await Promise.all([google.maps.importLibrary("maps"), google.maps.importLibrary("marker"), google.maps.importLibrary("places")]);
+      LIB = { mk, pl };
+      MAP = new Map($("#map"), { center: { lat: 44.4184, lng: 12.2035 }, zoom: 9, mapId: "DEMO_MAP_ID", mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: true, gestureHandling: "greedy" });
+      MAP.addListener("click", e => { if (e.placeId) { e.stop(); dettaglio(e.placeId); } });
+    }
+    $("#nomap").hidden = true; $("#sbx").hidden = false; segnaposti(true);
+  } catch(e) { noMap("La mappa Google non si carica. Controlla la rete; se il problema resta, la chiave Google va controllata."); }
+}
+function pin(n, colore, bordo){ const d = document.createElement("div");
+  d.style.cssText = `width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${colore};border:2px solid ${bordo || colore};display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.35)`;
+  const s = document.createElement("span"); s.textContent = String(n); s.style.cssText = "transform:rotate(45deg);color:#fff;font:800 12px Archivo,system-ui,sans-serif"; d.appendChild(s); return d; }
+function segnaposti(centra){
+  if (!MAP || !LIB || !P) return;
+  MK.forEach(m => m.map = null); MK = [];
+  const pts = [];
+  P.giorni.forEach((g, k) => g.tappe.forEach((t, i) => { if (!t.pos) return;
+    const att = k === CUR, col = att ? getComputedStyle(document.documentElement).getPropertyValue("--red").trim() || "#e41519" : "#8a8b92";
+    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: t.pos, title: (i+1) + ". " + t.azienda + " · " + etDay(g), content: pin(i + 1, col, att ? "#7f0d0f" : "#5f6066"), zIndex: att ? 10 : 1 });
+    m.addListener("click", () => { CUR = k; OPEN = i; pannello(); const el = $(`.stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
+    MK.push(m); if (att) pts.push(t.pos); }));
+  if (centra && pts.length) { const b = new google.maps.LatLngBounds(); pts.forEach(p => b.extend(p)); if (pts.length === 1) { MAP.setCenter(pts[0]); MAP.setZoom(13); } else MAP.fitBounds(b, 60); }
+}
+const indirizzoBreve = a => String(a || "").replace(/,\s*(Italia|Italy)$/i, "");
+function orariBrevi(desc){
+  if (!desc || !desc.length) return "";
+  const rows = desc.map(s => { const i = s.indexOf(":"); return [s.slice(0, i).trim().toLowerCase(), s.slice(i + 1).trim().replace(/^Chiuso$/i, "chiuso").replace(/ /g, " ")]; });
+  const gruppi = []; rows.forEach(([g, h]) => { const u = gruppi[gruppi.length - 1]; if (u && u.h === h) u.a = g; else gruppi.push({ da: g, a: g, h }); });
+  return gruppi.map(x => (x.da === x.a ? x.da.slice(0, 3) : x.da.slice(0, 3) + "–" + x.a.slice(0, 3)) + " " + x.h).join(" · ");
+}
+let deb = null;
+$("#cerca").addEventListener("input", e => { clearTimeout(deb); const q = e.target.value.trim(); if (q.length < 3) { $("#sug").hidden = true; return; } deb = setTimeout(() => suggerisci(q), 280); });
+$("#cerca").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); clearTimeout(deb); const q = e.target.value.trim(); if (q) cercaZona(q); } if (e.key === "Escape") $("#sug").hidden = true; });
+document.addEventListener("click", e => { if (!e.target.closest("#sbx")) $("#sug").hidden = true; });
+async function suggerisci(q){
+  if (!LIB) return;
+  try {
+    TOKEN = TOKEN || new LIB.pl.AutocompleteSessionToken();
+    const { suggestions } = await LIB.pl.AutocompleteSuggestion.fetchAutocompleteSuggestions({ input: q, sessionToken: TOKEN, language: "it", region: "it", locationBias: MAP.getCenter() });
+    const L = suggestions.filter(s => s.placePrediction).slice(0, 6);
+    $("#sug").innerHTML = (L.length ? L.map((s, i) => { const p = s.placePrediction; return `<button type="button" data-s="${i}"><b>${esc(p.mainText ? p.mainText.toString() : p.text.toString())}</b><span>${esc(p.secondaryText ? p.secondaryText.toString() : "")}</span></button>`; }).join("") : '<div class="hd">Nessun suggerimento</div>')
+      + `<button type="button" data-z="1"><b>Cerca «${esc(q)}» nella zona della mappa</b><span>Mostra fino a 20 risultati sulla mappa</span></button>`;
+    $("#sug").hidden = false;
+    $("#sug").onclick = ev => { const b = ev.target.closest("button"); if (!b) return; $("#sug").hidden = true;
+      if (b.dataset.z) cercaZona(q); else dettaglio(null, L[+b.dataset.s].placePrediction.toPlace()); };
+  } catch(e) { $("#sug").innerHTML = '<div class="hd">Ricerca non disponibile in questo momento.</div>'; $("#sug").hidden = false; }
+}
+async function cercaZona(q){
+  if (!LIB) return; $("#sug").hidden = true;
+  try {
+    const { places } = await LIB.pl.Place.searchByText({ textQuery: q, fields: ["id", "displayName", "formattedAddress", "location"], locationBias: MAP.getBounds() || MAP.getCenter(), maxResultCount: 20, language: "it", region: "it" });
+    RIS.forEach(m => m.map = null); RIS = [];
+    if (!places.length) { toast("Nessun risultato per «" + q + "» in questa zona."); return; }
+    const b = new google.maps.LatLngBounds();
+    places.forEach((p, i) => { const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: p.location, title: p.displayName, content: pin("•", "#2f5fd0", "#1e3a8a") });
+      m.addListener("click", () => dettaglio(null, p)); RIS.push(m); b.extend(p.location); });
+    MAP.fitBounds(b, 60);
+    $("#sug").innerHTML = '<div class="hd">' + places.length + ' risultati: tocca un nome o un segnaposto blu</div>' + places.map((p, i) => `<button type="button" data-r="${i}"><b>${esc(p.displayName)}</b><span>${esc(indirizzoBreve(p.formattedAddress))}</span></button>`).join("");
+    $("#sug").hidden = false;
+    $("#sug").onclick = ev => { const bt = ev.target.closest("button[data-r]"); if (!bt) return; $("#sug").hidden = true; dettaglio(null, places[+bt.dataset.r]); };
+  } catch(e) { toast("Ricerca non riuscita. Riprova tra poco.", true); }
+}
+async function dettaglio(placeId, place){
+  if (!LIB) return;
+  const pc = $("#pc"); pc.hidden = false; pc.innerHTML = '<p class="mut">Carico i dati da Google…</p>';
+  try {
+    const p = place || new LIB.pl.Place({ id: placeId });
+    await p.fetchFields({ fields: ["id", "displayName", "formattedAddress", "location", "nationalPhoneNumber", "internationalPhoneNumber", "regularOpeningHours", "googleMapsURI", "businessStatus"] });
+    TOKEN = null;
+    const orari = orariBrevi(p.regularOpeningHours && p.regularOpeningHours.weekdayDescriptions);
+    SEL = { azienda: p.displayName || "", indirizzo: indirizzoBreve(p.formattedAddress), telefono: p.nationalPhoneNumber || p.internationalPhoneNumber || "", orari: orari || "(da verificare)",
+      pos: p.location ? { lat: p.location.lat(), lng: p.location.lng() } : null, place_id: p.id, maps: p.googleMapsURI || "", note: "", portare: "", referente: "", etichette: [] };
+    MAP.panTo(SEL.pos); if (MAP.getZoom() < 13) MAP.setZoom(14);
+    const giorno = P.giorni[CUR] ? etDay(P.giorni[CUR]) : "il giro";
+    const gia = P.giorni.some(g => g.tappe.some(t => t.place_id && t.place_id === SEL.place_id));
+    pc.innerHTML = `<button class="x" type="button" id="pcx" aria-label="Chiudi">×</button><h3>${esc(SEL.azienda)}</h3>
+      <p>${esc(SEL.indirizzo)}</p>
+      ${p.businessStatus === "CLOSED_PERMANENTLY" ? '<p class="warn">Google la segnala come chiusa definitivamente.</p>' : p.businessStatus === "CLOSED_TEMPORARILY" ? '<p class="warn">Google la segnala come chiusa temporaneamente.</p>' : ""}
+      <p>${SEL.telefono ? "Tel. " + esc(SEL.telefono) : '<span class="mut">Telefono non indicato su Google</span>'}</p>
+      <div class="orr">${orari ? esc(orari.split(" · ").join("\n")) : "Orari non indicati su Google (da verificare)"}</div>
+      ${gia ? '<p class="warn">Questa azienda è già nel giro.</p>' : ""}
+      <div class="acts"><button class="btn red" type="button" id="pcadd">Aggiungi a ${esc(giorno)}</button>${SEL.maps ? `<a class="btn" href="${esc(SEL.maps)}" target="_blank" rel="noopener">Apri su Google Maps</a>` : ""}</div>`;
+    $("#pcx").onclick = () => pc.hidden = true;
+    $("#pcadd").onclick = () => { aggiungi(Object.assign({}, SEL)); pc.hidden = true; toast("Aggiunta a " + giorno + ": completa note e tipo di visita nel pannello."); };
+  } catch(e) { pc.innerHTML = '<button class="x" type="button" onclick="this.parentNode.hidden=true">×</button><p>Non riesco a leggere i dati di questo luogo da Google.</p>'; }
+}
+
+/* ---------------- amministrazione ---------------- */
+let ATAB = "giri";
+$("#atabs").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (!b) return; ATAB = b.dataset.t; $$("#atabs button").forEach(x => x.setAttribute("aria-pressed", x === b)); admin(); });
+const amsg = t => { $("#adm-msg").textContent = t || ""; };
+async function lavora(etichetta, fn){
+  amsg(etichetta + "…"); $$("#adm-body button").forEach(b => b.disabled = true);
+  try { await fn(); amsg(""); return true; } catch(x) { amsg(""); toast(x.message || "Operazione non riuscita.", true); admin(); return false; }
+}
+function admin(){
+  if (!CTX.admin) { location.hash = ""; return; }
+  const B = $("#adm-body");
+  if (ATAB === "giri") {
+    const L = [...GIRI].sort((a, b) => String(b.dal).localeCompare(String(a.dal)));
+    B.innerHTML = `<div class="box"><h3>Tutti i giri (${L.length})</h3><p>«Archivia» toglie il giro dal cruscotto di tutti ma lo conserva qui; «Elimina» lo cancella dal sito (resta solo nella cronologia di GitHub).</p>
+      <div class="tw"><table class="t"><thead><tr><th>Date</th><th>Giro</th><th>Creato da</th><th>Condiviso con</th><th>Visite</th><th>Stato</th><th></th></tr></thead><tbody>
+      ${L.map(g => `<tr data-id="${esc(g.id)}"><td>${esc(periodo(g))} ${esc(String(g.dal).slice(0,4))}</td><td><b>${esc(g.titolo)}</b>${g.zona ? "<br><span class=\"hint\">" + esc(g.zona) + "</span>" : ""}</td><td>${esc(g.autore || "—")}</td><td>${esc((g.condiviso || []).join(", ") || "—")}</td><td>${tappe(g).length}</td>
+        <td>${g.archiviato ? "Archiviato" : NOMI[stato(g)]}</td>
+        <td class="a"><a class="btn sm" href="${esc(link(g))}">Apri</a><a class="btn sm" href="#pianifica/${esc(encodeURIComponent(g.id))}">Modifica</a><button class="btn sm" type="button" data-a="arc">${g.archiviato ? "Ripristina" : "Archivia"}</button><button class="btn sm dang" type="button" data-a="del">Elimina</button></td></tr>`).join("") || '<tr><td colspan="7" class="hint">Nessun giro.</td></tr>'}
+      </tbody></table></div>
+      ${L.some(g => !g.archiviato && stato(g) === "f") ? '<div class="pfoot"><button class="btn" type="button" id="arc-all">Archivia tutti i giri conclusi</button></div>' : ""}</div>`;
+    B.onclick = async e => { const b = e.target.closest("button"); if (!b) return;
+      if (b.id === "arc-all") { const C = GIRI.filter(g => !g.archiviato && stato(g) === "f");
+        if (!confirm("Archiviare " + C.length + " giri conclusi?")) return;
+        await lavora("Archiviazione", async () => { for (const g of C) { await RT.salvaGiro(CTX, Object.assign({}, g, { archiviato: true, modificato: new Date().toISOString() })); g.archiviato = true; } });
+        toast("Giri conclusi archiviati."); admin(); return; }
+      const id = b.closest("tr") && b.closest("tr").dataset.id, g = GIRI.find(x => x.id === id); if (!g) return;
+      if (b.dataset.a === "arc") { const v = !g.archiviato;
+        if (await lavora(v ? "Archiviazione" : "Ripristino", () => RT.salvaGiro(CTX, Object.assign({}, g, { archiviato: v, modificato: new Date().toISOString() })))) { g.archiviato = v; toast(v ? "Giro archiviato." : "Giro ripristinato."); admin(); } }
+      if (b.dataset.a === "del") { if (!confirm("Eliminare definitivamente «" + g.titolo + "»?")) return;
+        if (await lavora("Eliminazione", () => RT.eliminaGiro(CTX, g.id, g.titolo))) { GIRI = GIRI.filter(x => x.id !== g.id); toast("Giro eliminato."); admin(); } }
+    };
+  }
+  else if (ATAB === "team") {
+    const ruolo = u => u.admin ? "admin" : u.tutti ? "tutti" : "suoi";
+    B.innerHTML = `<div class="box"><h3>Team</h3><p>«Vede tutti i giri»: vede anche i giri degli altri (solo in lettura). «Solo i suoi»: vede i giri creati da lui e quelli condivisi con lui. Gli strumenti di amministrazione sono solo per gli amministratori.</p>
+      <div class="tw"><table class="t"><thead><tr><th>Nome</th><th>Ruolo</th><th></th></tr></thead><tbody>
+      ${CTX.utenti.map(u => `<tr data-n="${esc(u.nome)}"><td><b>${esc(u.nome)}</b>${u.nome === CTX.nome ? ' <span class="hint">(tu)</span>' : ""}</td>
+        <td><select class="in" data-a="ruolo" style="max-width:240px" ${u.nome === CTX.nome ? "disabled" : ""}><option value="suoi" ${ruolo(u) === "suoi" ? "selected" : ""}>Solo i suoi giri</option><option value="tutti" ${ruolo(u) === "tutti" ? "selected" : ""}>Vede tutti i giri</option><option value="admin" ${ruolo(u) === "admin" ? "selected" : ""}>Amministratore</option></select></td>
+        <td class="a"><button class="btn sm" type="button" data-a="pw">Nuova password</button>${u.nome === CTX.nome ? "" : '<button class="btn sm dang" type="button" data-a="rm">Rimuovi</button>'}</td></tr>`).join("")}
+      </tbody></table></div><div id="pwout"></div></div>
+      <div class="box"><h3>Aggiungi una persona</h3><div class="sw"><input class="in" id="nn" placeholder="Nome" style="max-width:220px"><select class="in" id="nr" style="max-width:220px"><option value="suoi">Solo i suoi giri</option><option value="tutti">Vede tutti i giri</option></select><button class="btn dk" type="button" id="nadd">Aggiungi</button></div>
+      <p class="hint" style="margin-top:8px">La password viene creata qui e mostrata una sola volta: annotala e consegnala alla persona.</p></div>`;
+    const mostraPw = (nome, p) => { $("#pwout").innerHTML = `<div class="box" style="margin:14px 0 0"><h3>Password di ${esc(nome)}</h3><span class="pwbox">${esc(p)}</span><p>Annotala adesso e consegnala a ${esc(nome)}: non verrà più mostrata.</p><button class="btn sm" type="button" id="cp">Copia</button></div>`;
+      $("#cp").onclick = async () => { try { await navigator.clipboard.writeText(p); $("#cp").textContent = "Copiata"; } catch(e) { $("#cp").textContent = "Copia non riuscita: selezionala a mano"; } }; };
+    B.onchange = async e => { const s = e.target; if (s.dataset.a !== "ruolo") return; const n = s.closest("tr").dataset.n;
+      const U = CTX.utenti.map(u => u.nome === n ? Object.assign({}, u, { admin: s.value === "admin", tutti: s.value === "tutti" }) : u);
+      if (await lavora("Aggiornamento del team", () => aggiornaTeam(U))) toast("Ruolo di " + n + " aggiornato."); admin(); };
+    B.onclick = async e => { const b = e.target.closest("button"); if (!b || b.id === "cp") return;
+      if (b.id === "nadd") { const nome = $("#nn").value.trim().replace(/\s+/g, " "), r = $("#nr").value;
+        if (!nome) { toast("Scrivi il nome.", true); return; }
+        if (CTX.utenti.some(u => u.nome.toLowerCase() === nome.toLowerCase())) { toast("Esiste già una persona con questo nome.", true); return; }
+        const p = RT.password(); let nuovo;
+        if (await lavora("Creazione dell'account", async () => { nuovo = await RT.nuovoUtente(nome, p, { tutti: r === "tutti" }); await aggiornaTeam([...CTX.utenti, nuovo]); })) { admin(); mostraPw(nome, p); }
+        return; }
+      const n = b.closest("tr") && b.closest("tr").dataset.n; if (!n) return; const u = CTX.utenti.find(x => x.nome === n);
+      if (b.dataset.a === "pw") { if (!confirm("Creare una nuova password per " + n + "? Quella vecchia smetterà di funzionare" + (n === CTX.nome ? " e dovrai rientrare." : "."))) return;
+        const p = RT.password(); let fatto = false;
+        if (await lavora("Nuova password", async () => { const nu = await RT.nuovoUtente(n, p, { admin: u.admin, tutti: u.tutti }); await aggiornaTeam(CTX.utenti.map(x => x.nome === n ? nu : x)); fatto = true; })) {
+          admin(); mostraPw(n, p); if (n === CTX.nome) { RT.sess.del(); $("#pwout").insertAdjacentHTML("beforeend", '<p class="no">Hai cambiato la tua password: annotala, poi esci e rientra con quella nuova.</p>'); } } }
+      if (b.dataset.a === "rm") { if (!confirm("Rimuovere " + n + "? Non potrà più entrare. I giri creati da " + n + " restano (li vedono gli amministratori).")) return;
+        if (await lavora("Rimozione", () => aggiornaTeam(CTX.utenti.filter(x => x.nome !== n)))) { toast(n + " rimosso dal team."); admin(); } }
+    };
+  }
+  else {
+    const c = Object.assign({}, RT.COLORI, CTX.config.colori || {});
+    const scad = CTX.config.gh_scadenza || "";
+    B.innerHTML = `<div class="box"><h3>Colori dell'app</h3><p>Valgono per il cruscotto, il pianificatore e le pagine dei giri, su tutti i telefoni.</p>
+      <div class="sw"><label class="sw">Colore principale <input type="color" id="c1" value="${esc(c.accento)}"></label><label class="sw">Colore scuro (testate) <input type="color" id="c2" value="${esc(c.scuro)}"></label>
+      <button class="btn dk" type="button" id="csave">Salva colori</button><button class="btn" type="button" id="creset">Colori RAPID originali</button></div></div>
+      <div class="box"><h3>Chiave Google Maps</h3><p>Serve per la mappa e la ricerca delle aziende nel pianificatore. Stato: ${CTX.config.gmaps_key ? '<span class="ok">inserita</span>' : '<span class="no">manca</span>'}</p>
+      <div class="sw"><input class="in" id="gk" placeholder="Incolla qui la chiave (inizia con AIza…)" value="${esc(CTX.config.gmaps_key || "")}" style="max-width:460px"><button class="btn dk" type="button" id="gsave">Salva chiave Google</button></div>
+      <p class="hint" style="margin-top:8px">Questa chiave è visibile nel codice del sito: va protetta in Google Cloud con la restrizione al sito https://rapidteam1.github.io/* e un limite di richieste giornaliere.</p></div>
+      <div class="box"><h3>Chiave GitHub (salvataggio)</h3><p>Permette a tutti di salvare i giri. Viene cifrata per ogni persona del team e non è leggibile da chi non ha accesso. Stato: ${CTX.config.gh ? '<span class="ok">inserita</span>' : '<span class="no">manca: nessuno può salvare</span>'}${scad ? " · scade il " + esc(scad.split("-").reverse().join("/")) : ""}</p>
+      <div class="sw"><input class="in" id="tk" type="password" autocomplete="off" placeholder="Incolla qui la chiave (github_pat_…)" style="max-width:460px"><label class="sw" style="font-size:14px">Scade il <input class="in" type="date" id="tks" value="${esc(scad)}" style="max-width:170px"></label><button class="btn dk" type="button" id="tsave">Salva chiave GitHub</button></div></div>`;
+    $("#c1").oninput = $("#c2").oninput = () => RT.colori({ accento: $("#c1").value, scuro: $("#c2").value });
+    $("#creset").onclick = () => { $("#c1").value = RT.COLORI.accento; $("#c2").value = RT.COLORI.scuro; RT.colori(RT.COLORI); };
+    $("#csave").onclick = async () => { const col = { accento: $("#c1").value, scuro: $("#c2").value };
+      if (await lavora("Salvataggio colori", () => salvaConfig({ colori: col }))) toast("Colori salvati."); admin(); };
+    $("#gsave").onclick = async () => { const k = $("#gk").value.trim();
+      if (k && !/^AIza[0-9A-Za-z_\-]{30,}$/.test(k)) { toast("Questa non sembra una chiave Google Maps (deve iniziare con AIza).", true); return; }
+      if (await lavora("Salvataggio chiave Google", () => salvaConfig({ gmaps_key: k }))) { toast(k ? "Chiave Google salvata: la mappa è attiva nel pianificatore." : "Chiave Google tolta."); MAP = null; caricaMaps.p = null; } admin(); };
+    $("#tsave").onclick = async () => { const t = $("#tk").value.trim(), s = $("#tks").value;
+      if (!t) { if (CTX.config.gh && s !== scad) { if (await lavora("Salvataggio", () => salvaConfig({ gh_scadenza: s }))) toast("Scadenza aggiornata."); admin(); return; } toast("Incolla la chiave GitHub.", true); return; }
+      if (!/^(github_pat_|ghp_)[0-9A-Za-z_]{20,}$/.test(t)) { toast("Questa non sembra una chiave GitHub (deve iniziare con github_pat_).", true); return; }
+      if (await lavora("Verifica e salvataggio della chiave", async () => {
+        await RT.daAPI("dati/config.json", t);
+        const gh = await RT.chiude(t, CTX.utenti);
+        CTX.config = await RT.modifica("dati/config.json", t, c => Object.assign(c || {}, { gh, gh_scadenza: s }), "Chiave GitHub aggiornata (" + CTX.nome + ")");
+        CTX.tok = t;
+        if (CTX.pubErrata) await correggiChiave();
+      })) toast("Chiave GitHub salvata: ora tutti possono salvare i giri.");
+      admin(); };
+  }
+}
+async function salvaConfig(cambi){
+  CTX.config = await RT.modifica("dati/config.json", CTX.tok, c => Object.assign(c || {}, cambi), "Impostazioni aggiornate (" + CTX.nome + ")");
+  RT.colori(CTX.config.colori);
+}
+/* nuovo elenco del team: riconsegna le chiavi dei giri e della chiave GitHub, poi salva gli utenti */
+async function aggiornaTeam(U){
+  if (!CTX.tok) throw new Error("Prima inserisci la chiave GitHub nelle impostazioni.");
+  if (!U.some(u => u.admin)) throw new Error("Deve restare almeno un amministratore.");
+  const pub = U.map(({ nome, admin, tutti, it, salt, iv, ct, pub }) => ({ nome, admin: !!admin, tutti: !!tutti, it, salt, iv, ct, pub }));
+  await RT.modifica("dati/giri.json", CTX.tok, async lista => {
+    const out = [];
+    for (const b of (lista || [])) { const G = await RT.apre(b, CTX.pk, CTX.nome);
+      out.push(G ? Object.assign({ id: b.id }, await RT.riconsegna(b, CTX.pk, CTX.nome, RT.destinatariGiro(G, pub))) : b); }
+    return out; }, "Team aggiornato: chiavi dei giri (" + CTX.nome + ")");
+  if (CTX.config.gh) { const gh = await RT.chiude(CTX.tok, pub); await salvaConfigRaw(c => Object.assign(c || {}, { gh })); }
+  await RT.modifica("dati/utenti.json", CTX.tok, () => pub, "Team aggiornato (" + CTX.nome + ")");
+  CTX.utenti = pub; CTX.io = pub.find(u => u.nome === CTX.nome) || CTX.io;
+}
+async function salvaConfigRaw(fn){ CTX.config = await RT.modifica("dati/config.json", CTX.tok, fn, "Team aggiornato: chiave GitHub (" + CTX.nome + ")"); }
+
+avvioLogin();
 addEventListener("pageshow", e => { if (e.persisted) location.reload(); });
 if ("serviceWorker" in navigator && location.protocol === "https:") { try { navigator.serviceWorker.register("sw.js").catch(() => {}); } catch(e) {} }
 }</script>
