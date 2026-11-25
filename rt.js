@@ -47,6 +47,15 @@ window.RT = (() => {
     return Object.assign({ nome, admin: false, tutti: false }, extra || {}, { it: ITER, salt: tob64(salt), iv: tob64(iv), ct: tob64(ct), pub: tob64(pub) });
   }
 
+  // nuova password: ricifra la stessa chiave privata (le chiavi pubbliche e i giri non cambiano)
+  async function ricifraChiave(jwk, pass) {
+    const pk = await S.importKey("jwk", jwk, { name: "RSA-OAEP", hash: "SHA-256" }, true, ["decrypt"]);
+    const priv = await S.exportKey("pkcs8", pk), salt = rnd(16), iv = rnd(12);
+    const km = await S.importKey("raw", enc.encode(pass), "PBKDF2", false, ["deriveKey"]);
+    const k = await S.deriveKey({ name: "PBKDF2", salt, iterations: ITER, hash: "SHA-256" }, km, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+    return { it: ITER, salt: tob64(salt), iv: tob64(iv), ct: tob64(await S.encrypt({ name: "AES-GCM", iv }, k, priv)) };
+  }
+
   /* ---------- buste cifrate: { wraps: {nome: chiave cifrata}, iv, ct } ---------- */
   async function chiude(obj, destinatari) {
     const k = await S.generateKey({ name: "AES-GCM", length: 256 }, true, ["encrypt"]);
@@ -168,6 +177,6 @@ window.RT = (() => {
   const eliminaGiro = (ctx, id, titolo) => modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
   const eliminaLista = (ctx, id, titolo) => modifica("dati/liste.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Lista clienti eliminata: " + titolo + " (" + ctx.nome + ")");
 
-  return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, chiude, apre, riconsegna,
+  return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, ricifraChiave, chiude, apre, riconsegna,
     destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori };
 })();
