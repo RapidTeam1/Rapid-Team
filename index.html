@@ -15,7 +15,7 @@
 <style>
 /* VOICE: cruscotto di lavoro, asciutto, da usare col pollice o dal PC.
    IDEA: la bacheca dei fogli di marcia: il prossimo giro in evidenza, poi tutti gli altri per stato;
-   dal PC il tavolo di lavoro con la mappa per preparare il giro.
+   dal PC il tavolo di lavoro con la mappa per raccogliere i clienti e preparare il giro.
    COLOUR and TYPE: nero e rosso RAPID su bianco (colori modificabili dall'amministratore); Archivo largo. */
 :root{color-scheme:light dark;--bg:#fff;--ink:#111214;--mut:#62646b;--line:#e4e4e7;--card:#f4f4f5;--red:#e41519;--ok:#1d8a4b;--or:#c2410c;--blk:#0c0c0d}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#101012;--ink:#f2f2f3;--mut:#a3a4ab;--line:#2a2a2f;--card:#1a1a1e;--ok:#34c26f;--or:#fb923c}}
@@ -53,7 +53,9 @@ h2{font-size:14px;color:var(--mut);font-weight:700;margin:26px 0 10px}
 .org{margin-top:22px;border-radius:18px;padding:20px;background:var(--blk);color:#fff;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center}
 .org h3{margin:0;font-size:clamp(20px,4.6vw,25px);line-height:1.2;font-weight:800}
 .org p{margin:6px 0 0;color:#c4c5cb;font-size:14px}
+.org .acts{display:grid;gap:8px}
 .org button{min-height:52px;padding:12px 20px;border:0;border-radius:12px;background:var(--red);color:#fff;font-weight:700;font-size:16px;cursor:pointer;white-space:nowrap}
+.org button.sec{background:transparent;border:1px solid #55555c;min-height:44px;font-size:15px}
 @media(max-width:560px){.org{grid-template-columns:1fr}.org button{width:100%}}
 .tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:26px 0 4px}
 .tabs button{flex:none;min-height:40px;padding:8px 14px;border-radius:999px;border:0;background:var(--card);color:var(--ink);font-size:14px;font-weight:600;cursor:pointer}
@@ -66,6 +68,7 @@ ul{list-style:none;margin:0;padding:0}
 .dt{text-align:center;border-radius:12px;background:var(--card);padding:6px 0;line-height:1.1}
 .dt b{display:block;font-size:24px;font-weight:800}
 .dt span{font-size:12px;color:var(--mut);text-transform:uppercase}
+.dt.ls span{text-transform:none}
 .g h4{margin:0;font-size:17px;line-height:1.25}
 .g p{margin:2px 0 0;font-size:13px;color:var(--mut)}
 .st{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
@@ -108,7 +111,7 @@ details.inst b{color:var(--red)}
 .btn.sm{min-height:34px;padding:5px 10px;font-size:13px;font-weight:600}
 .btn:disabled{opacity:.55;cursor:default}
 .btn.dang{color:#b91c1c;border-color:#fecaca}
-/* ---------- pianificatore ---------- */
+/* ---------- pianificatore e raccolta clienti ---------- */
 .pl{display:grid;grid-template-columns:minmax(380px,460px) minmax(0,1fr);height:calc(100vh - 62px);height:calc(100dvh - 62px)}
 .pp{overflow:auto;border-right:1px solid var(--line);padding:16px 16px 60px}
 .mw{position:relative;background:var(--card)}
@@ -137,8 +140,10 @@ details.inst b{color:var(--red)}
 .fl{display:grid;gap:4px;margin-bottom:10px}
 .fl>span{font-size:13px;color:var(--mut);font-weight:600}
 .in{width:100%;min-height:42px;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-size:15px}
+.in:disabled{opacity:.8}
 textarea.in{min-height:64px;resize:vertical;line-height:1.4}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .share{display:flex;flex-wrap:wrap;gap:6px}
 .share label{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600;cursor:pointer}
 .share input{width:18px;height:18px;accent-color:var(--red)}
@@ -151,10 +156,12 @@ textarea.in{min-height:64px;resize:vertical;line-height:1.4}
 .stp{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden}
 .stp>.hd{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 10px 10px 12px;cursor:pointer}
 .stp .n{width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
+.stp .n.gr{background:#26272b}
 .stp .tt{font-weight:700;font-size:15px;line-height:1.25}
 .stp .ss{font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stp .mv{display:flex;gap:4px}
 .stp .mv button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;font-size:14px;line-height:1}
+.stp .ap{font-size:12px;font-weight:700;color:var(--ok);white-space:nowrap}
 .stp .bd{padding:4px 12px 12px;border-top:1px solid var(--line);background:var(--card)}
 .stp .bd .in{background:var(--bg)}
 .stp.open{border-color:var(--ink)}
@@ -162,6 +169,21 @@ textarea.in{min-height:64px;resize:vertical;line-height:1.4}
 .chk input{width:18px;height:18px;accent-color:var(--red)}
 .addm{width:100%;margin-top:4px}
 .pfoot{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.gen{border:2px solid var(--ink);border-radius:14px;padding:14px 14px 4px;margin:0 0 16px}
+.gen legend{padding:0 6px;font-size:14px;color:var(--ink)}
+.gen .btn.red{width:100%;min-height:50px;font-size:16px;margin:4px 0 10px}
+.pv{margin:6px 0 12px}
+.pv .tot{font-size:14px;margin:0 0 8px}
+.pday{border:1px solid var(--line);border-radius:12px;margin:0 0 10px;overflow:hidden}
+.pday h4{margin:0;padding:10px 12px;font-size:15px;display:flex;gap:8px;align-items:center;background:var(--card)}
+.pday h4 i{width:12px;height:12px;border-radius:50%;flex:none}
+.pday h4 em{font-style:normal;font-weight:600;color:var(--mut);font-size:13px;margin-left:auto}
+.pday li{padding:8px 12px;border-top:1px solid var(--line);font-size:14px;display:grid;grid-template-columns:46px minmax(0,1fr);gap:8px}
+.pday li b{font-variant-numeric:tabular-nums}
+.pday li span{display:block;color:var(--mut);font-size:12px}
+.pday li .ap{color:var(--ok);font-weight:700}
+.pday .end{display:block;padding:8px 12px;border-top:1px solid var(--line);color:var(--mut);font-size:13px}
+.pv ul.av{margin:0 0 10px;padding-left:18px;list-style:disc;font-size:13px}
 @media(max-width:900px){
   .pl{display:flex;flex-direction:column;height:auto}
   .mw{order:-1;height:46vh;height:46dvh}
@@ -169,6 +191,7 @@ textarea.in{min-height:64px;resize:vertical;line-height:1.4}
   .pc{max-height:60%}
   .wb h1{font-size:16px}
 }
+@media(max-width:420px){.three{grid-template-columns:1fr 1fr}}
 /* ---------- amministrazione ---------- */
 .adm{max-width:1100px;margin:0 auto;padding:18px max(3vw,14px) 60px}
 .atabs{display:flex;gap:6px;margin:4px 0 16px;flex-wrap:wrap}
@@ -215,9 +238,10 @@ table.t td.a .btn{margin:2px}
   <section id="prossimo"></section>
   <section class="org">
     <div><h3 class="w">Organizza qui il tuo prossimo giro, Rapid ha bisogno anche di te!</h3>
-    <p>Cerca i clienti sulla mappa, aggiungi note e orari: il giro è subito pronto sul telefono.</p></div>
-    <button type="button" id="nuovo">Crea un nuovo giro</button>
+    <p>Raccogli i clienti sulla mappa, poi premi «Genera giro»: ordine, giorni e orari li propone l'app. Se sai già da chi andare, pianifica direttamente.</p></div>
+    <div class="acts"><button type="button" id="raccogli">Raccogli clienti sulla mappa</button><button type="button" class="sec" id="nuovo">Pianifica un giro</button></div>
   </section>
+  <section id="liste-s" hidden><h2>Liste clienti</h2><ul id="liste"></ul></section>
   <div class="tabs" role="group" aria-label="Filtra i giri" id="tabs"></div>
   <input class="srch" id="q" type="search" placeholder="Cerca giro, zona, azienda o collega" aria-label="Cerca giro">
   <ul id="lista"></ul>
@@ -231,11 +255,12 @@ table.t td.a .btn{margin:2px}
 </main>
 </div>
 
-<!-- PIANIFICATORE -->
+<!-- PIANIFICATORE e RACCOLTA CLIENTI (stessa mappa) -->
 <div id="v-plan" hidden>
   <div class="wb"><a class="ghost" href="#" id="pl-back">← Giri</a><h1 id="pl-tit">Nuovo giro</h1><span class="msg" id="pl-msg"></span><button class="btn red" type="button" id="pl-save">Salva giro</button></div>
   <div class="pl">
     <div class="pp" id="pp"></div>
+    <div class="pp" id="lp" hidden></div>
     <div class="mw" id="mw">
       <div id="map"></div>
       <div class="nomap" id="nomap" hidden><div id="nomap-t"></div></div>
@@ -256,6 +281,7 @@ table.t td.a .btn{margin:2px}
 <div id="toast" role="status" hidden></div>
 
 <script src="rt.js"></script>
+<script src="genera.js"></script>
 <script>{
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 const esc = RT.esc;
@@ -265,7 +291,7 @@ const GIORNI = ["domenica","lunedì","martedì","mercoledì","giovedì","venerd�
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const dt = s => { const [y,m,d] = String(s).split("-").map(Number); return new Date(y, m-1, d); };
 const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-let CTX = null, GIRI = [];
+let CTX = null, GIRI = [], LISTE = [], MODE = "giro";
 
 function toast(t, errore){ const x = $("#toast"); x.textContent = t; x.classList.toggle("err", !!errore); x.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => x.hidden = true, errore ? 9000 : 5000); }
 
@@ -298,12 +324,12 @@ async function entra(s){
   CTX = await RT.carica(s);
   if (CTX.pubErrata) await correggiChiave();
   GIRI = await RT.giri(CTX);
+  try { LISTE = await RT.liste(CTX); } catch(e) { LISTE = []; }
   $("#lock").style.display = "none";
   const m = new URLSearchParams(location.search).get("modifica");
   if (m) { history.replaceState(null, "", location.pathname + "#pianifica/" + encodeURIComponent(m)); }
   instrada();
 }
-async function ricarica(){ GIRI = await RT.giri(CTX); }
 /* se la chiave pubblica salvata non corrisponde all'account: la corregge (serve la chiave GitHub) e, se admin, riconsegna i giri */
 async function correggiChiave(){
   if (!CTX.tok) { if (!CTX.admin) toast("Il tuo account va riattivato: chiedi all'amministratore una nuova password.", true); return; }
@@ -322,7 +348,9 @@ addEventListener("hashchange", () => { if (CTX) instrada(); });
 function instrada(){
   const h = decodeURIComponent(location.hash.slice(1));
   ["#v-home","#v-plan","#v-adm"].forEach(v => $(v).hidden = true);
-  if (h.startsWith("pianifica")) { const id = h.split("/")[1] || ""; apriPiano(id); $("#v-plan").hidden = false; }
+  $("#pc").hidden = true; $("#sug").hidden = true;
+  if (h.startsWith("pianifica")) { MODE = "giro"; $("#pp").hidden = false; $("#lp").hidden = true; const id = h.split("/")[1] || ""; apriPiano(id); $("#v-plan").hidden = false; }
+  else if (h.startsWith("raccogli")) { MODE = "lista"; $("#pp").hidden = true; $("#lp").hidden = false; const id = h.split("/")[1] || ""; apriLista(id); $("#v-plan").hidden = false; }
   else if (h === "admin" && CTX.admin) { $("#v-adm").hidden = false; admin(); }
   else { $("#v-home").hidden = false; cruscotto(); }
   scrollTo(0, 0);
@@ -360,6 +388,13 @@ function cruscotto(){
       <div class="chips"><span class="chip">${tot} ${tot === 1 ? "visita" : "visite"}</span>${conta(prox,"appuntamento") ? `<span class="chip ap">${conta(prox,"appuntamento")} appuntamenti</span>` : ""}${conta(prox,"prospezione") ? `<span class="chip pz">${conta(prox,"prospezione")} prospezioni</span>` : ""}<span class="chip">${ng} ${ng === 1 ? "giorno" : "giorni"}</span></div>
       <div class="bar"><i><s style="width:${pc}%"></s></i>${f} di ${tot} fatte</div><span class="go">Apri il giro</span></a>`;
   } else $("#prossimo").innerHTML = '<h2>Prossimo giro</h2><p class="empty">Nessun giro in programma.</p>';
+  // liste clienti (raccolta)
+  const LV = LISTE.filter(l => !l.archiviato).sort((a, b) => String(b.modificato).localeCompare(String(a.modificato)));
+  $("#liste-s").hidden = !LV.length;
+  $("#liste").innerHTML = LV.map(l => { const nc = (l.clienti || []).length, na = (l.clienti || []).filter(c => c.appuntamento).length;
+    const chi = l.autore === CTX.nome ? ((l.condiviso||[]).length ? "condivisa con " + l.condiviso.join(", ") : "creata da te") : "di " + (l.autore || "—");
+    return `<li class="gw"><a class="g" href="#raccogli/${esc(encodeURIComponent(l.id))}"><div class="dt ls"><b>${nc}</b><span>${nc === 1 ? "cliente" : "clienti"}</span></div>
+      <div><h4>${esc(l.titolo)}</h4><p>${l.zona ? esc(l.zona) + " · " : ""}${na ? na + (na === 1 ? " appuntamento · " : " appuntamenti · ") : ""}${esc(chi)}</p></div><span class="st p">Lista</span></a></li>`; }).join("");
   const TABS = [["tutti","Tutti",G.length],["c","In corso",n("c")],["p","In programma",n("p")],["f","Conclusi",n("f")],["miei","Creati da me",G.filter(g => g.autore === CTX.nome).length]];
   const disegna = () => {
     $("#tabs").innerHTML = TABS.map(([k,l,c]) => `<button type="button" data-k="${k}" aria-pressed="${filtro === k}">${l}<em>${c}</em></button>`).join("");
@@ -381,6 +416,7 @@ function cruscotto(){
   if (location.protocol === "https:" && navigator.onLine !== false) { try { fetch("giro.html", {cache:"no-cache"}).catch(() => {}); } catch(e) {} }
 }
 $("#nuovo").addEventListener("click", () => { location.hash = "pianifica"; });
+$("#raccogli").addEventListener("click", () => { location.hash = "raccogli"; });
 const rete = () => { $("#off").hidden = navigator.onLine !== false; };
 addEventListener("online", rete); addEventListener("offline", rete); rete();
 { const app = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
@@ -392,7 +428,7 @@ addEventListener("online", rete); addEventListener("offline", rete); rete();
   if (ib) ib.addEventListener("click", async () => { if (!ev) return; try { ev.prompt(); await ev.userChoice; } catch(e) {} ev = null; ib.style.display = "none"; }); }
 
 /* ---------------- pianificatore ---------------- */
-let P = null, CUR = 0, OPEN = -1;
+let P = null, CUR = 0, OPEN = -1, GENERATO = null;
 const BOZZA = "rt-bozza-" ;
 function giorniTra(dal, al){
   if (!dal) return []; const a = dt(dal), b = dt(al && al >= dal ? al : dal), out = [];
@@ -422,14 +458,17 @@ function togliBozza(id){ try { localStorage.removeItem(BOZZA + (id || "nuovo") +
 
 function apriPiano(id){
   let bozza = null;
+  $("#pl-save").textContent = "Salva giro";
   if (id) { const G = GIRI.find(g => g.id === id);
     if (!G) { $("#pp").innerHTML = '<p class="empty">Giro non trovato o non visibile per te.</p>'; $("#pl-save").hidden = true; return; }
     if (!puoModificare(G)) { $("#pp").innerHTML = '<p class="empty">Puoi modificare solo i giri creati da te.</p>'; $("#pl-save").hidden = true; return; }
     P = daGiro(G); const b = leggiBozza(id); if (b && JSON.stringify(b) !== JSON.stringify(P)) bozza = b;
-  } else { P = nuovoP(); bozza = leggiBozza(""); }
+  } else if (GENERATO) { P = GENERATO; GENERATO = null; }
+  else { P = nuovoP(); bozza = leggiBozza(""); }
   $("#pl-save").hidden = false; dirty = false; CUR = 0; OPEN = -1;
-  $("#pl-tit").textContent = id ? "Modifica giro" : "Nuovo giro";
-  allineaGiorni(); pannello(bozza); mappa();
+  $("#pl-tit").textContent = id ? "Modifica giro" : (P._generato ? "Nuovo giro (proposta generata)" : "Nuovo giro");
+  allineaGiorni(); if (P._generato) { delete P._generato; salvaBozza(); toast("Proposta pronta: controlla orari, note e notti, poi premi «Salva giro»."); }
+  pannello(bozza); mappa();
 }
 const TIPI = [["", "—"], ["appuntamento", "Appuntamento"], ["prospezione", "Prospezione"]];
 const tipo = t => (t.etichette || []).includes("appuntamento") ? "appuntamento" : (t.etichette || []).includes("prospezione") ? "prospezione" : "";
@@ -473,7 +512,7 @@ function scheda(t, i){
       <label class="fl"><span>Orari di apertura</span><textarea class="in" data-k="orari" rows="2">${esc(t.orari)}</textarea></label>
       <label class="fl"><span>Note (lette ad alta voce quando si preme Naviga)</span><textarea class="in" data-k="note" rows="3">${esc(t.note)}</textarea></label>
       <label class="fl"><span>Da portare</span><input class="in" data-k="portare" value="${esc(t.portare)}"></label>
-      <div class="pfoot">${alt ? `<select class="in" data-act="sposta" style="flex:1;min-height:34px"><option value="">Sposta a un altro giorno…</option>${alt}</select>` : ""}
+      <div class="pfoot">${alt ? `<select class="in" data-act="sposta" style="flex:1;min-height:34px"><option value="">Giorno: sposta a…</option>${alt}</select>` : ""}
         <button class="btn sm dang" type="button" data-act="del">${t._del ? "Tocca di nuovo per togliere" : "Togli visita"}</button></div>
     </div>` : ""}
   </div>`;
@@ -525,7 +564,8 @@ $("#pp").addEventListener("click", e => {
 });
 $("#pl-back").addEventListener("click", e => { if (dirty) { e.preventDefault(); if (confirm("Ci sono modifiche non salvate (restano come bozza su questo dispositivo). Uscire?")) { dirty = false; location.hash = ""; } } });
 
-$("#pl-save").addEventListener("click", async () => {
+$("#pl-save").addEventListener("click", () => MODE === "lista" ? salvaL() : salvaP());
+async function salvaP(){
   const b = $("#pl-save"), msg = $("#pl-msg");
   const T = P.giorni.flatMap(g => g.tappe);
   if (!P.titolo.trim()) { toast("Scrivi il titolo del giro.", true); $('[data-p="titolo"]').focus(); return; }
@@ -553,9 +593,270 @@ $("#pl-save").addEventListener("click", async () => {
     location.hash = "";
   } catch(x) { toast(x.message || "Salvataggio non riuscito.", true); }
   b.disabled = false; b.textContent = "Salva giro";
-});
+}
 
-/* ---------------- mappa Google ---------------- */
+/* ---------------- raccolta clienti (liste) ---------------- */
+let L = null, LOPEN = -1, LEDIT = false, GS = null, PREV = null;
+const LBOZZA = "rt-lbozza-", GSK = "rt-gen-";
+const COLG = ["#e41519","#2563eb","#16a34a","#9333ea","#ea580c","#0891b2","#db2777","#65a30d","#7c3aed","#ca8a04"];
+const puoModificareL = l => CTX.admin || l.autore === CTX.nome;
+const dataBreve = s => { if (!s) return ""; const d = dt(s); return cap(GIORNI[d.getDay()]).slice(0,3) + " " + d.getDate() + " " + MESI[d.getMonth()]; };
+const citta = ind => { const p = String(ind || "").split(",").map(s => s.trim()).filter(Boolean); let c = p.length ? p[p.length - 1] : "";
+  c = c.replace(/^\d{5}\s*/, "").replace(/\s+[A-Z]{2}$/, "").trim(); return c; };
+function prossimoLavorativo(){ const d = new Date(d0); do d.setDate(d.getDate() + 1); while (d.getDay() === 0 || d.getDay() === 6); return iso(d); }
+function nuovaL(){ return { id: "", titolo: "", zona: "", condiviso: [], autore: CTX.nome, creato: "", archiviato: false, clienti: [] }; }
+const copia = o => JSON.parse(JSON.stringify(o));
+function salvaBozzaL(){ if (!LEDIT) return; dirty = true; try { localStorage.setItem(LBOZZA + (L.id || "nuovo") + "-" + CTX.nome, JSON.stringify(L)); } catch(e) {} }
+function leggiBozzaL(id){ try { return JSON.parse(localStorage.getItem(LBOZZA + (id || "nuovo") + "-" + CTX.nome) || "null"); } catch(e) { return null; } }
+function togliBozzaL(id){ try { localStorage.removeItem(LBOZZA + (id || "nuovo") + "-" + CTX.nome); } catch(e) {} }
+function leggiGS(id){ let g = null; try { g = JSON.parse(localStorage.getItem(GSK + (id || "nuovo")) || "null"); } catch(e) {}
+  g = Object.assign({ partenza: "Ravenna", dal: prossimoLavorativo(), ora: "8:30", durata: 30, max: 6, fine: "18:30", sabato: false }, g || {});
+  if (g.dal < iso(d0)) g.dal = prossimoLavorativo(); return g; }
+function salvaGS(){ try { localStorage.setItem(GSK + (L.id || "nuovo"), JSON.stringify(GS)); } catch(e) {} }
+
+function apriLista(id){
+  let bozza = null;
+  $("#pl-tit").textContent = id ? "Lista clienti" : "Nuova lista clienti"; $("#pl-save").textContent = "Salva lista";
+  if (id) { const X = LISTE.find(l => l.id === id);
+    if (!X) { $("#lp").innerHTML = '<p class="empty">Lista non trovata o non visibile per te.</p>'; $("#pl-save").hidden = true; L = null; return; }
+    L = copia(X); LEDIT = puoModificareL(X);
+    const b = LEDIT && leggiBozzaL(id); if (b && JSON.stringify(b) !== JSON.stringify(L)) bozza = b;
+  } else { L = nuovaL(); LEDIT = true; bozza = leggiBozzaL(""); }
+  $("#pl-save").hidden = !LEDIT; dirty = false; LOPEN = -1; PREV = null; GS = leggiGS(id);
+  pannelloL(bozza); mappa();
+}
+function pannelloL(bozza){
+  if (!L) return;
+  const ro = LEDIT ? "" : "disabled";
+  const altri = CTX.utenti.filter(u => u.nome !== L.autore && !u.admin && !u.tutti);
+  const sempre = CTX.utenti.filter(u => u.nome !== L.autore && (u.admin || u.tutti)).map(u => u.nome);
+  const C = L.clienti;
+  $("#lp").innerHTML = `
+  ${bozza ? `<div class="bozza" id="lbz">Hai una bozza non salvata${bozza.titolo ? ": «" + esc(bozza.titolo) + "»" : ""}. <button class="btn sm" type="button" id="lbz-si">Riprendi</button><button class="btn sm" type="button" id="lbz-no">Scarta</button></div>` : ""}
+  ${LEDIT ? "" : `<div class="bozza">Lista di ${esc(L.autore)}: puoi vederla e generare un giro; i clienti li modifica solo ${esc(L.autore)}.</div>`}
+  <fieldset class="fs"><legend>La lista</legend>
+    <label class="fl"><span>Nome della lista</span><input class="in" data-l="titolo" value="${esc(L.titolo)}" placeholder="Es. Serramentisti Romagna, dicembre" ${ro}></label>
+    <label class="fl"><span>Zona (facoltativa)</span><input class="in" data-l="zona" value="${esc(L.zona)}" placeholder="Es. Forlì, Cesena, Rimini" ${ro}></label>
+  </fieldset>
+  ${LEDIT ? `<fieldset class="fs"><legend>Condividi lista con colleghi</legend>
+    ${altri.length ? `<div class="share" id="lshare">${altri.map(u => `<label class="${L.condiviso.includes(u.nome) ? "on" : ""}"><input type="checkbox" value="${esc(u.nome)}" ${L.condiviso.includes(u.nome) ? "checked" : ""}>${esc(u.nome)}</label>`).join("")}</div>` : '<p class="hint">Nessun altro collega da scegliere.</p>'}
+    ${sempre.length ? `<p class="hint">${esc(sempre.join(", "))} ${sempre.length === 1 ? "vede" : "vedono"} già tutte le liste.</p>` : ""}
+  </fieldset>` : ""}
+  <fieldset class="fs"><legend>Clienti (${C.length})</legend>
+    ${C.length ? C.map((c, i) => schedaL(c, i)).join("") : `<p class="hint" style="margin:4px 0 10px">${CTX.config.gmaps_key ? "Cerca un'azienda sulla mappa (o premi Invio per vedere tutte quelle della zona) e premi «Aggiungi alla lista»." : "La mappa non è attiva: aggiungi i clienti a mano."}</p>`}
+    ${LEDIT ? '<button class="btn addm" type="button" id="laddm">+ Aggiungi cliente a mano</button>' : ""}
+  </fieldset>
+  <fieldset class="fs gen"><legend><b>Genera giro</b></legend>
+    <label class="fl"><span>Città di partenza</span><input class="in" data-gs="partenza" value="${esc(GS.partenza)}" placeholder="Es. Ravenna"></label>
+    <div class="two"><label class="fl"><span>Data di inizio</span><input class="in" type="date" data-gs="dal" value="${esc(GS.dal)}"></label><label class="fl"><span>Ora di partenza</span><input class="in" type="time" data-gs="ora" value="${esc(oraInput(GS.ora))}"></label></div>
+    <div class="three"><label class="fl"><span>Durata visita (min)</span><input class="in" type="number" min="5" max="240" step="5" data-gs="durata" value="${esc(GS.durata)}"></label><label class="fl"><span>Max visite al giorno</span><input class="in" type="number" min="1" max="15" data-gs="max" value="${esc(GS.max)}"></label><label class="fl"><span>Ultima visita finita entro</span><input class="in" type="time" data-gs="fine" value="${esc(oraInput(GS.fine))}"></label></div>
+    <label class="chk"><input type="checkbox" data-gs="sabato" ${GS.sabato ? "checked" : ""}> Lavoro anche il sabato</label>
+    <button class="btn red" type="button" id="gen">Genera giro</button>
+    <p class="hint" style="margin:-4px 0 10px">Giro di un giorno: rientro alla città di partenza. Più giorni: si dorme fuori e il giorno dopo si riparte dalla zona dell'ultima visita.</p>
+    <div class="pv" id="genout"></div>
+  </fieldset>
+  ${LEDIT && L.id ? '<div class="pfoot"><button class="btn sm dang" type="button" id="ldel">Elimina lista</button></div>' : ""}`;
+  if (PREV) mostraPrev();
+  segnaposti();
+}
+function schedaL(c, i){
+  const ap = i === LOPEN, ro = LEDIT ? "" : "disabled";
+  const app = c.appuntamento ? "Appuntamento" + (c.app_data ? " " + dataBreve(c.app_data) + (c.app_ora ? " " + c.app_ora : "") : "") : "";
+  return `<div class="stp${ap ? " open" : ""}" data-i="${i}">
+    <div class="hd" data-act="toggle"><span class="n${c.appuntamento ? "" : " gr"}">${i+1}</span><div><div class="tt">${esc(c.azienda || "Nuovo cliente")}</div><div class="ss">${esc(c.indirizzo || "Indirizzo da inserire")}</div></div><span class="ap">${esc(app)}</span></div>
+    ${ap ? `<div class="bd">
+      <label class="fl"><span>Azienda</span><input class="in" data-c="azienda" value="${esc(c.azienda)}" ${ro}></label>
+      <label class="fl"><span>Indirizzo</span><input class="in" data-c="indirizzo" value="${esc(c.indirizzo)}" ${ro}></label>
+      <div class="two"><label class="fl"><span>Telefono</span><input class="in" type="tel" data-c="telefono" value="${esc(c.telefono)}" ${ro}></label><label class="fl"><span>Referente</span><input class="in" data-c="referente" value="${esc(c.referente)}" ${ro}></label></div>
+      <label class="fl"><span>Orari di apertura</span><textarea class="in" data-c="orari" rows="2" ${ro}>${esc(c.orari)}</textarea></label>
+      <p class="hint" style="margin:-6px 0 10px">${c.periodi && c.periodi.length ? "«Genera giro» usa gli orari letti da Google." : "Orari Google non disponibili: «Genera giro» considera il cliente sempre aperto (da verificare)."}</p>
+      <label class="fl"><span>Note</span><textarea class="in" data-c="note" rows="3" ${ro}>${esc(c.note)}</textarea></label>
+      <label class="chk"><input type="checkbox" data-c="appuntamento" ${c.appuntamento ? "checked" : ""} ${ro}> Appuntamento</label>
+      ${c.appuntamento ? `<div class="two"><label class="fl"><span>Giorno fissato (facoltativo)</span><input class="in" type="date" data-c="app_data" value="${esc(c.app_data)}" ${ro}></label><label class="fl"><span>Ora fissata (facoltativa)</span><input class="in" type="time" data-c="app_ora" value="${esc(oraInput(c.app_ora))}" ${ro}></label></div>` : ""}
+      ${c.aggiunto && c.aggiunto !== L.autore ? `<p class="hint">Aggiunto da ${esc(c.aggiunto)}</p>` : ""}
+      ${LEDIT ? `<div class="pfoot"><button class="btn sm dang" type="button" data-act="del">${c._del ? "Tocca di nuovo per togliere" : "Togli dalla lista"}</button></div>` : ""}
+    </div>` : ""}
+  </div>`;
+}
+function aggiungiL(c){
+  L.clienti.push(Object.assign({ azienda: "", indirizzo: "", telefono: "", referente: "", orari: "", note: "", appuntamento: false, app_data: "", app_ora: "" }, c, { aggiunto: CTX.nome }));
+  LOPEN = L.clienti.length - 1; PREV = null; salvaBozzaL(); pannelloL();
+  const el = $(`#lp .stp[data-i="${LOPEN}"]`); if (el) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+$("#lp").addEventListener("input", e => {
+  const x = e.target; if (!L) return;
+  if (x.dataset.gs) { const k = x.dataset.gs; GS[k] = k === "sabato" ? x.checked : (k === "ora" || k === "fine") ? oraBella(x.value) : (k === "durata" || k === "max") ? +x.value : x.value; salvaGS(); return; }
+  if (!LEDIT) return;
+  if (x.dataset.l) { L[x.dataset.l] = x.value; salvaBozzaL(); return; }
+  const k = x.dataset.c; if (!k) return;
+  const i = +x.closest(".stp").dataset.i, c = L.clienti[i];
+  if (k === "appuntamento") { c.appuntamento = x.checked; PREV = null; salvaBozzaL(); pannelloL(); return; }
+  c[k] = k === "app_ora" ? oraBella(x.value) : x.value;
+  if (k === "app_data" || k === "app_ora") { PREV = null; $("#genout").innerHTML = ""; x.closest(".stp").querySelector(".ap").textContent = "Appuntamento" + (c.app_data ? " " + dataBreve(c.app_data) + (c.app_ora ? " " + c.app_ora : "") : ""); }
+  if (k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
+    hd.querySelector(".tt").textContent = c.azienda || "Nuovo cliente"; hd.querySelector(".ss").textContent = c.indirizzo || "Indirizzo da inserire";
+    if (k === "indirizzo" && c.pos && !c.place_id) delete c.pos; }
+  salvaBozzaL();
+});
+$("#lp").addEventListener("change", e => {
+  const x = e.target;
+  if (x.closest("#lshare")) { L.condiviso = $$("#lshare input:checked").map(c => c.value); $$("#lshare label").forEach(l => l.classList.toggle("on", l.querySelector("input").checked)); salvaBozzaL(); }
+});
+$("#lp").addEventListener("click", e => {
+  const b = e.target.closest("button,[data-act=toggle]"); if (!b || !L) return;
+  if (b.id === "lbz-si") { const bz = leggiBozzaL(L.id); if (bz) L = bz; dirty = true; PREV = null; pannelloL(); return; }
+  if (b.id === "lbz-no") { togliBozzaL(L.id); $("#lbz").remove(); return; }
+  if (b.id === "laddm") { aggiungiL({}); return; }
+  if (b.id === "gen") { genera(); return; }
+  if (b.id === "gen-apri") { aGiro(); return; }
+  if (b.id === "ldel") { eliminaL(); return; }
+  const card = b.closest(".stp"); if (!card) return; const i = +card.dataset.i, C = L.clienti;
+  if (b.dataset.act === "toggle") { LOPEN = LOPEN === i ? -1 : i; pannelloL(); if (LOPEN >= 0 && C[i].pos && MAP) MAP.panTo(C[i].pos); return; }
+  if (b.dataset.act === "del") { if (C[i]._del) { C.splice(i, 1); LOPEN = -1; PREV = null; salvaBozzaL(); pannelloL(); } else { C[i]._del = 1; b.textContent = "Tocca di nuovo per togliere"; setTimeout(() => { delete C[i]?._del; }, 4000); } }
+});
+async function salvaL(){
+  const b = $("#pl-save");
+  if (!L.titolo.trim()) { toast("Scrivi il nome della lista.", true); const t = $('[data-l="titolo"]'); if (t) t.focus(); return; }
+  if (!L.clienti.length) { toast("Aggiungi almeno un cliente.", true); return; }
+  const senza = L.clienti.findIndex(c => !String(c.azienda || "").trim());
+  if (senza >= 0) { LOPEN = senza; pannelloL(); toast("C'è un cliente senza nome dell'azienda.", true); return; }
+  if (!CTX.tok) { toast("Il salvataggio non è ancora attivo: l'amministratore deve inserire la chiave GitHub nelle impostazioni. La lista resta come bozza su questo dispositivo.", true); return; }
+  const ora = new Date().toISOString(), vecchio = L.id;
+  const X = { id: L.id || ("l-" + iso(d0).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 8)), titolo: L.titolo.trim(), zona: String(L.zona || "").trim(),
+    autore: L.autore || CTX.nome, condiviso: L.condiviso || [], archiviato: !!L.archiviato, creato: L.creato || ora, modificato: ora,
+    clienti: L.clienti.map(c => { const o = {}; ["azienda","indirizzo","telefono","referente","orari","note","app_data","app_ora","place_id","maps","aggiunto"].forEach(k => { const v = String(c[k] ?? "").trim(); if (v) o[k] = v; });
+      o.appuntamento = !!c.appuntamento; if (!o.appuntamento) { delete o.app_data; delete o.app_ora; } if (c.pos) o.pos = c.pos; if (c.periodi) o.periodi = c.periodi; return o; }) };
+  if (!L.id) X.creato = X.modificato;
+  b.disabled = true; b.textContent = "Salvataggio…";
+  try {
+    await RT.salvaLista(CTX, X);
+    togliBozzaL(vecchio); togliBozzaL(X.id); dirty = false;
+    const i = LISTE.findIndex(l => l.id === X.id); if (i >= 0) LISTE[i] = X; else LISTE.push(X);
+    if (!vecchio) { try { localStorage.setItem(GSK + X.id, JSON.stringify(GS)); } catch(e) {} }
+    Object.assign(L, { id: X.id, autore: X.autore, creato: X.creato, modificato: X.modificato }); history.replaceState(null, "", location.pathname + location.search + "#raccogli/" + encodeURIComponent(X.id));
+    $("#pl-tit").textContent = "Lista clienti";
+    toast("Lista salvata" + ((X.condiviso || []).length ? ": la vedono anche " + X.condiviso.join(", ") + "." : "."));
+    pannelloL();
+  } catch(x) { toast(x.message || "Salvataggio non riuscito.", true); }
+  b.disabled = false; b.textContent = "Salva lista";
+}
+async function eliminaL(){
+  if (!confirm("Eliminare la lista «" + L.titolo + "»? I giri già creati da questa lista restano.")) return;
+  try { await RT.eliminaLista(CTX, L.id, L.titolo); LISTE = LISTE.filter(l => l.id !== L.id); togliBozzaL(L.id); dirty = false; toast("Lista eliminata."); location.hash = ""; }
+  catch(x) { toast(x.message || "Eliminazione non riuscita.", true); }
+}
+
+/* --- Genera giro: posizioni, tempi di viaggio (Google Routes API), proposta --- */
+const chiaveP = p => p.lat.toFixed(5) + "," + p.lng.toFixed(5);
+function cacheTempi(){ try { return JSON.parse(localStorage.getItem("rt-tempi") || "{}"); } catch(e) { return {}; } }
+function salvaTempi(T){ try { const k = Object.keys(T); if (k.length > 30000) k.slice(0, k.length - 30000).forEach(x => delete T[x]); localStorage.setItem("rt-tempi", JSON.stringify(T)); } catch(e) {} }
+async function trovaLuogo(testo){
+  let C = {}; try { C = JSON.parse(localStorage.getItem("rt-luoghi") || "{}"); } catch(e) {}
+  const k = testo.trim().toLowerCase(); if (C[k]) return C[k];
+  const { places } = await LIB.pl.Place.searchByText({ textQuery: testo, fields: ["displayName", "formattedAddress", "location"], maxResultCount: 1, language: "it", region: "it" });
+  if (!places || !places.length || !places[0].location) return null;
+  const r = { pos: { lat: places[0].location.lat(), lng: places[0].location.lng() }, nome: places[0].displayName || testo, indirizzo: indirizzoBreve(places[0].formattedAddress) };
+  C[k] = r; try { localStorage.setItem("rt-luoghi", JSON.stringify(C)); } catch(e) {} return r;
+}
+async function matrice(punti, avanza){
+  const T = cacheTempi(), K = punti.map(chiaveP), n = punti.length, B = 25;
+  let nuovi = 0, errore = "";
+  const manca = (i, j) => i !== j && T[K[i] + ">" + K[j]] == null;
+  for (let oi = 0; oi < n; oi += B) for (let di = 0; di < n; di += B) {
+    const O = [...Array(Math.min(B, n - oi)).keys()].map(x => x + oi), D = [...Array(Math.min(B, n - di)).keys()].map(x => x + di);
+    if (!O.some(i => D.some(j => manca(i, j)))) continue;
+    if (errore) continue;
+    avanza && avanza();
+    const wp = i => ({ waypoint: { location: { latLng: { latitude: punti[i].lat, longitude: punti[i].lng } } } });
+    try {
+      const r = await fetch("https://routes.googleapis.com/distanceMatrix/v2:computeRouteMatrix", { method: "POST",
+        headers: { "Content-Type": "application/json", "X-Goog-Api-Key": CTX.config.gmaps_key, "X-Goog-FieldMask": "originIndex,destinationIndex,duration,condition" },
+        body: JSON.stringify({ origins: O.map(wp), destinations: D.map(wp), travelMode: "DRIVE", routingPreference: "TRAFFIC_UNAWARE", languageCode: "it", regionCode: "IT" }) });
+      if (!r.ok) { let m = ""; try { m = (await r.json()).error.message || ""; } catch(e) {}
+        errore = r.status === 403 && /not been used|disabled|blocked|not authorized/i.test(m) ? "La Routes API non è abilitata nel progetto Google o non è consentita dalla chiave: l'amministratore deve abilitarla in Google Cloud."
+          : "Google non ha calcolato i tempi di viaggio (errore " + r.status + (m ? ": " + m : "") + ")."; continue; }
+      const E = await r.json();
+      for (const x of E) { const i = O[x.originIndex || 0], j = D[x.destinationIndex || 0];
+        if (i === j) continue;
+        T[K[i] + ">" + K[j]] = x.condition === "ROUTE_EXISTS" && x.duration ? Math.ceil(parseInt(x.duration, 10) / 60) : -1; nuovi++; }
+    } catch(e) { errore = "Non riesco a contattare Google per i tempi di viaggio (rete o blocco del browser)."; }
+  }
+  salvaTempi(T);
+  let stime = 0;
+  const tempo = (i, j) => { if (i === j) return 0; const v = T[K[i] + ">" + K[j]]; if (v != null && v >= 0) return v; stime++; return GEN.stimaMinuti(punti[i], punti[j]); };
+  return { tempo, nuovi, errore, stime: () => stime };
+}
+async function genera(){
+  const out = $("#genout"), btn = $("#gen");
+  if (!L.clienti.length) { toast("Aggiungi prima qualche cliente alla lista.", true); return; }
+  if (!GS.partenza.trim()) { toast("Scrivi la città di partenza.", true); return; }
+  if (!GS.dal) { toast("Indica la data di inizio.", true); return; }
+  if (!LIB) { await mappa(); if (!LIB) { toast("Per generare il giro serve la mappa Google attiva.", true); return; } }
+  const msg = t => { out.innerHTML = `<p class="hint">${esc(t)}</p>`; };
+  btn.disabled = true;
+  try {
+    msg("Cerco la città di partenza…");
+    const part = await trovaLuogo(GS.partenza);
+    if (!part) { toast("Non trovo «" + GS.partenza + "»: scrivi la città o l'indirizzo di partenza in un altro modo.", true); out.innerHTML = ""; return; }
+    const senzaPos = [];
+    for (const c of L.clienti) if (!c.pos) {
+      msg("Cerco sulla mappa: " + (c.azienda || c.indirizzo) + "…");
+      const q = [c.azienda, c.indirizzo].filter(Boolean).join(" ");
+      const r = q ? await trovaLuogo(q).catch(() => null) : null;
+      if (r) { c.pos = r.pos; if (!c.indirizzo) c.indirizzo = r.indirizzo; salvaBozzaL(); } else senzaPos.push(c);
+    }
+    const sel = L.clienti.filter(c => c.pos);
+    if (!sel.length) { msg("Nessun cliente ha una posizione sulla mappa: aggiungili dalla ricerca o completa gli indirizzi."); return; }
+    msg("Calcolo i tempi di viaggio con Google…");
+    const punti = [part.pos, ...sel.map(c => c.pos)];
+    const M = await matrice(punti, () => {});
+    const r = GEN.pianifica({ clienti: sel, tempo: M.tempo, dal: GS.dal, ora: GS.ora, durata: GS.durata, max: GS.max, fine: GS.fine, sabato: GS.sabato });
+    PREV = { r, sel, part, senzaPos, M, stime: M.stime(), opz: Object.assign({}, GS) };
+    mostraPrev(); segnaposti(true);
+  } catch(e) { out.innerHTML = `<p class="hint">Non è stato possibile generare il giro: ${esc(e.message || "errore")}. Riprova tra poco.</p>`; }
+  finally { btn.disabled = false; }
+}
+function mostraPrev(){
+  const { r, sel, part, senzaPos, M, stime, opz } = PREV, hh = GEN.hhmm, out = $("#genout"); if (!out) return;
+  const tot = r.giorni.reduce((k, g) => k + g.visite.length, 0);
+  const avv = [...r.avvisi];
+  if (M.errore) avv.unshift(M.errore + " Intanto i tempi mancanti sono stimati in linea d'aria (poco affidabili).");
+  else if (stime) avv.unshift("Per " + stime + " tratte Google non ha trovato un percorso in auto: il tempo è stimato in linea d'aria.");
+  const nomeP = part.nome || opz.partenza;
+  out.innerHTML = `<p class="tot"><b>${tot} ${tot === 1 ? "visita" : "visite"} in ${r.giorni.length} ${r.giorni.length === 1 ? "giorno" : "giorni"}</b>${r.fuori.length + senzaPos.length ? " · " + (r.fuori.length + senzaPos.length) + " fuori dal giro" : ""}</p>
+  ${avv.length ? `<ul class="av">${avv.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}
+  ${r.giorni.map((g, gi) => { const ult = gi === r.giorni.length - 1, last = sel[g.visite[g.visite.length - 1].k - 1];
+    const da = gi === 0 ? nomeP : "zona di " + (citta(sel[g.partenza - 1].indirizzo) || sel[g.partenza - 1].azienda);
+    return `<div class="pday"><h4><i style="background:${COLG[gi % COLG.length]}"></i>${esc(dataBreve(g.iso))}<em>${g.visite.length} ${g.visite.length === 1 ? "visita" : "visite"} · partenza ${esc(hh(GEN.min(opz.ora) ?? 510))} da ${esc(da)}</em></h4><ul>
+    ${g.visite.map(v => { const c = sel[v.k - 1];
+      const info = [v.viaggio + " min di viaggio", v.attesa > 0 ? "attesa " + v.attesa + " min (apertura o appuntamento)" : "", v.ritardo > 0 ? "in ritardo di " + v.ritardo + " min" : "", !(c.periodi && c.periodi.length) ? "orari da verificare" : ""].filter(Boolean).join(" · ");
+      return `<li><b>${hh(v.inizio)}</b><div>${esc(c.azienda)}${c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span></div></li>`; }).join("")}
+    </ul><span class="end">${ult ? "Rientro a " + esc(nomeP) + " verso le " + hh(g.rientro.ora) + " (" + g.rientro.viaggio + " min)" : "Notte in zona " + esc(citta(last.indirizzo) || last.azienda) + ": da compilare nel pianificatore"}</span></div>`; }).join("")}
+  ${r.fuori.length || senzaPos.length ? `<p class="tot"><b>Fuori dal giro</b></p><ul class="av">${r.fuori.map(f => `<li>${esc(sel[f.k - 1].azienda)}: ${esc(f.motivo)}</li>`).join("")}${senzaPos.map(c => `<li>${esc(c.azienda || "Cliente senza nome")}: non trovato sulla mappa, completa l'indirizzo</li>`).join("")}</ul>` : ""}
+  ${r.giorni.length ? `<div class="pfoot"><button class="btn red" type="button" id="gen-apri" style="margin:0">Apri nel pianificatore</button></div>` : ""}
+  <p class="hint">È una proposta: controlla sempre orari, appuntamenti e note prima di salvare. Tempi in auto senza traffico più ${GEN.MARGINE} min di margine per ogni spostamento${M.nuovi ? " · " + M.nuovi + " nuovi calcoli Google, gli altri già salvati su questo dispositivo" : ""}.</p>`;
+}
+function aGiro(){
+  if (!PREV || !PREV.r.giorni.length) return;
+  const { r, sel, part, opz } = PREV, hh = GEN.hhmm, nomeP = part.nome || opz.partenza;
+  const dal = r.giorni[0].iso, al = r.giorni[r.giorni.length - 1].iso;
+  const ok = new Set(CTX.utenti.filter(u => !u.admin && !u.tutti && u.nome !== CTX.nome).map(u => u.nome));
+  const cond = [...new Set([...(L.condiviso || []), L.autore])].filter(n => ok.has(n));
+  const G = { id: "", titolo: L.titolo || "Nuovo giro", sottotitolo: "", dal, al, zona: L.zona || "", prima: "", condiviso: cond, autore: CTX.nome, creato: "", archiviato: false, _generato: true,
+    giorni: giorniTra(dal, al).map(i => {
+      const gi = r.giorni.findIndex(g => g.iso === i); if (gi < 0) return { iso: i, percorso: "", notte: "", tappe: [] };
+      const g = r.giorni[gi], ult = gi === r.giorni.length - 1;
+      const tappe = g.visite.map(v => { const c = sel[v.k - 1];
+        return { ora: hh(v.inizio), azienda: c.azienda || "", indirizzo: c.indirizzo || "", telefono: c.telefono || "", referente: c.referente || "", orari: c.orari || "(da verificare)", note: c.note || "", portare: "",
+          etichette: [c.appuntamento ? "appuntamento" : "prospezione"], pos: c.pos, place_id: c.place_id || "", maps: c.maps || "" }; });
+      const luoghi = []; [gi === 0 ? nomeP : citta(sel[g.partenza - 1].indirizzo), ...g.visite.map(v => citta(sel[v.k - 1].indirizzo))].forEach(x => { if (x && luoghi[luoghi.length - 1] !== x) luoghi.push(x); });
+      if (ult && luoghi[luoghi.length - 1] !== nomeP) luoghi.push(nomeP);
+      return { iso: i, percorso: luoghi.join(" → ") + (ult ? " (rientro verso le " + hh(g.rientro.ora) + ")" : ""), notte: "", tappe };
+    }) };
+  GENERATO = G; dirty = false; location.hash = "pianifica";
+}
+
+/* ---------------- mappa Google (pianificatore e raccolta) ---------------- */
 let MAP = null, LIB = null, MK = [], RIS = [], TOKEN = null, SEL = null;
 function caricaMaps(key){
   if (window.google && google.maps && google.maps.importLibrary) return Promise.resolve();
@@ -571,8 +872,9 @@ function caricaMaps(key){
 function noMap(t){ $("#nomap").hidden = false; $("#nomap-t").textContent = t; $("#sbx").hidden = true; }
 async function mappa(){
   const key = CTX.config.gmaps_key;
-  if (!key) { noMap(CTX.admin ? "La mappa non è ancora attiva: inserisci la chiave Google Maps in Amministrazione → Impostazioni. Intanto puoi aggiungere le visite a mano." : "La mappa non è ancora attiva: l'amministratore deve inserire la chiave Google. Intanto puoi aggiungere le visite a mano."); return; }
-  if (navigator.onLine === false) { noMap("Senza rete la mappa non funziona: puoi comunque aggiungere le visite a mano."); return; }
+  const amano = MODE === "lista" ? "i clienti" : "le visite";
+  if (!key) { noMap(CTX.admin ? "La mappa non è ancora attiva: inserisci la chiave Google Maps in Amministrazione → Impostazioni. Intanto puoi aggiungere " + amano + " a mano." : "La mappa non è ancora attiva: l'amministratore deve inserire la chiave Google. Intanto puoi aggiungere " + amano + " a mano."); return; }
+  if (navigator.onLine === false) { noMap("Senza rete la mappa non funziona: puoi comunque aggiungere " + amano + " a mano."); return; }
   try {
     await caricaMaps(key);
     if (!MAP) {
@@ -581,27 +883,44 @@ async function mappa(){
       MAP = new Map($("#map"), { center: { lat: 44.4184, lng: 12.2035 }, zoom: 9, mapId: "DEMO_MAP_ID", mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: true, gestureHandling: "greedy" });
       MAP.addListener("click", e => { if (e.placeId) { e.stop(); dettaglio(e.placeId); } });
     }
+    RIS.forEach(m => m.map = null); RIS = [];
     $("#nomap").hidden = true; $("#sbx").hidden = false; segnaposti(true);
   } catch(e) { noMap("La mappa Google non si carica. Controlla la rete; se il problema resta, la chiave Google va controllata."); }
 }
 function pin(n, colore, bordo){ const d = document.createElement("div");
   d.style.cssText = `width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${colore};border:2px solid ${bordo || colore};display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.35)`;
   const s = document.createElement("span"); s.textContent = String(n); s.style.cssText = "transform:rotate(45deg);color:#fff;font:800 12px Archivo,system-ui,sans-serif"; d.appendChild(s); return d; }
+function adatta(pts){ if (!pts.length) return; if (pts.length === 1) { MAP.setCenter(pts[0]); MAP.setZoom(13); return; } const b = new google.maps.LatLngBounds(); pts.forEach(p => b.extend(p)); MAP.fitBounds(b, 60); }
 function segnaposti(centra){
-  if (!MAP || !LIB || !P) return;
+  if (!MAP || !LIB) return;
   MK.forEach(m => m.map = null); MK = [];
+  if (MODE === "lista") return segnapostiL(centra);
+  if (!P) return;
   const pts = [];
   P.giorni.forEach((g, k) => g.tappe.forEach((t, i) => { if (!t.pos) return;
     const att = k === CUR, col = att ? getComputedStyle(document.documentElement).getPropertyValue("--red").trim() || "#e41519" : "#8a8b92";
     const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: t.pos, title: (i+1) + ". " + t.azienda + " · " + etDay(g), content: pin(i + 1, col, att ? "#7f0d0f" : "#5f6066"), zIndex: att ? 10 : 1 });
-    m.addListener("click", () => { CUR = k; OPEN = i; pannello(); const el = $(`.stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
+    m.addListener("click", () => { CUR = k; OPEN = i; pannello(); const el = $(`#pp .stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
     MK.push(m); if (att) pts.push(t.pos); }));
-  if (centra && pts.length) { const b = new google.maps.LatLngBounds(); pts.forEach(p => b.extend(p)); if (pts.length === 1) { MAP.setCenter(pts[0]); MAP.setZoom(13); } else MAP.fitBounds(b, 60); }
+  if (centra) adatta(pts);
+}
+function segnapostiL(centra){
+  if (!L) return;
+  const pts = [], posto = new Map();
+  if (PREV) PREV.r.giorni.forEach((g, gi) => g.visite.forEach((v, j) => posto.set(PREV.sel[v.k - 1], { gi, j })));
+  L.clienti.forEach((c, i) => { if (!c.pos) return;
+    const p = posto.get(c);
+    const content = PREV ? (p ? pin(p.j + 1, COLG[p.gi % COLG.length], "#1118") : pin("×", "#8a8b92", "#5f6066")) : pin(i + 1, c.appuntamento ? "#1d8a4b" : "#26272b", c.appuntamento ? "#14532d" : "#000");
+    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: c.pos, title: c.azienda + (p ? " · " + dataBreve(PREV.r.giorni[p.gi].iso) : ""), content, zIndex: p ? 10 : 2 });
+    m.addListener("click", () => { LOPEN = i; pannelloL(); const el = $(`#lp .stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
+    MK.push(m); pts.push(c.pos); });
+  if (PREV && PREV.part) { MK.push(new LIB.mk.AdvancedMarkerElement({ map: MAP, position: PREV.part.pos, title: "Partenza: " + PREV.part.nome, content: pin("P", "#0c0c0d", "#000"), zIndex: 20 })); pts.push(PREV.part.pos); }
+  if (centra) adatta(pts);
 }
 const indirizzoBreve = a => String(a || "").replace(/,\s*(Italia|Italy)$/i, "");
 function orariBrevi(desc){
   if (!desc || !desc.length) return "";
-  const rows = desc.map(s => { const i = s.indexOf(":"); return [s.slice(0, i).trim().toLowerCase(), s.slice(i + 1).trim().replace(/^Chiuso$/i, "chiuso").replace(/ /g, " ")]; });
+  const rows = desc.map(s => { const i = s.indexOf(":"); return [s.slice(0, i).trim().toLowerCase(), s.slice(i + 1).trim().replace(/^Chiuso$/i, "chiuso").replace(/ /g, " ")]; });
   const gruppi = []; rows.forEach(([g, h]) => { const u = gruppi[gruppi.length - 1]; if (u && u.h === h) u.a = g; else gruppi.push({ da: g, a: g, h }); });
   return gruppi.map(x => (x.da === x.a ? x.da.slice(0, 3) : x.da.slice(0, 3) + "–" + x.a.slice(0, 3)) + " " + x.h).join(" · ");
 }
@@ -614,12 +933,12 @@ async function suggerisci(q){
   try {
     TOKEN = TOKEN || new LIB.pl.AutocompleteSessionToken();
     const { suggestions } = await LIB.pl.AutocompleteSuggestion.fetchAutocompleteSuggestions({ input: q, sessionToken: TOKEN, language: "it", region: "it", locationBias: MAP.getCenter() });
-    const L = suggestions.filter(s => s.placePrediction).slice(0, 6);
-    $("#sug").innerHTML = (L.length ? L.map((s, i) => { const p = s.placePrediction; return `<button type="button" data-s="${i}"><b>${esc(p.mainText ? p.mainText.toString() : p.text.toString())}</b><span>${esc(p.secondaryText ? p.secondaryText.toString() : "")}</span></button>`; }).join("") : '<div class="hd">Nessun suggerimento</div>')
+    const R = suggestions.filter(s => s.placePrediction).slice(0, 6);
+    $("#sug").innerHTML = (R.length ? R.map((s, i) => { const p = s.placePrediction; return `<button type="button" data-s="${i}"><b>${esc(p.mainText ? p.mainText.toString() : p.text.toString())}</b><span>${esc(p.secondaryText ? p.secondaryText.toString() : "")}</span></button>`; }).join("") : '<div class="hd">Nessun suggerimento</div>')
       + `<button type="button" data-z="1"><b>Cerca «${esc(q)}» nella zona della mappa</b><span>Mostra fino a 20 risultati sulla mappa</span></button>`;
     $("#sug").hidden = false;
     $("#sug").onclick = ev => { const b = ev.target.closest("button"); if (!b) return; $("#sug").hidden = true;
-      if (b.dataset.z) cercaZona(q); else dettaglio(null, L[+b.dataset.s].placePrediction.toPlace()); };
+      if (b.dataset.z) cercaZona(q); else dettaglio(null, R[+b.dataset.s].placePrediction.toPlace()); };
   } catch(e) { $("#sug").innerHTML = '<div class="hd">Ricerca non disponibile in questo momento.</div>'; $("#sug").hidden = false; }
 }
 async function cercaZona(q){
@@ -644,21 +963,33 @@ async function dettaglio(placeId, place){
     const p = place || new LIB.pl.Place({ id: placeId });
     await p.fetchFields({ fields: ["id", "displayName", "formattedAddress", "location", "nationalPhoneNumber", "internationalPhoneNumber", "regularOpeningHours", "googleMapsURI", "businessStatus"] });
     TOKEN = null;
-    const orari = orariBrevi(p.regularOpeningHours && p.regularOpeningHours.weekdayDescriptions);
+    const oh = p.regularOpeningHours, orari = orariBrevi(oh && oh.weekdayDescriptions);
     SEL = { azienda: p.displayName || "", indirizzo: indirizzoBreve(p.formattedAddress), telefono: p.nationalPhoneNumber || p.internationalPhoneNumber || "", orari: orari || "(da verificare)",
       pos: p.location ? { lat: p.location.lat(), lng: p.location.lng() } : null, place_id: p.id, maps: p.googleMapsURI || "", note: "", portare: "", referente: "", etichette: [] };
+    const periodi = oh && oh.periods ? GEN.daPeriodiGoogle(oh.periods) : null;
     MAP.panTo(SEL.pos); if (MAP.getZoom() < 13) MAP.setZoom(14);
-    const giorno = P.giorni[CUR] ? etDay(P.giorni[CUR]) : "il giro";
-    const gia = P.giorni.some(g => g.tappe.some(t => t.place_id && t.place_id === SEL.place_id));
+    let azioni = "", gia = false;
+    if (MODE === "lista") {
+      gia = L && L.clienti.some(c => c.place_id && c.place_id === SEL.place_id);
+      azioni = L && LEDIT ? `<button class="btn red" type="button" id="pcadd">Aggiungi alla lista</button>` : "";
+    } else {
+      gia = P.giorni.some(g => g.tappe.some(t => t.place_id && t.place_id === SEL.place_id));
+      azioni = (P.giorni.length > 1 ? `<select class="in" id="pcday" aria-label="Giorno" style="width:auto;min-height:42px">${P.giorni.map((g, k) => `<option value="${k}" ${k === CUR ? "selected" : ""}>${esc(etDay(g))}</option>`).join("")}</select>` : "")
+        + `<button class="btn red" type="button" id="pcadd">${P.giorni.length > 1 ? "Aggiungi" : "Aggiungi a " + esc(P.giorni[CUR] ? etDay(P.giorni[CUR]) : "il giro")}</button>`;
+    }
     pc.innerHTML = `<button class="x" type="button" id="pcx" aria-label="Chiudi">×</button><h3>${esc(SEL.azienda)}</h3>
       <p>${esc(SEL.indirizzo)}</p>
       ${p.businessStatus === "CLOSED_PERMANENTLY" ? '<p class="warn">Google la segnala come chiusa definitivamente.</p>' : p.businessStatus === "CLOSED_TEMPORARILY" ? '<p class="warn">Google la segnala come chiusa temporaneamente.</p>' : ""}
       <p>${SEL.telefono ? "Tel. " + esc(SEL.telefono) : '<span class="mut">Telefono non indicato su Google</span>'}</p>
       <div class="orr">${orari ? esc(orari.split(" · ").join("\n")) : "Orari non indicati su Google (da verificare)"}</div>
-      ${gia ? '<p class="warn">Questa azienda è già nel giro.</p>' : ""}
-      <div class="acts"><button class="btn red" type="button" id="pcadd">Aggiungi a ${esc(giorno)}</button>${SEL.maps ? `<a class="btn" href="${esc(SEL.maps)}" target="_blank" rel="noopener">Apri su Google Maps</a>` : ""}</div>`;
+      ${gia ? `<p class="warn">Questa azienda è già ${MODE === "lista" ? "nella lista" : "nel giro"}.</p>` : ""}
+      <div class="acts">${azioni}${SEL.maps ? `<a class="btn" href="${esc(SEL.maps)}" target="_blank" rel="noopener">Apri su Google Maps</a>` : ""}</div>`;
     $("#pcx").onclick = () => pc.hidden = true;
-    $("#pcadd").onclick = () => { aggiungi(Object.assign({}, SEL)); pc.hidden = true; toast("Aggiunta a " + giorno + ": completa note e tipo di visita nel pannello."); };
+    const add = $("#pcadd");
+    if (add) add.onclick = () => {
+      if (MODE === "lista") { const c = Object.assign({}, SEL); delete c.etichette; delete c.portare; if (!orari) c.orari = ""; if (periodi) c.periodi = periodi; aggiungiL(c); pc.hidden = true; toast("Aggiunta alla lista: se serve scrivi una nota o segna l'appuntamento."); return; }
+      const sd = $("#pcday"); if (sd) CUR = +sd.value; const giorno = P.giorni[CUR] ? etDay(P.giorni[CUR]) : "il giro";
+      aggiungi(Object.assign({}, SEL)); pc.hidden = true; toast("Aggiunta a " + giorno + ": completa note e tipo di visita nel pannello."); };
   } catch(e) { pc.innerHTML = '<button class="x" type="button" onclick="this.parentNode.hidden=true">×</button><p>Non riesco a leggere i dati di questo luogo da Google.</p>'; }
 }
 
@@ -696,7 +1027,7 @@ function admin(){
   }
   else if (ATAB === "team") {
     const ruolo = u => u.admin ? "admin" : u.tutti ? "tutti" : "suoi";
-    B.innerHTML = `<div class="box"><h3>Team</h3><p>«Vede tutti i giri»: vede anche i giri degli altri (solo in lettura). «Solo i suoi»: vede i giri creati da lui e quelli condivisi con lui. Gli strumenti di amministrazione sono solo per gli amministratori.</p>
+    B.innerHTML = `<div class="box"><h3>Team</h3><p>«Vede tutti i giri»: vede anche i giri e le liste clienti degli altri (solo in lettura). «Solo i suoi»: vede i giri e le liste creati da lui e quelli condivisi con lui. Gli strumenti di amministrazione sono solo per gli amministratori.</p>
       <div class="tw"><table class="t"><thead><tr><th>Nome</th><th>Ruolo</th><th></th></tr></thead><tbody>
       ${CTX.utenti.map(u => `<tr data-n="${esc(u.nome)}"><td><b>${esc(u.nome)}</b>${u.nome === CTX.nome ? ' <span class="hint">(tu)</span>' : ""}</td>
         <td><select class="in" data-a="ruolo" style="max-width:240px" ${u.nome === CTX.nome ? "disabled" : ""}><option value="suoi" ${ruolo(u) === "suoi" ? "selected" : ""}>Solo i suoi giri</option><option value="tutti" ${ruolo(u) === "tutti" ? "selected" : ""}>Vede tutti i giri</option><option value="admin" ${ruolo(u) === "admin" ? "selected" : ""}>Amministratore</option></select></td>
@@ -718,10 +1049,10 @@ function admin(){
         return; }
       const n = b.closest("tr") && b.closest("tr").dataset.n; if (!n) return; const u = CTX.utenti.find(x => x.nome === n);
       if (b.dataset.a === "pw") { if (!confirm("Creare una nuova password per " + n + "? Quella vecchia smetterà di funzionare" + (n === CTX.nome ? " e dovrai rientrare." : "."))) return;
-        const p = RT.password(); let fatto = false;
-        if (await lavora("Nuova password", async () => { const nu = await RT.nuovoUtente(n, p, { admin: u.admin, tutti: u.tutti }); await aggiornaTeam(CTX.utenti.map(x => x.nome === n ? nu : x)); fatto = true; })) {
+        const p = RT.password();
+        if (await lavora("Nuova password", async () => { const nu = await RT.nuovoUtente(n, p, { admin: u.admin, tutti: u.tutti }); await aggiornaTeam(CTX.utenti.map(x => x.nome === n ? nu : x)); })) {
           admin(); mostraPw(n, p); if (n === CTX.nome) { RT.sess.del(); $("#pwout").insertAdjacentHTML("beforeend", '<p class="no">Hai cambiato la tua password: annotala, poi esci e rientra con quella nuova.</p>'); } } }
-      if (b.dataset.a === "rm") { if (!confirm("Rimuovere " + n + "? Non potrà più entrare. I giri creati da " + n + " restano (li vedono gli amministratori).")) return;
+      if (b.dataset.a === "rm") { if (!confirm("Rimuovere " + n + "? Non potrà più entrare. I giri e le liste creati da " + n + " restano (li vedono gli amministratori).")) return;
         if (await lavora("Rimozione", () => aggiornaTeam(CTX.utenti.filter(x => x.nome !== n)))) { toast(n + " rimosso dal team."); admin(); } }
     };
   }
@@ -731,10 +1062,10 @@ function admin(){
     B.innerHTML = `<div class="box"><h3>Colori dell'app</h3><p>Valgono per il cruscotto, il pianificatore e le pagine dei giri, su tutti i telefoni.</p>
       <div class="sw"><label class="sw">Colore principale <input type="color" id="c1" value="${esc(c.accento)}"></label><label class="sw">Colore scuro (testate) <input type="color" id="c2" value="${esc(c.scuro)}"></label>
       <button class="btn dk" type="button" id="csave">Salva colori</button><button class="btn" type="button" id="creset">Colori RAPID originali</button></div></div>
-      <div class="box"><h3>Chiave Google Maps</h3><p>Serve per la mappa e la ricerca delle aziende nel pianificatore. Stato: ${CTX.config.gmaps_key ? '<span class="ok">inserita</span>' : '<span class="no">manca</span>'}</p>
+      <div class="box"><h3>Chiave Google Maps</h3><p>Serve per la mappa, la ricerca delle aziende e i tempi di viaggio di «Genera giro». Stato: ${CTX.config.gmaps_key ? '<span class="ok">inserita</span>' : '<span class="no">manca</span>'}</p>
       <div class="sw"><input class="in" id="gk" placeholder="Incolla qui la chiave (inizia con AIza…)" value="${esc(CTX.config.gmaps_key || "")}" style="max-width:460px"><button class="btn dk" type="button" id="gsave">Salva chiave Google</button></div>
-      <p class="hint" style="margin-top:8px">Questa chiave è visibile nel codice del sito: va protetta in Google Cloud con la restrizione al sito https://rapidteam1.github.io/* e un limite di richieste giornaliere.</p></div>
-      <div class="box"><h3>Chiave GitHub (salvataggio)</h3><p>Permette a tutti di salvare i giri. Viene cifrata per ogni persona del team e non è leggibile da chi non ha accesso. Stato: ${CTX.config.gh ? '<span class="ok">inserita</span>' : '<span class="no">manca: nessuno può salvare</span>'}${scad ? " · scade il " + esc(scad.split("-").reverse().join("/")) : ""}</p>
+      <p class="hint" style="margin-top:8px">Questa chiave è visibile nel codice del sito: va protetta in Google Cloud con la restrizione al sito https://rapidteam1.github.io/*, limitata a Maps JavaScript API, Places API (New) e Routes API, con un limite di richieste giornaliere.</p></div>
+      <div class="box"><h3>Chiave GitHub (salvataggio)</h3><p>Permette a tutti di salvare giri e liste. Viene cifrata per ogni persona del team e non è leggibile da chi non ha accesso. Stato: ${CTX.config.gh ? '<span class="ok">inserita</span>' : '<span class="no">manca: nessuno può salvare</span>'}${scad ? " · scade il " + esc(scad.split("-").reverse().join("/")) : ""}</p>
       <div class="sw"><input class="in" id="tk" type="password" autocomplete="off" placeholder="Incolla qui la chiave (github_pat_…)" style="max-width:460px"><label class="sw" style="font-size:14px">Scade il <input class="in" type="date" id="tks" value="${esc(scad)}" style="max-width:170px"></label><button class="btn dk" type="button" id="tsave">Salva chiave GitHub</button></div></div>`;
     $("#c1").oninput = $("#c2").oninput = () => RT.colori({ accento: $("#c1").value, scuro: $("#c2").value });
     $("#creset").onclick = () => { $("#c1").value = RT.COLORI.accento; $("#c2").value = RT.COLORI.scuro; RT.colori(RT.COLORI); };
@@ -752,7 +1083,7 @@ function admin(){
         CTX.config = await RT.modifica("dati/config.json", t, c => Object.assign(c || {}, { gh, gh_scadenza: s }), "Chiave GitHub aggiornata (" + CTX.nome + ")");
         CTX.tok = t;
         if (CTX.pubErrata) await correggiChiave();
-      })) toast("Chiave GitHub salvata: ora tutti possono salvare i giri.");
+      })) toast("Chiave GitHub salvata: ora tutti possono salvare giri e liste.");
       admin(); };
   }
 }
@@ -760,16 +1091,18 @@ async function salvaConfig(cambi){
   CTX.config = await RT.modifica("dati/config.json", CTX.tok, c => Object.assign(c || {}, cambi), "Impostazioni aggiornate (" + CTX.nome + ")");
   RT.colori(CTX.config.colori);
 }
-/* nuovo elenco del team: riconsegna le chiavi dei giri e della chiave GitHub, poi salva gli utenti */
+/* nuovo elenco del team: riconsegna le chiavi di giri, liste e chiave GitHub, poi salva gli utenti */
 async function aggiornaTeam(U){
   if (!CTX.tok) throw new Error("Prima inserisci la chiave GitHub nelle impostazioni.");
   if (!U.some(u => u.admin)) throw new Error("Deve restare almeno un amministratore.");
   const pub = U.map(({ nome, admin, tutti, it, salt, iv, ct, pub }) => ({ nome, admin: !!admin, tutti: !!tutti, it, salt, iv, ct, pub }));
-  await RT.modifica("dati/giri.json", CTX.tok, async lista => {
-    const out = [];
-    for (const b of (lista || [])) { const G = await RT.apre(b, CTX.pk, CTX.nome);
-      out.push(G ? Object.assign({ id: b.id }, await RT.riconsegna(b, CTX.pk, CTX.nome, RT.destinatariGiro(G, pub))) : b); }
-    return out; }, "Team aggiornato: chiavi dei giri (" + CTX.nome + ")");
+  for (const path of RT.BUSTE) {
+    await RT.modifica(path, CTX.tok, async lista => {
+      const out = [];
+      for (const b of (lista || [])) { const G = await RT.apre(b, CTX.pk, CTX.nome);
+        out.push(G ? Object.assign({ id: b.id }, await RT.riconsegna(b, CTX.pk, CTX.nome, RT.destinatariGiro(G, pub))) : b); }
+      return out; }, "Team aggiornato: chiavi di " + path.replace("dati/", "") + " (" + CTX.nome + ")");
+  }
   if (CTX.config.gh) { const gh = await RT.chiude(CTX.tok, pub); await salvaConfigRaw(c => Object.assign(c || {}, { gh })); }
   await RT.modifica("dati/utenti.json", CTX.tok, () => pub, "Team aggiornato (" + CTX.nome + ")");
   CTX.utenti = pub; CTX.io = pub.find(u => u.nome === CTX.nome) || CTX.io;

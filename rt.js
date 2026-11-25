@@ -1,12 +1,13 @@
 // Rapid Team: libreria comune (accesso, cifratura, lettura e salvataggio dei dati sul repository).
-// I dati stanno in dati/utenti.json, dati/config.json, dati/giri.json.
-// Ogni giro è cifrato (AES-GCM) con una chiave casuale consegnata (RSA-OAEP) solo a chi lo può vedere.
+// I dati stanno in dati/utenti.json, dati/config.json, dati/giri.json, dati/liste.json (liste clienti della raccolta).
+// Ogni giro e ogni lista sono cifrati (AES-GCM) con una chiave casuale consegnata (RSA-OAEP) solo a chi li può vedere.
 "use strict";
 window.RT = (() => {
   const REPO = "RapidTeam1/Rapid-Team", BRANCH = "main", API = "https://api.github.com/repos/" + REPO + "/contents/";
   const S = crypto.subtle, enc = new TextEncoder(), dec = new TextDecoder();
   const ITER = 600000, K = "rt-sess", CACHE_DATI = "rapid-team-dati";
   const COLORI = { accento: "#e41519", scuro: "#0c0c0d" };
+  const BUSTE = ["dati/giri.json", "dati/liste.json"];
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const tob64 = buf => { const u = buf instanceof Uint8Array ? buf : new Uint8Array(buf); let s = "";
     for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
@@ -71,7 +72,7 @@ window.RT = (() => {
     return Object.assign({}, b, { wraps });
   }
 
-  /* chi vede un giro: chi lo ha creato, i colleghi con cui è condiviso, chi vede tutti i giri, gli amministratori */
+  /* chi vede un giro o una lista: chi l'ha creato, i colleghi con cui è condiviso, chi vede tutti i giri, gli amministratori */
   const destinatariGiro = (G, utenti) => utenti.filter(u => u.admin || u.tutti || u.nome === G.autore || (G.condiviso || []).includes(u.nome));
 
   /* ---------- lettura dati ---------- */
@@ -96,7 +97,7 @@ window.RT = (() => {
   }
   // legge dalla API (sempre aggiornata) se c'è la chiave GitHub, altrimenti dal sito o dalla copia sul telefono
   async function leggi(path, tok) {
-    if (tok && navigator.onLine !== false) { try { const x = await daAPI(path, tok); if (x.data) return x.data; } catch (e) {} }
+    if (tok && navigator.onLine !== false) { try { const x = await daAPI(path, tok); if (x.data) return x.data; if (x.sha === null) return []; } catch (e) {} }
     return daSito(path);
   }
   function errore(st) {
@@ -137,33 +138,36 @@ window.RT = (() => {
     colori(config.colori);
     return ctx;
   }
-  async function giri(ctx) {
-    const lista = (await leggi("dati/giri.json", ctx.tok)) || [];
+  async function buste(ctx, path) {
+    const lista = (await leggi(path, ctx.tok)) || [];
     const out = [];
     for (const b of lista) { try { const G = await apre(b, ctx.pk, ctx.nome); if (G) out.push(G); } catch (e) {} }
     return out;
   }
+  const giri = ctx => buste(ctx, "dati/giri.json");
+  const liste = ctx => buste(ctx, "dati/liste.json");
   function colori(c) {
     c = Object.assign({}, COLORI, c || {});
     const r = document.documentElement.style; r.setProperty("--red", c.accento); r.setProperty("--blk", c.scuro);
     const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", c.scuro);
   }
 
-  /* salva (crea o sostituisce) un giro */
-  async function salvaGiro(ctx, G) {
+  /* salva (crea o sostituisce) un oggetto cifrato in un elenco di buste */
+  async function salvaBusta(ctx, path, G, messaggio) {
     const dest = destinatariGiro(G, ctx.utenti);
     const busta = Object.assign({ id: G.id }, await chiude(G, dest));
-    await modifica("dati/giri.json", ctx.tok, lista => {
+    await modifica(path, ctx.tok, lista => {
       lista = Array.isArray(lista) ? lista : [];
       const i = lista.findIndex(b => b.id === G.id);
       if (i >= 0) lista[i] = busta; else lista.push(busta);
       return lista;
-    }, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")");
+    }, messaggio);
   }
-  async function eliminaGiro(ctx, id, titolo) {
-    await modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
-  }
+  const salvaGiro = (ctx, G) => salvaBusta(ctx, "dati/giri.json", G, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")");
+  const salvaLista = (ctx, L) => salvaBusta(ctx, "dati/liste.json", L, (L.creato === L.modificato ? "Nuova lista clienti: " : "Lista clienti aggiornata: ") + L.titolo + " (" + ctx.nome + ")");
+  const eliminaGiro = (ctx, id, titolo) => modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
+  const eliminaLista = (ctx, id, titolo) => modifica("dati/liste.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Lista clienti eliminata: " + titolo + " (" + ctx.nome + ")");
 
-  return { REPO, BRANCH, COLORI, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, chiude, apre, riconsegna,
-    destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, salvaGiro, eliminaGiro, colori };
+  return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, chiude, apre, riconsegna,
+    destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori };
 })();
