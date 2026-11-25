@@ -1,7 +1,7 @@
 {
-  "name": "RAPID Giri commerciali",
-  "short_name": "RAPID Giri",
-  "description": "Giri commerciali RAPID: visite, navigazione, chiamate e note",
+  "name": "Rapid Team",
+  "short_name": "Rapid Team",
+  "description": "Rapid Team: giri commerciali, visite, navigazione, chiamate e note",
   "lang": "it",
   "start_url": "./",
   "scope": "./",
