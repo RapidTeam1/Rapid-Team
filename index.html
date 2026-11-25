@@ -104,7 +104,8 @@ details.inst b{color:var(--red)}
 #lock h1{margin:0;font-size:clamp(34px,4vw,46px);line-height:1;font-weight:800}
 #lock p{margin:0;color:#b9bac0;font-size:15px}
 #lh{min-height:22px}
-.who{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.who{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.who .nm{min-width:0;overflow-wrap:anywhere;line-height:1.2}
 .who button{display:flex;align-items:center;gap:10px;min-height:58px;padding:8px 12px;border-radius:14px;border:1.5px solid #2c2d33;background:#141417;color:#fff;font-weight:700;font-size:16px;cursor:pointer;text-align:left;transition:border-color .15s,background .15s,transform .15s}
 .who button:hover{border-color:#4a4b52;transform:translateY(-1px)}
 .who button[aria-pressed=true]{border-color:var(--red);background:linear-gradient(180deg,rgba(228,21,25,.22),rgba(228,21,25,.08));box-shadow:0 0 0 3px rgba(228,21,25,.18)}
@@ -435,7 +436,7 @@ async function avvioLogin(){
   if (!RT.ok) { err.textContent = "Questo browser non può aprire l'app. Usa Chrome, Edge o Safari aggiornati."; return; }
   UT = (await RT.daSito("dati/utenti.json")) || [];
   if (!UT.length) { err.textContent = "Impossibile caricare l'elenco degli utenti: controlla la rete."; return; }
-  $("#who").innerHTML = UT.map(u => `<button type="button" data-n="${esc(u.nome)}" aria-pressed="false"><span class="av">${esc(u.nome.charAt(0).toUpperCase())}</span>${esc(u.nome)}</button>`).join("");
+  $("#who").innerHTML = UT.map(u => `<button type="button" data-n="${esc(u.nome)}" aria-pressed="false"><span class="av">${esc(u.nome.charAt(0).toUpperCase())}</span><span class="nm">${esc(u.nome)}</span></button>`).join("");
   const s = RT.sess.get(); if (s && s.nome && s.jwk) { entra(s).catch(() => RT.sess.del()); return; }
   // ricorda l'ultima persona entrata da questo dispositivo
   let ult = null; try { ult = JSON.parse(localStorage.getItem("rt-nome") || "null"); } catch(e) {}
