@@ -3,5 +3,17 @@
   "accento": "#e41519",
   "scuro": "#0c0c0d"
  },
- "gmaps_key": "AIzaSyC1hh2WVYzc4Py0hS8dPJuCBCIt2xhAi48"
+ "gmaps_key": "AIzaSyC1hh2WVYzc4Py0hS8dPJuCBCIt2xhAi48",
+ "gh": {
+  "wraps": {
+   "Susannah": "Sx7oMdOsN96UYQiQ77bLkBA5+IGtoNRM4kaHCbtS2nHTsJ8AJqZaFyv3jisbxAEJ7IybpEpv1V00n2rQiRMAPtqiSp+93yc/vd6VX7NdFfX9XpTFz/jIZ7wvssTVDiqk3ulzETDK4t0Fu25eMetMgng9iru9+6aXdjSRu7PgodnIdJCAcXx2lrJJniiTDB6zgqTBRYQZ5BbGASXLMdC3iwMKA1lYU6wL2c5Z9Y3Nx3uR9a4Ma2S1h0BWsuGM8lk2LEWmnF5TEh+LSVEmJ7y0ttEUUN188xNDNWHYfSKwbnYgOB/FUZk0WsOyiLCUkHJvEH5sfwnhCJvXlUvIZJxh9A==",
+   "Marco": "Ct44ngq54V5n/tKd/Wk/546kRE3yOiHSZmtkU8XRLp40rl0WfZVRYDqliKhIYv2B8CdwNEYyNm95NPrZgng+rHuisxtajMvHqocdxUlTvt0QeR9CihIE53jbt/Uf3WywI6JzO7HAIy4wHXwKwHdRFxFbMBaoYDRK1bIQbnj8fecm8jpl+L2oSvAxQ0ut1Cqyyy3g/gjyKMLxxpzD3UxrZqW7k3qYfsSB2j/IjncrjAfX/WI8rntThPLBS0vkh8jA8eFB5lBY1ljvbPjlLPsdndqmcSWmyZ+uotCCbjhfCtuGHSlLG1DUYZpZAE/CHj8AFikgpps17mZDYRNcnDHXSw==",
+   "Pietro": "jB+48fco64S7MMzXtOP2K37oBTZoGoZTjNIGM5Ey1oFghHpu97S/Mzq6GUV8/pivwUdnFW38w2qqZH74/xADylJgQLxKwOXzjLELj0Ld+IHEV2EwiOM+TLxpgaBUZ4oShvZmEQ2u0nmai52tMLT9pxq+FEnItvsMJDRBJ6G8mqAIrMn0KXxEwYWUaXuwHuZ3je47OMxGu8TxnxO8BWv4AXu9PdHU8h4KJGSTUsISIXV4pMBPyY97s/em7xh7nKCT4PmqmWd6dLPfBbOwnAbE49j/UsT5ow4CCBHQDJMrRyuVOQRsM61Vdoq7Ke01gKcZt/x7hvh6AjLLNbwMIjlAyA==",
+   "Andrea": "nFj6pUAn44pRHJBAU5LUDUfJyzbDaUk+3qNcN2G7+roe1VX8CeC98iHvFK6/D8jorw8+J5ZqbR2pnX2uOjnsS1sER+zWwzc6TL17fREn/gixaCzyF1b3JieJ9xrzDsGDfDIm1xbIuwMy1RbJ8Lrg5ogIi9owvIuh4ygLXUsr+Ynsf4fWt6TknJ7dmxfu2GasWri6wlfN462JP5kDu3S4J0KV+pGiRhZDP+qn9XSxNaXXrtskyUhs5UyHmWNaEMWWp0FH3GF3bKI0fQHtpecUe6ZxDkakSQi+KEvfZhh4c3R4neSIZk4z5zzwZeFfcipuH+CtczmhPaRIdlwMBi/iaA==",
+   "Dana": "lOU9bd+YOzviXymX9HPGEmWAYDAXb5rotFdz2+o1SqeJlxbM8lBJWxPh1gckR+suWEAR5ykgHREYIhxgWSFu5SFhILoOBQFd0OdPk0JScsWmXAG40vRLZ+bbWRrScRwmK1dsLlB/fzdPT/C8N97wcUbuePIDKfk6poDswKga71rDPtNDdzk02smiAd4c6B8FuFJrywRvIdJpJRt1lp+JyrVZ7z3YUN3GWBSW7TdVnRE0gwj6YSm5xcc2GoSP0+WFvwVctHpgHsUhSSqQutQkE/DDzfTqFTrLmaQr0A4P2OOPlKhJWj5LcuqmfIYfBQtaD4CIZyeyGVp+jhWwuUEuNA=="
+  },
+  "iv": "lv5XjqPZ61bjX6ZD",
+  "ct": "82iPgxNjHiiMU4kiLQwFUvoVx5poE5jShtenroRC8dXNHMFXoxtxwGif/UYECNZaj2q+HhhgEM0cxM4OFss5YBNet53Ifthet2/tWRjsdfymtRvc4185mGqGCgLzDmLKxKMb6x8S0/ocl2+E+6Uz"
+ },
+ "gh_scadenza": "2027-07-25"
 }
