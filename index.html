@@ -333,6 +333,24 @@ table.t td.a .btn{margin:2px}
 .imp-rq{display:flex;gap:6px;margin-top:8px}.imp-rq .in{min-height:36px;padding:6px 10px;font-size:14px}.imp-rq .btn{flex:none}
 details.imp-sk{margin-top:12px;font-size:13px}details.imp-sk summary{cursor:pointer;font-weight:700}
 details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--mut)}
+/* ---------- stato del cliente / della visita: Solo passaggio · Da contattare (arancione) · Appuntamento fissato (verde) ---------- */
+.chip.ct{color:var(--or);border-color:var(--or)}
+.g p .ct{color:var(--or);font-weight:700}
+.stp .n.ct{background:#ea580c}
+.stp.ctt{border-color:#ea580c;box-shadow:inset 5px 0 0 #ea580c;background:rgba(234,88,12,.07)}
+.stp.ctt.open{border-color:#ea580c}
+.stp .ap.ct{color:var(--or)}
+.stati{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:2px 0 10px}
+.stati label{display:flex;align-items:center;gap:7px;border:1.5px solid var(--line);border-radius:10px;padding:7px 9px;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;background:var(--bg)}
+.stati input{width:17px;height:17px;margin:0;flex:none}
+.stati .pa input{accent-color:var(--ink)}.stati .ct input{accent-color:#ea580c}.stati .ap input{accent-color:var(--ok)}
+.stati label.on.pa{border-color:var(--ink)}
+.stati label.on.ct{border-color:#ea580c;background:rgba(234,88,12,.1);color:var(--or)}
+.stati label.on.ap{border-color:var(--ok);background:rgba(29,138,75,.1);color:var(--ok)}
+.stati label.ro{cursor:default}
+.pday li .ct{color:var(--or);font-weight:700}
+.collab{background:rgba(29,138,75,.08);border:1px solid rgba(29,138,75,.3);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+@media(max-width:420px){.stati{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -379,7 +397,7 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
     <div class="cap"><b>Il team RAPID, un giro alla volta.</b><span>Giri commerciali, clienti e visite: tutto in un posto, sul telefono e sul PC.</span></div>
   </div>
   <div class="lk-side"><form id="lf" autocomplete="off">
-    <img src="__LOGO_B__" alt="RAPID Flood Control Systems">
+    <img src="logo-bianco.png" alt="RAPID Flood Control Systems">
     <h1 class="w">Rapid Team</h1>
     <p id="lh">Chi sei?</p>
     <div class="who" id="who" role="group" aria-label="Scegli il tuo nome"></div>
@@ -398,7 +416,7 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
 <header class="top">
   <svg class="top-onde" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path class="o1" d="M0 70 Q150 40 300 70 T600 70 T900 70 T1200 70 V120 H0Z"/><path class="o2" d="M0 88 Q150 62 300 88 T600 88 T900 88 T1200 88 V120 H0Z"/></svg>
   <div class="wrap">
-    <div class="row"><img class="lg" src="__LOGO_B__" alt="RAPID Flood Control Systems"><span class="hdr-acts"><button class="ghost tema" type="button" id="tema" aria-label="Cambia tema"></button><button class="ghost" type="button" id="cpw" aria-label="Cambia password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M16 7l3 3M18.5 4.5l2 2"/></svg><span class="tx">Password</span></button><a class="ghost" href="#admin" id="toadm" aria-label="Amministrazione" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span class="tx">Amministrazione</span></a><button class="ghost" type="button" id="esci" aria-label="Esci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span class="tx">Esci</span></button></span></div>
+    <div class="row"><img class="lg" src="logo-bianco.png" alt="RAPID Flood Control Systems"><span class="hdr-acts"><button class="ghost tema" type="button" id="tema" aria-label="Cambia tema"></button><button class="ghost" type="button" id="cpw" aria-label="Cambia password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M16 7l3 3M18.5 4.5l2 2"/></svg><span class="tx">Password</span></button><a class="ghost" href="#admin" id="toadm" aria-label="Amministrazione" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span class="tx">Amministrazione</span></a><button class="ghost" type="button" id="esci" aria-label="Esci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span class="tx">Esci</span></button></span></div>
     <p class="sub" id="oggi"></p>
     <h1 class="w" id="ciao">Rapid Team</h1>
     <div class="kpi" id="kpi"></div>
@@ -471,22 +489,6 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
 <input type="file" id="impf" accept=".xlsx,.xls,.xlsm,.ods,.csv,.txt" hidden>
 <div id="toast" role="status" hidden></div>
 
-<script>
-/* logo: se la pagina non è passata da «node app.mjs costruisci» (c'è ancora il segnaposto), prende il logo ufficiale
-   da giro.html, che lo contiene già: tra le immagini incorporate sceglie quella chiara (il logo bianco per i fondi scuri). */
-(async () => { const I = [...document.querySelectorAll('img[src="__LOGO_B__"]')]; if (!I.length) return;
-  I.forEach(i => { i.removeAttribute("src"); i.style.visibility = "hidden"; });
-  try {
-    const t = await (await fetch("giro.html")).text(), U = [...new Set(t.match(/data:image\/png;base64,[A-Za-z0-9+\/=]+/g) || [])];
-    const luce = u => new Promise(ok => { const im = new Image(); im.onerror = () => ok(-1);
-      im.onload = () => { try { const c = document.createElement("canvas"); c.width = im.width; c.height = im.height; const x = c.getContext("2d"); x.drawImage(im, 0, 0);
-        const d = x.getImageData(0, 0, c.width, c.height).data; let s = 0, n = 0; for (let k = 0; k < d.length; k += 4) if (d[k + 3] > 128) { s += d[k] + d[k + 1] + d[k + 2]; n++; } ok(n ? s / n : 0); } catch (e) { ok(-1); } };
-      im.src = u; });
-    let best = null, bl = -1; for (const u of U) { const l = await luce(u); if (l > bl) { bl = l; best = u; } }
-    if (best) I.forEach(i => { i.src = best; });
-  } catch (e) {}
-  I.forEach(i => { i.style.visibility = ""; }); })();
-</script>
 <script src="rt.js"></script>
 <script src="genera.js"></script>
 <script src="importa.js"></script>
@@ -502,6 +504,27 @@ const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") 
 let CTX = null, GIRI = [], LISTE = [], MODE = "giro";
 
 function toast(t, errore){ const x = $("#toast"); x.textContent = t; x.classList.toggle("err", !!errore); x.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => x.hidden = true, errore ? 9000 : 5000); }
+
+/* ---------------- stato del cliente (lista) e della visita (giro) ----------------
+   Lista: c.stato = "passaggio" | "contattare" | "appuntamento" (c.appuntamento resta allineato per «Genera giro»).
+   Giro: etichetta della visita "prospezione" (= solo passaggio) | "contattare" | "appuntamento". */
+const STATI = [["passaggio", "Solo passaggio"], ["contattare", "Da contattare per appuntamento"], ["appuntamento", "Appuntamento fissato"]];
+const statoC = c => ["passaggio", "contattare", "appuntamento"].includes(c.stato) ? c.stato : (c.appuntamento ? "appuntamento" : "passaggio");
+const radioStati = (nome, val, attr, voci, ro) => `<div class="stati" role="radiogroup" aria-label="Stato">${voci.map(([v, l]) => { const k = v === "appuntamento" ? "ap" : v === "contattare" ? "ct" : "pa";
+  return `<label class="${k}${val === v ? " on" : ""}${ro ? " ro" : ""}"><input type="radio" name="${esc(nome)}" value="${v}" ${attr} ${val === v ? "checked" : ""} ${ro}>${esc(l)}</label>`; }).join("")}</div>`;
+
+/* salvataggio con controllo: se un collega ha salvato la stessa cosa dopo che l'hai aperta, chiede se sovrascrivere */
+async function salvaSicuro(fn, base, cosa){
+  try { await fn(base); }
+  catch(x) {
+    if (!x.conflitto) throw x;
+    const c = x.conflitto, chi = c.da || "Un collega", d = c.quando ? new Date(c.quando) : null;
+    const quando = d && !isNaN(d) ? " (" + d.toLocaleDateString("it-IT") + " alle " + d.toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" }) + ")" : "";
+    if (!confirm(chi + " ha salvato " + cosa + quando + " dopo che l'hai aperto.\n\nOK = salva lo stesso le tue modifiche (quelle di " + chi + " vanno perse).\nAnnulla = non salvare: le tue modifiche restano come bozza su questo dispositivo; ricarica la pagina per vedere la versione di " + chi + "."))
+      throw new Error("Non salvato: le tue modifiche restano come bozza. Ricarica la pagina per vedere la versione di " + chi + ".");
+    await fn(null);
+  }
+}
 
 /* ---------------- accesso ---------------- */
 const pw = $("#pw"), lb = $("#lb"), err = $("#err");
@@ -611,7 +634,11 @@ const NOMI = {c:"In corso", p:"In programma", f:"Concluso"};
 const tappe = g => (g.giorni || []).flatMap(d => d.tappe || []);
 const conta = (g, e) => tappe(g).filter(t => (t.etichette || []).includes(e)).length;
 const fatte = g => { try { return Object.keys(JSON.parse(localStorage.getItem("spunte-" + g.id) || "{}")).length; } catch(e) { return 0; } };
-const puoModificare = g => CTX.admin || g.autore === CTX.nome;
+/* permessi: chi ha creato il giro (o la lista) e gli amministratori decidono condivisione, «Il giro è per» ed eliminazione;
+   chi lo riceve (condiviso o «Il giro è per») può modificare visite, stato, appuntamenti, ore e note */
+const coinvolto = x => (x.per || []).includes(CTX.nome) || (x.condiviso || []).includes(CTX.nome);
+const puoGestire = x => CTX.admin || x.autore === CTX.nome;
+const puoModificare = g => puoGestire(g) || coinvolto(g);
 // giro «mio»: assegnato a me con «Il giro è per», oppure creato da me se non è assegnato a nessuno
 const mio = g => (g.per || []).length ? g.per.includes(CTX.nome) : g.autore === CTX.nome;
 const chiGiro = g => { const p = (g.per || []).length ? "per " + (g.per.includes(CTX.nome) && g.per.length === 1 ? "te" : g.per.join(", ")) : "";
@@ -636,19 +663,20 @@ function cruscotto(){
     const diAltri = !mio(prox) ? ((prox.per || []).length ? prox.per.join(", ") : prox.autore || "") : "";
     const tot = tappe(prox).length, f = Math.min(fatte(prox), tot), pc = tot ? Math.round(f / tot * 100) : 0, ng = (prox.giorni || []).length;
     const k = prox._s === "c" ? "In corso oggi" : (gg(d0, dt(prox.dal)) === 1 ? "Domani" : `Tra ${gg(d0, dt(prox.dal))} giorni · ${GIORNI[dt(prox.dal).getDay()]}`);
+    const na = conta(prox, "appuntamento"), nct = conta(prox, "contattare");
     $("#prossimo").innerHTML = `<h2>${prox._s === "c" ? "Giro in corso" : "Prossimo giro"}</h2>
     <a class="next" href="${esc(link(prox))}"><span class="when">${esc(k)}${diAltri ? " · giro di " + esc(diAltri) : ""}</span>
       <h3 class="w">${esc(prox.titolo)}</h3><p>${esc(periodo(prox))}${prox.zona ? " · " + esc(prox.zona) : ""}${(prox.per || []).length && !diAltri ? " · per " + (prox.per.length === 1 ? "te" : esc(prox.per.join(", "))) : ""}</p>
-      <div class="chips"><span class="chip">${tot} ${tot === 1 ? "visita" : "visite"}</span>${conta(prox,"appuntamento") ? `<span class="chip ap">${conta(prox,"appuntamento")} appuntamenti</span>` : ""}${conta(prox,"prospezione") ? `<span class="chip pz">${conta(prox,"prospezione")} prospezioni</span>` : ""}<span class="chip">${ng} ${ng === 1 ? "giorno" : "giorni"}</span></div>
+      <div class="chips"><span class="chip">${tot} ${tot === 1 ? "visita" : "visite"}</span>${na ? `<span class="chip ap">${na} ${na === 1 ? "appuntamento" : "appuntamenti"}</span>` : ""}${nct ? `<span class="chip ct">${nct} da contattare</span>` : ""}<span class="chip">${ng} ${ng === 1 ? "giorno" : "giorni"}</span></div>
       <div class="giorni-pv">${(prox.giorni || []).map(d => { const n = (d.tappe || []).length; return `<span><b>${esc(d.nome || "")} ${esc(d.data || "")}</b>${n} ${n === 1 ? "visita" : "visite"}${d.notte ? " · notte" : ""}</span>`; }).join("")}</div>
       <div class="bar"><i><s style="width:${pc}%"></s></i>${f} di ${tot} fatte</div><span class="go">Apri il giro</span></a>`;
   } else $("#prossimo").innerHTML = '<h2>Prossimo giro</h2><p class="empty">Nessun giro in programma.</p>';
   // liste clienti (raccolta)
   const LV = LISTE.filter(l => !l.archiviato).sort((a, b) => String(b.modificato).localeCompare(String(a.modificato)));
-  $("#liste").innerHTML = LV.length ? LV.map(l => { const nc = (l.clienti || []).length, na = (l.clienti || []).filter(c => c.appuntamento).length;
-    const chi = l.autore === CTX.nome ? ((l.condiviso||[]).length ? "condivisa con " + l.condiviso.join(", ") : "creata da te") : "di " + (l.autore || "—");
+  $("#liste").innerHTML = LV.length ? LV.map(l => { const C = l.clienti || [], nc = C.length, na = C.filter(c => statoC(c) === "appuntamento").length, nct = C.filter(c => statoC(c) === "contattare").length;
+    const chi = l.autore === CTX.nome ? ((l.condiviso||[]).length ? "condivisa con " + l.condiviso.join(", ") : "creata da te") : "di " + (l.autore || "—") + ((l.condiviso || []).includes(CTX.nome) ? " · condivisa con te" : "");
     return `<li class="gw"><a class="g" href="#raccogli/${esc(encodeURIComponent(l.id))}"><div class="dt ls"><b>${nc}</b><span>${nc === 1 ? "cliente" : "clienti"}</span></div>
-      <div><h4>${esc(l.titolo)}</h4><p>${l.zona ? esc(l.zona) + " · " : ""}${na ? na + (na === 1 ? " appuntamento · " : " appuntamenti · ") : ""}${esc(chi)}</p></div><span class="st p">Lista</span></a></li>`; }).join("")
+      <div><h4>${esc(l.titolo)}</h4><p>${l.zona ? esc(l.zona) + " · " : ""}${na ? na + (na === 1 ? " appuntamento · " : " appuntamenti · ") : ""}${nct ? '<span class="ct">' + nct + " da contattare</span> · " : ""}${esc(chi)}</p></div><span class="st p">Lista</span></a></li>`; }).join("")
     : '<li class="vuoto">Nessuna lista ancora. Raccogli sulla mappa i clienti da visitare (o importali da un file Excel), condividili con i colleghi e genera il giro.<a href="#raccogli">Crea la prima lista →</a></li>';
   const TABS = [["tutti","Tutti",G.length],["per","Per me",G.filter(mio).length],["c","In corso",n("c")],["p","In programma",n("p")],["f","Conclusi",n("f")],["miei","Creati da me",G.filter(g => g.autore === CTX.nome).length]];
   const disegna = () => {
@@ -656,18 +684,18 @@ function cruscotto(){
     const q = $("#q").value.trim().toLowerCase();
     const vis = G.filter(g => (filtro === "tutti" || g._s === filtro || (filtro === "miei" && g.autore === CTX.nome) || (filtro === "per" && mio(g))) &&
       (!q || [g.titolo, g.zona, g.autore, (g.per||[]).join(" "), (g.condiviso||[]).join(" "), tappe(g).map(t => t.azienda + " " + (t.indirizzo||"")).join(" ")].join(" ").toLowerCase().includes(q)));
-    $("#lista").innerHTML = vis.length ? vis.map(g => { const a = dt(g.dal), tot = tappe(g).length, f = Math.min(fatte(g), tot);
+    $("#lista").innerHTML = vis.length ? vis.map(g => { const a = dt(g.dal), tot = tappe(g).length, f = Math.min(fatte(g), tot), nct = conta(g, "contattare");
       const chi = chiGiro(g);
       return `<li class="gw"><a class="g" href="${esc(link(g))}"><div class="dt"><b>${a.getDate()}</b><span>${MESI[a.getMonth()]}</span></div>
-        <div><h4>${esc(g.titolo)}</h4><p>${esc(periodo(g))}${g.zona ? " · " + esc(g.zona) : ""} · ${tot} ${tot === 1 ? "visita" : "visite"}${g._s !== "f" && f ? " · " + f + " fatte" : ""} · ${esc(chi)}</p></div>
+        <div><h4>${esc(g.titolo)}</h4><p>${esc(periodo(g))}${g.zona ? " · " + esc(g.zona) : ""} · ${tot} ${tot === 1 ? "visita" : "visite"}${g._s !== "f" && f ? " · " + f + " fatte" : ""}${nct ? ' · <span class="ct">' + nct + " da contattare</span>" : ""} · ${esc(chi)}</p></div>
         <span class="st ${g._s}">${NOMI[g._s]}</span></a>${puoModificare(g) ? `<a class="ed" href="#pianifica/${esc(encodeURIComponent(g.id))}">Modifica</a>` : ""}</li>`; }).join("")
       : `<li class="empty">${q ? "Nessun giro trovato." : "Nessun giro in questa sezione."}</li>`;
   };
   $("#tabs").onclick = e => { const b = e.target.closest("button[data-k]"); if (b) { filtro = b.dataset.k; disegna(); } };
   $("#q").oninput = disegna;
   disegna();
-  $("#nota").textContent = CTX.tutti ? "Vedi tutti i giri del team. L'avanzamento delle visite è quello segnato su questo dispositivo."
-    : "Vedi i giri creati da te e quelli che i colleghi hanno condiviso con te. L'avanzamento delle visite è quello segnato su questo dispositivo.";
+  $("#nota").textContent = (CTX.tutti ? "Vedi tutti i giri del team." : "Vedi i giri creati da te e quelli che i colleghi hanno condiviso con te.")
+    + " Puoi modificare i giri creati da te e quelli che ti hanno condiviso o assegnato. L'avanzamento delle visite è quello segnato su questo dispositivo.";
   if (location.protocol === "https:" && navigator.onLine !== false) { try { fetch("giro.html", {cache:"no-cache"}).catch(() => {}); } catch(e) {} }
 }
 $("#nuovo").addEventListener("click", () => { location.hash = "pianifica"; });
@@ -694,7 +722,7 @@ addEventListener("online", rete); addEventListener("offline", rete); rete();
   if (ib) ib.addEventListener("click", async () => { if (!ev) return; try { ev.prompt(); await ev.userChoice; } catch(e) {} ev = null; ib.style.display = "none"; }); }
 
 /* ---------------- pianificatore ---------------- */
-let P = null, CUR = 0, OPEN = -1, GENERATO = null;
+let P = null, CUR = 0, OPEN = -1, GENERATO = null, PGEST = true;
 const BOZZA = "rt-bozza-" ;
 function giorniTra(dal, al){
   if (!dal) return []; const a = dt(dal), b = dt(al && al >= dal ? al : dal), out = [];
@@ -716,7 +744,7 @@ function nuovoP(){
 function daGiro(G){
   const per = [...(G.per || [])];
   return { id: G.id, titolo: G.titolo || "", sottotitolo: G.sottotitolo || "", dal: G.dal || "", al: G.al || G.dal || "", zona: G.zona || "", prima: (G.prima_di_partire || []).join("\n"),
-    condiviso: (G.condiviso || []).filter(n => !per.includes(n)), per, autore: G.autore || CTX.nome, creato: G.creato || "", archiviato: !!G.archiviato,
+    condiviso: (G.condiviso || []).filter(n => !per.includes(n)), per, autore: G.autore || CTX.nome, creato: G.creato || "", archiviato: !!G.archiviato, base: G.modificato || "",
     giorni: (G.giorni || []).map((g, i) => ({ iso: g.iso || (G.dal ? iso(new Date(dt(G.dal).getTime() + i * 864e5)) : ""), percorso: g.percorso || "", notte: g.notte || "", tappe: (g.tappe || []).map(t => Object.assign({}, t)) })) };
 }
 function salvaBozza(){ dirty = true; try { localStorage.setItem(BOZZA + (P.id || "nuovo") + "-" + CTX.nome, JSON.stringify(P)); } catch(e) {} }
@@ -725,10 +753,11 @@ function togliBozza(id){ try { localStorage.removeItem(BOZZA + (id || "nuovo") +
 
 function apriPiano(id){
   let bozza = null;
-  $("#pl-save").textContent = "Salva giro";
+  $("#pl-save").textContent = "Salva giro"; PGEST = true;
   if (id) { const G = GIRI.find(g => g.id === id);
     if (!G) { $("#pp").innerHTML = '<p class="empty">Giro non trovato o non visibile per te.</p>'; $("#pl-save").hidden = true; return; }
-    if (!puoModificare(G)) { $("#pp").innerHTML = '<p class="empty">Puoi modificare solo i giri creati da te.</p>'; $("#pl-save").hidden = true; return; }
+    if (!puoModificare(G)) { $("#pp").innerHTML = '<p class="empty">Puoi modificare solo i giri creati da te, assegnati a te o condivisi con te.</p>'; $("#pl-save").hidden = true; return; }
+    PGEST = puoGestire(G);
     P = daGiro(G); const b = leggiBozza(id); if (b && JSON.stringify(b) !== JSON.stringify(P)) bozza = b;
   } else if (GENERATO) { P = GENERATO; GENERATO = null; }
   else { P = nuovoP(); bozza = leggiBozza(""); }
@@ -737,14 +766,23 @@ function apriPiano(id){
   allineaGiorni(); if (P._generato) { delete P._generato; salvaBozza(); toast("Proposta pronta: controlla orari, note e notti, poi premi «Salva giro»."); }
   pannello(bozza); mappa();
 }
-const TIPI = [["", "—"], ["appuntamento", "Appuntamento"], ["prospezione", "Prospezione"]];
-const tipo = t => (t.etichette || []).includes("appuntamento") ? "appuntamento" : (t.etichette || []).includes("prospezione") ? "prospezione" : "";
+// stato della visita nel giro: etichetta "prospezione" (= solo passaggio), "contattare" o "appuntamento"
+const TIPI = [["prospezione", "Solo passaggio"], ["contattare", "Da contattare per appuntamento"], ["appuntamento", "Appuntamento fissato"]];
+const ETI_T = ["appuntamento", "contattare", "prospezione"];
+const tipo = t => ETI_T.find(e => (t.etichette || []).includes(e)) || "";
+// ora dell'appuntamento: precisa («10:30») o fascia («10:00–12:00», cioè dalle 10 alle 12)
+const oraT = t => t.ora ? t.ora + (t.ora_a ? "–" + t.ora_a : "") : "";
+const ssT = t => { const ti = tipo(t);
+  return (ti === "appuntamento" ? '<b style="color:var(--ok)">Appuntamento' + (t.ora ? "" : " · ora da inserire") + "</b> · " : ti === "contattare" ? '<b style="color:var(--or)">Da contattare</b> · ' : "")
+    + esc(t.indirizzo || t.ricerca || "Indirizzo da inserire"); };
 function pannello(bozza){
   const altri = CTX.utenti.filter(u => u.nome !== P.autore && !u.admin && !u.tutti);
   const sempre = CTX.utenti.filter(u => u.nome !== P.autore && (u.admin || u.tutti)).map(u => u.nome);
   const g = P.giorni[CUR] || { tappe: [] };
+  const nCt = P.giorni.reduce((k, d) => k + d.tappe.filter(t => tipo(t) === "contattare").length, 0);
   $("#pp").innerHTML = `
   ${bozza ? `<div class="bozza" id="bz">Hai una bozza non salvata${bozza.titolo ? ": «" + esc(bozza.titolo) + "»" : ""}. <button class="btn sm" type="button" id="bz-si">Riprendi</button><button class="btn sm" type="button" id="bz-no">Scarta</button></div>` : ""}
+  ${PGEST ? "" : `<div class="collab">Giro di <b>${esc(P.autore)}</b>${(P.per || []).length ? " per " + esc(P.per.join(", ")) : ""}: puoi segnare lo stato delle visite (da contattare, appuntamento fissato), le ore, le note e aggiungere o spostare visite. A chi è assegnato e con chi è condiviso lo decide ${esc(P.autore)} (o un amministratore).</div>`}
   <fieldset class="fs"><legend>Il giro</legend>
     <label class="fl"><span>Titolo</span><input class="in" data-p="titolo" value="${esc(P.titolo)}" placeholder="Es. Giro Liguria di Ponente"></label>
     <div class="two"><label class="fl"><span>Dal</span><input class="in" type="date" data-p="dal" value="${esc(P.dal)}"></label><label class="fl"><span>Al</span><input class="in" type="date" data-p="al" value="${esc(P.al)}"></label></div>
@@ -752,32 +790,38 @@ function pannello(bozza){
     <label class="fl"><span>Descrizione breve (facoltativa)</span><input class="in" data-p="sottotitolo" value="${esc(P.sottotitolo)}"></label>
     <label class="fl"><span>Prima di partire (una voce per riga)</span><textarea class="in" data-p="prima" placeholder="Catalogo fotografico&#10;Campione CLICK">${esc(P.prima)}</textarea></label>
   </fieldset>
-  <fieldset class="fs"><legend>Il giro è per</legend>
+  ${PGEST ? `<fieldset class="fs"><legend>Il giro è per</legend>
     <div class="share" id="per">${CTX.utenti.map(u => `<label class="${(P.per || []).includes(u.nome) ? "on" : ""}"><input type="checkbox" value="${esc(u.nome)}" ${(P.per || []).includes(u.nome) ? "checked" : ""}>${esc(u.nome)}${u.nome === CTX.nome ? " (io)" : ""}</label>`).join("")}</div>
-    <p class="hint">Chi farà il giro: lo trova come suo nel cruscotto (anche se lo hai preparato tu). Se non scegli nessuno, il giro è di chi lo crea.</p>
+    <p class="hint">Chi farà il giro: lo trova come suo nel cruscotto (anche se lo hai preparato tu) e può modificarlo. Se non scegli nessuno, il giro è di chi lo crea.</p>
   </fieldset>
   <fieldset class="fs"><legend>Condividi giro con colleghi</legend>
     ${altri.length ? `<div class="share" id="share">${altri.map(u => `<label class="${P.condiviso.includes(u.nome) ? "on" : ""}"><input type="checkbox" value="${esc(u.nome)}" ${P.condiviso.includes(u.nome) ? "checked" : ""}>${esc(u.nome)}</label>`).join("")}</div>` : '<p class="hint">Nessun altro collega da scegliere.</p>'}
     ${sempre.length ? `<p class="hint">${esc(sempre.join(", "))} ${sempre.length === 1 ? "vede" : "vedono"} già tutti i giri.</p>` : ""}
-  </fieldset>
-  <fieldset class="fs"><legend>Visite</legend>
+    <p class="hint">Chi riceve il giro può segnare stato delle visite, appuntamenti e note.</p>
+  </fieldset>` : ""}
+  <fieldset class="fs"><legend>Visite${nCt ? ` · <span style="color:var(--or)">${nCt} da contattare</span>` : ""}</legend>
     <div class="dtabs" id="dtabs">${P.giorni.map((d,i) => `<button type="button" data-d="${i}" aria-pressed="${i === CUR}">${esc(etDay(d))}<em>${d.tappe.length}</em></button>`).join("")}</div>
     <div class="two"><label class="fl"><span>Percorso del giorno</span><input class="in" data-g="percorso" value="${esc(g.percorso)}" placeholder="Es. Ravenna → Faenza → Forlì"></label><label class="fl"><span>Notte</span><input class="in" data-g="notte" value="${esc(g.notte)}" placeholder="Es. Hotel a Savona"></label></div>
     <div id="stops">${g.tappe.length ? g.tappe.map((t,i) => scheda(t, i)).join("") : `<p class="hint" style="margin:4px 0 10px">${CTX.config.gmaps_key ? "Cerca un'azienda sulla mappa e premi «Aggiungi»: la visita compare qui." : "Aggiungi le visite a mano con il bottone qui sotto."}</p>`}</div>
     <button class="btn addm" type="button" id="addm">+ Aggiungi visita a mano</button>
-    <div class="pfoot">${g.tappe.length > 1 && g.tappe.every(t => t.ora) ? '<button class="btn sm" type="button" id="ord">Ordina per orario</button>' : ""}</div>
+    <div class="pfoot">${g.tappe.length > 1 && g.tappe.every(t => t.ora) ? '<button class="btn sm" type="button" id="ord">Ordina per orario</button>' : ""}${P.giorni.some(d => d.tappe.some(t => t.ora && tipo(t) !== "appuntamento")) ? '<button class="btn sm" type="button" id="noore">Togli le ore (tranne gli appuntamenti)</button>' : ""}</div>
   </fieldset>`;
   segnaposti();
 }
 function scheda(t, i){
   const ap = i === OPEN, alt = P.giorni.map((d,k) => k === CUR ? "" : `<option value="${k}">${esc(etDay(d))}</option>`).join("");
-  const isApp = tipo(t) === "appuntamento";
-  return `<div class="stp${ap ? " open" : ""}${isApp ? " app" : ""}" data-i="${i}">
-    <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : ""}">${i+1}</span><div><div class="tt">${t.ora ? esc(t.ora) + " · " : ""}${esc(t.azienda || "Nuova visita")}</div><div class="ss">${isApp ? '<b style="color:var(--ok)">Appuntamento</b> · ' : ""}${esc(t.indirizzo || t.ricerca || "Indirizzo da inserire")}</div></div>
+  const ti = tipo(t), isApp = ti === "appuntamento", isCt = ti === "contattare";
+  return `<div class="stp${ap ? " open" : ""}${isApp ? " app" : isCt ? " ctt" : ""}" data-i="${i}">
+    <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : isCt ? " ct" : ""}">${i+1}</span><div><div class="tt">${oraT(t) ? esc(oraT(t)) + " · " : ""}${esc(t.azienda || "Nuova visita")}</div><div class="ss">${ssT(t)}</div></div>
       <div class="mv"><button type="button" data-act="su" aria-label="Sposta su" ${i === 0 ? "disabled" : ""}>↑</button><button type="button" data-act="giu" aria-label="Sposta giù" ${i === (P.giorni[CUR].tappe.length - 1) ? "disabled" : ""}>↓</button></div></div>
     ${ap ? `<div class="bd">
-      <div class="two"><label class="fl"><span>Ora (solo se c'è un appuntamento)</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>Tipo visita</span><select class="in" data-k="tipo">${TIPI.map(([v,l]) => `<option value="${v}" ${tipo(t) === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
-      <label class="chk"><input type="checkbox" data-k="att" ${(t.etichette||[]).includes("attenzione") ? "checked" : ""}> Attenzione (segnale arancione)</label>
+      <div class="fl"><span>Stato della visita</span>${radioStati("tp-" + CUR + "-" + i, ti, 'data-k="tipo"', TIPI, "")}</div>
+      ${isCt ? '<p class="hint" style="margin:-6px 0 10px">Da chiamare per fissare l\'appuntamento. Quando è fissato scegli «Appuntamento fissato» e scrivi l\'ora (il giorno è quello della visita: per cambiarlo usa «Giorno: sposta a…»).</p>' : ""}
+      ${isApp ? (t.ora_a || t._fa ? `<div class="two"><label class="fl"><span>Appuntamento dalle</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>alle</span><input class="in" type="time" data-k="ora_a" value="${esc(oraInput(t.ora_a))}"></label></div>
+      <div class="pfoot" style="margin:-4px 0 10px"><button class="btn sm" type="button" data-act="nofascia">Togli la fascia: ora precisa</button></div>`
+        : `<div class="two"><label class="fl"><span>Ora dell'appuntamento</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><div style="align-self:end;margin-bottom:10px"><button class="btn sm" type="button" data-act="fascia">Fascia oraria (dalle… alle…)</button></div></div>
+      ${t.ora ? "" : '<p class="hint" style="margin:-6px 0 10px;color:var(--ok);font-weight:700">Scrivi l\'ora dell\'appuntamento.</p>'}`) : ""}
+      <label class="chk"><input type="checkbox" data-k="att" ${(t.etichette||[]).includes("attenzione") ? "checked" : ""}> Attenzione (segnale giallo)</label>
       <label class="fl"><span>Azienda</span><input class="in" data-k="azienda" value="${esc(t.azienda)}"></label>
       <label class="fl"><span>Indirizzo</span><input class="in" data-k="indirizzo" value="${esc(t.indirizzo)}"></label>
       <div class="two"><label class="fl"><span>Telefono</span><input class="in" type="tel" data-k="telefono" value="${esc(t.telefono)}"></label><label class="fl"><span>Referente</span><input class="in" data-k="referente" value="${esc(t.referente)}"></label></div>
@@ -806,12 +850,14 @@ $("#pp").addEventListener("input", e => {
   if (x.dataset.g) { P.giorni[CUR][x.dataset.g] = x.value; salvaBozza(); return; }
   const k = x.dataset.k; if (!k) return;
   const i = +x.closest(".stp").dataset.i, t = P.giorni[CUR].tappe[i];
-  if (k === "ora") t.ora = oraBella(x.value);
-  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => e !== "appuntamento" && e !== "prospezione"); if (x.value) t.etichette.unshift(x.value); salvaBozza(); pannello(); return; }
+  if (k === "ora" || k === "ora_a") t[k] = oraBella(x.value);
+  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => !ETI_T.includes(e)); if (x.value) t.etichette.unshift(x.value);
+    // l'ora serve solo agli appuntamenti: cambiando stato si toglie
+    if (x.value !== "appuntamento") { t.ora = ""; delete t.ora_a; delete t._fa; } salvaBozza(); pannello(); return; }
   else if (k === "att") { t.etichette = (t.etichette || []).filter(e => e !== "attenzione"); if (x.checked) t.etichette.push("attenzione"); }
   else t[k] = x.value;
-  if (k === "ora" || k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
-    hd.querySelector(".tt").textContent = (t.ora ? t.ora + " · " : "") + (t.azienda || "Nuova visita"); hd.querySelector(".ss").textContent = t.indirizzo || t.ricerca || "Indirizzo da inserire"; }
+  if (k === "ora" || k === "ora_a" || k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
+    hd.querySelector(".tt").textContent = (oraT(t) ? oraT(t) + " · " : "") + (t.azienda || "Nuova visita"); hd.querySelector(".ss").innerHTML = ssT(t); }
   salvaBozza();
 });
 $("#pp").addEventListener("change", e => {
@@ -827,10 +873,14 @@ $("#pp").addEventListener("click", e => {
   if (b.id === "bz-no") { togliBozza(P.id); $("#bz").remove(); return; }
   if (b.dataset.d != null) { CUR = +b.dataset.d; OPEN = -1; pannello(); return; }
   if (b.id === "addm") { aggiungi({ azienda: "", indirizzo: "", etichette: [] }); return; }
+  if (b.id === "noore") { let n = 0; P.giorni.forEach(d => d.tappe.forEach(t => { if (t.ora && tipo(t) !== "appuntamento") { t.ora = ""; delete t.ora_a; n++; } }));
+    OPEN = -1; salvaBozza(); pannello(); toast(n + (n === 1 ? " ora tolta" : " ore tolte") + " in tutti i giorni del giro: premi «Salva giro» per confermare."); return; }
   if (b.id === "ord") { P.giorni[CUR].tappe.sort((a, c) => minuti(a.ora) - minuti(c.ora)); OPEN = -1; salvaBozza(); pannello(); return; }
   const card = b.closest(".stp"); if (!card) return; const i = +card.dataset.i, T = P.giorni[CUR].tappe;
   const act = b.dataset.act;
   if (act === "toggle") { if (e.target.closest(".mv")) return; OPEN = OPEN === i ? -1 : i; pannello(); if (OPEN >= 0 && T[i].pos && MAP) MAP.panTo(T[i].pos); return; }
+  if (act === "fascia") { T[i]._fa = true; pannello(); const el = $(`#pp .stp[data-i="${i}"] [data-k="ora_a"]`); if (el) el.focus(); return; }
+  if (act === "nofascia") { delete T[i].ora_a; delete T[i]._fa; salvaBozza(); pannello(); return; }
   if (act === "su" && i > 0) { [T[i-1], T[i]] = [T[i], T[i-1]]; OPEN = OPEN === i ? i - 1 : OPEN; salvaBozza(); pannello(); }
   else if (act === "giu" && i < T.length - 1) { [T[i+1], T[i]] = [T[i], T[i+1]]; OPEN = OPEN === i ? i + 1 : OPEN; salvaBozza(); pannello(); }
   else if (act === "del") { if (T[i]._del) { T.splice(i, 1); OPEN = -1; salvaBozza(); pannello(); } else { T[i]._del = 1; b.textContent = "Tocca di nuovo per togliere"; setTimeout(() => { delete T[i]?._del; }, 4000); } }
@@ -853,16 +903,16 @@ async function salvaP(){
     // chi farà il giro lo deve poter vedere: i nomi di «per» entrano anche tra i destinatari (condiviso)
     per: (P.per || []).filter(n => CTX.utenti.some(u => u.nome === n)),
     condiviso: [...new Set([...(P.condiviso || []), ...(P.per || [])])].filter(n => n !== (P.autore || CTX.nome) && CTX.utenti.some(u => u.nome === n)),
-    creato: P.creato || ora, modificato: ora,
+    creato: P.creato || ora, modificato: ora, modificato_da: CTX.nome,
     prima_di_partire: P.prima.split("\n").map(s => s.trim()).filter(Boolean),
     giorni: P.giorni.filter(g => g.tappe.length).map(g => { const d = g.iso ? dt(g.iso) : null;
       return { iso: g.iso, nome: d ? cap(GIORNI[d.getDay()]) : "Giorno", data: d ? d.getDate() + " " + MESI_L[d.getMonth()] : "", percorso: g.percorso.trim(), notte: g.notte.trim(),
-        tappe: g.tappe.map(t => { const o = {}; ["ora","azienda","indirizzo","ricerca","referente","telefono","orari","note","portare","place_id","maps"].forEach(k => { const v = String(t[k] ?? "").trim(); if (v) o[k] = v; });
+        tappe: g.tappe.map(t => { const o = {}; ["ora","ora_a","azienda","indirizzo","ricerca","referente","telefono","orari","note","portare","place_id","maps"].forEach(k => { const v = String(t[k] ?? "").trim(); if (v) o[k] = v; });
           o.etichette = (t.etichette || []).filter(Boolean); if (t.pos) o.pos = t.pos; return o; }) }; }) };
   if (!P.id) G.creato = G.modificato;
   b.disabled = true; b.textContent = "Salvataggio…"; msg.textContent = "";
   try {
-    await RT.salvaGiro(CTX, G);
+    await salvaSicuro(base => RT.salvaGiro(CTX, G, base), P.id ? P.base : null, "questo giro");
     togliBozza(P.id); togliBozza(G.id); dirty = false;
     const i = GIRI.findIndex(g => g.id === G.id); if (i >= 0) GIRI[i] = G; else GIRI.push(G);
     toast("Giro salvato: è già visibile a chi lo può vedere.");
@@ -872,10 +922,10 @@ async function salvaP(){
 }
 
 /* ---------------- raccolta clienti (liste) ---------------- */
-let L = null, LOPEN = -1, LEDIT = false, GS = null, PREV = null;
+let L = null, LOPEN = -1, LEDIT = false, LGEST = true, GS = null, PREV = null;
 const LBOZZA = "rt-lbozza-", GSK = "rt-gen-";
 const COLG = ["#e41519","#2563eb","#16a34a","#9333ea","#ea580c","#0891b2","#db2777","#65a30d","#7c3aed","#ca8a04"];
-const puoModificareL = l => CTX.admin || l.autore === CTX.nome;
+const puoModificareL = l => puoGestire(l) || coinvolto(l);
 const dataBreve = s => { if (!s) return ""; const d = dt(s); return cap(GIORNI[d.getDay()]).slice(0,3) + " " + d.getDate() + " " + MESI[d.getMonth()]; };
 const citta = ind => { const p = String(ind || "").split(",").map(s => s.trim()).filter(Boolean); let c = p.length ? p[p.length - 1] : "";
   c = c.replace(/^\d{5}\s*/, "").replace(/\s+[A-Z]{2}$/, "").trim(); return c; };
@@ -893,10 +943,10 @@ function salvaGS(){ try { localStorage.setItem(GSK + (L.id || "nuovo"), JSON.str
 
 function apriLista(id){
   let bozza = null;
-  $("#pl-tit").textContent = id ? "Lista clienti" : "Nuova lista clienti"; $("#pl-save").textContent = "Salva lista";
+  $("#pl-tit").textContent = id ? "Lista clienti" : "Nuova lista clienti"; $("#pl-save").textContent = "Salva lista"; LGEST = true;
   if (id) { const X = LISTE.find(l => l.id === id);
     if (!X) { $("#lp").innerHTML = '<p class="empty">Lista non trovata o non visibile per te.</p>'; $("#pl-save").hidden = true; L = null; return; }
-    L = copia(X); LEDIT = puoModificareL(X);
+    L = copia(X); LEDIT = puoModificareL(X); LGEST = puoGestire(X);
     const b = LEDIT && leggiBozzaL(id); if (b && JSON.stringify(b) !== JSON.stringify(L)) bozza = b;
   } else { L = nuovaL(); LEDIT = true; bozza = leggiBozzaL(""); }
   $("#pl-save").hidden = !LEDIT; dirty = false; LOPEN = -1; PREV = null; GS = leggiGS(id);
@@ -905,22 +955,26 @@ function apriLista(id){
 }
 function pannelloL(bozza){
   if (!L) return;
+  // stato di ogni cliente sempre allineato (vale anche per le liste vecchie, le bozze e i clienti importati)
+  L.clienti.forEach(c => { c.stato = statoC(c); c.appuntamento = c.stato === "appuntamento"; });
   const ro = LEDIT ? "" : "disabled";
   const altri = CTX.utenti.filter(u => u.nome !== L.autore && !u.admin && !u.tutti);
   const sempre = CTX.utenti.filter(u => u.nome !== L.autore && (u.admin || u.tutti)).map(u => u.nome);
-  const C = L.clienti;
+  const C = L.clienti, nCt = C.filter(c => c.stato === "contattare").length;
   $("#lp").innerHTML = `
   ${bozza ? `<div class="bozza" id="lbz">Hai una bozza non salvata${bozza.titolo ? ": «" + esc(bozza.titolo) + "»" : ""}. <button class="btn sm" type="button" id="lbz-si">Riprendi</button><button class="btn sm" type="button" id="lbz-no">Scarta</button></div>` : ""}
-  ${LEDIT ? "" : `<div class="bozza">Lista di ${esc(L.autore)}: puoi vederla e generare un giro; i clienti li modifica solo ${esc(L.autore)}.</div>`}
+  ${LEDIT ? "" : `<div class="bozza">Lista di ${esc(L.autore)}: puoi vederla e generare un giro. Per segnare stati, appuntamenti e note chiedi a ${esc(L.autore)} di condividerla con te.</div>`}
+  ${LEDIT && !LGEST ? `<div class="collab">Lista di <b>${esc(L.autore)}</b> condivisa con te: puoi segnare lo stato dei clienti (da contattare, appuntamento fissato), le note e aggiungere clienti. La condivisione la decide ${esc(L.autore)}.</div>` : ""}
   <fieldset class="fs"><legend>La lista</legend>
     <label class="fl"><span>Nome della lista</span><input class="in" data-l="titolo" value="${esc(L.titolo)}" placeholder="Es. Serramentisti Romagna, dicembre" ${ro}></label>
     <label class="fl"><span>Zona (facoltativa)</span><input class="in" data-l="zona" value="${esc(L.zona)}" placeholder="Es. Forlì, Cesena, Rimini" ${ro}></label>
   </fieldset>
-  ${LEDIT ? `<fieldset class="fs"><legend>Condividi lista con colleghi</legend>
+  ${LEDIT && LGEST ? `<fieldset class="fs"><legend>Condividi lista con colleghi</legend>
     ${altri.length ? `<div class="share" id="lshare">${altri.map(u => `<label class="${L.condiviso.includes(u.nome) ? "on" : ""}"><input type="checkbox" value="${esc(u.nome)}" ${L.condiviso.includes(u.nome) ? "checked" : ""}>${esc(u.nome)}</label>`).join("")}</div>` : '<p class="hint">Nessun altro collega da scegliere.</p>'}
     ${sempre.length ? `<p class="hint">${esc(sempre.join(", "))} ${sempre.length === 1 ? "vede" : "vedono"} già tutte le liste.</p>` : ""}
+    <p class="hint">Chi riceve la lista può segnare stato dei clienti, appuntamenti e note.</p>
   </fieldset>` : ""}
-  <fieldset class="fs"><legend>Clienti (${C.length})</legend>
+  <fieldset class="fs"><legend>Clienti (${C.length})${nCt ? ` · <span style="color:var(--or)">${nCt} da contattare</span>` : ""}</legend>
     ${C.length ? C.map((c, i) => schedaL(c, i)).join("") : `<p class="hint" style="margin:4px 0 10px">${CTX.config.gmaps_key ? "Cerca un'azienda sulla mappa (o premi Invio per vedere tutte quelle della zona) e premi «Aggiungi alla lista», oppure importa un file Excel." : "La mappa non è attiva: aggiungi i clienti a mano o importali da un file."}</p>`}
     ${LEDIT ? '<button class="btn addm" type="button" id="laddm">+ Aggiungi cliente a mano</button><button class="btn addm" type="button" id="limp">Importa clienti da Excel o CSV</button>' : ""}
   </fieldset>
@@ -931,27 +985,33 @@ function pannelloL(bozza){
     <label class="chk"><input type="checkbox" data-gs="sabato" ${GS.sabato ? "checked" : ""}> Lavoro anche il sabato</label>
     <label class="chk"><input type="checkbox" data-gs="orari" ${GS.orari ? "checked" : ""}> Rispetta gli orari di apertura (se non spunti, gli orari servono solo come avviso)</label>
     <button class="btn red" type="button" id="gen">Genera giro</button>
-    <p class="hint" style="margin:-4px 0 10px">1 giorno: andata e rientro alla città di partenza. Più giorni: i clienti vengono divisi sui giorni scelti, si dorme fuori e il giorno dopo si riparte dalla zona dell'ultima visita. Gli appuntamenti con giorno e ora sono fissi (in un giro di 1 giorno basta l'ora).${C.length > 24 ? " La lista ha più di 24 clienti: per restare nel limite giornaliero di Google conviene dividerla." : ""}</p>
+    <p class="hint" style="margin:-4px 0 10px">1 giorno: andata e rientro alla città di partenza. Più giorni: i clienti vengono divisi sui giorni scelti, si dorme fuori e il giorno dopo si riparte dalla zona dell'ultima visita. Gli appuntamenti fissati con giorno e ora sono fissi (in un giro di 1 giorno basta l'ora). I clienti «da contattare» entrano come visite normali, segnati in arancione.${C.length > 24 ? " La lista ha più di 24 clienti: per restare nel limite giornaliero di Google conviene dividerla." : ""}</p>
     <div class="pv" id="genout"></div>
   </fieldset>
-  ${LEDIT && L.id ? '<div class="pfoot"><button class="btn sm dang" type="button" id="ldel">Elimina lista</button></div>' : ""}`;
+  ${LEDIT && LGEST && L.id ? '<div class="pfoot"><button class="btn sm dang" type="button" id="ldel">Elimina lista</button></div>' : ""}`;
   if (PREV) mostraPrev();
   segnaposti();
 }
+const badgeL = c => c.stato === "appuntamento" ? "Appuntamento" + (c.app_data ? " " + dataBreve(c.app_data) : "") + (c.app_ora ? " " + c.app_ora + (c.app_ora_a ? "–" + c.app_ora_a : "") : "") : c.stato === "contattare" ? "Da contattare" : "";
 function schedaL(c, i){
   const ap = i === LOPEN, ro = LEDIT ? "" : "disabled";
-  const app = c.appuntamento ? "Appuntamento" + (c.app_data ? " " + dataBreve(c.app_data) + (c.app_ora ? " " + c.app_ora : "") : "") : "";
-  return `<div class="stp${ap ? " open" : ""}${c.appuntamento ? " app" : ""}" data-i="${i}">
-    <div class="hd" data-act="toggle"><span class="n${c.appuntamento ? " ok" : " gr"}">${i+1}</span><div><div class="tt">${esc(c.azienda || "Nuovo cliente")}</div><div class="ss">${esc(c.indirizzo || "Indirizzo da inserire")}${c.pos ? "" : " · senza posizione"}</div></div><span class="ap">${esc(app)} <span class="cv" aria-hidden="true">${ap ? "▲" : "▼"}</span></span></div>
+  const st = statoC(c), isApp = st === "appuntamento", isCt = st === "contattare";
+  return `<div class="stp${ap ? " open" : ""}${isApp ? " app" : isCt ? " ctt" : ""}" data-i="${i}">
+    <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : isCt ? " ct" : " gr"}">${i+1}</span><div><div class="tt">${esc(c.azienda || "Nuovo cliente")}</div><div class="ss">${esc(c.indirizzo || "Indirizzo da inserire")}${c.pos ? "" : " · senza posizione"}</div></div><span class="ap${isCt ? " ct" : ""}"><span class="ax">${esc(badgeL(c))}</span> <span class="cv" aria-hidden="true">${ap ? "▲" : "▼"}</span></span></div>
     ${ap ? `<div class="bd">
+      <div class="fl"><span>Stato del cliente</span>${radioStati("st-" + i, st, 'data-c="stato"', STATI, ro)}</div>
+      ${isCt ? '<p class="hint" style="margin:-6px 0 10px">Da chiamare per fissare l\'appuntamento. Quando è fissato scegli «Appuntamento fissato» e scrivi giorno e ora.</p>' : ""}
+      ${isApp ? `<label class="fl"><span>Giorno fissato</span><input class="in" type="date" data-c="app_data" value="${esc(c.app_data)}" ${ro}></label>
+      ${c.app_ora_a || c._fa ? `<div class="two"><label class="fl"><span>Dalle</span><input class="in" type="time" data-c="app_ora" value="${esc(oraInput(c.app_ora))}" ${ro}></label><label class="fl"><span>alle</span><input class="in" type="time" data-c="app_ora_a" value="${esc(oraInput(c.app_ora_a))}" ${ro}></label></div>
+      ${LEDIT ? '<div class="pfoot" style="margin:-4px 0 10px"><button class="btn sm" type="button" data-act="nofascia">Togli la fascia: ora precisa</button></div>' : ""}`
+        : `<div class="two"><label class="fl"><span>Ora fissata</span><input class="in" type="time" data-c="app_ora" value="${esc(oraInput(c.app_ora))}" ${ro}></label>${LEDIT ? '<div style="align-self:end;margin-bottom:10px"><button class="btn sm" type="button" data-act="fascia">Fascia oraria (dalle… alle…)</button></div>' : "<div></div>"}</div>`}
+      <p class="hint" style="margin:-6px 0 10px">Giorno e ora sono facoltativi: senza, «Genera giro» lo tratta come una visita normale segnata come appuntamento. Con la fascia oraria il giro arriva tra le due ore.</p>` : ""}
       <label class="fl"><span>Azienda</span><input class="in" data-c="azienda" value="${esc(c.azienda)}" ${ro}></label>
       <label class="fl"><span>Indirizzo</span><input class="in" data-c="indirizzo" value="${esc(c.indirizzo)}" ${ro}></label>
       <div class="two"><label class="fl"><span>Telefono</span><input class="in" type="tel" data-c="telefono" value="${esc(c.telefono)}" ${ro}></label><label class="fl"><span>Referente</span><input class="in" data-c="referente" value="${esc(c.referente)}" ${ro}></label></div>
       <label class="fl"><span>Orari di apertura</span><textarea class="in" data-c="orari" rows="2" ${ro}>${esc(c.orari)}</textarea></label>
       <p class="hint" style="margin:-6px 0 10px">${c.periodi && c.periodi.length ? "«Genera giro» usa gli orari letti da Google." : "Orari Google non disponibili: «Genera giro» considera il cliente sempre aperto (da verificare)."}</p>
       <label class="fl"><span>Note</span><textarea class="in" data-c="note" rows="3" ${ro}>${esc(c.note)}</textarea></label>
-      <label class="chk"><input type="checkbox" data-c="appuntamento" ${c.appuntamento ? "checked" : ""} ${ro}> Appuntamento</label>
-      ${c.appuntamento ? `<div class="two"><label class="fl"><span>Giorno fissato (facoltativo)</span><input class="in" type="date" data-c="app_data" value="${esc(c.app_data)}" ${ro}></label><label class="fl"><span>Ora fissata (facoltativa)</span><input class="in" type="time" data-c="app_ora" value="${esc(oraInput(c.app_ora))}" ${ro}></label></div>` : ""}
       ${c.aggiunto && c.aggiunto !== L.autore ? `<p class="hint">Aggiunto da ${esc(c.aggiunto)}</p>` : ""}
       <div class="pfoot"><button class="btn sm" type="button" data-act="toggle">▲ Chiudi scheda</button>${LEDIT ? `<button class="btn sm dang" type="button" data-act="del">${c._del ? "Tocca di nuovo per togliere" : "Togli dalla lista"}</button>` : ""}</div>
     </div>` : ""}
@@ -969,9 +1029,9 @@ $("#lp").addEventListener("input", e => {
   if (x.dataset.l) { L[x.dataset.l] = x.value; salvaBozzaL(); return; }
   const k = x.dataset.c; if (!k) return;
   const i = +x.closest(".stp").dataset.i, c = L.clienti[i];
-  if (k === "appuntamento") { c.appuntamento = x.checked; PREV = null; salvaBozzaL(); pannelloL(); return; }
-  c[k] = k === "app_ora" ? oraBella(x.value) : x.value;
-  if (k === "app_data" || k === "app_ora") { PREV = null; $("#genout").innerHTML = ""; x.closest(".stp").querySelector(".ap").textContent = "Appuntamento" + (c.app_data ? " " + dataBreve(c.app_data) + (c.app_ora ? " " + c.app_ora : "") : ""); }
+  if (k === "stato") { c.stato = x.value; c.appuntamento = x.value === "appuntamento"; PREV = null; salvaBozzaL(); pannelloL(); return; }
+  c[k] = k === "app_ora" || k === "app_ora_a" ? oraBella(x.value) : x.value;
+  if (k === "app_data" || k === "app_ora" || k === "app_ora_a") { PREV = null; $("#genout").innerHTML = ""; x.closest(".stp").querySelector(".ap .ax").textContent = badgeL(c); }
   if (k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
     hd.querySelector(".tt").textContent = c.azienda || "Nuovo cliente"; hd.querySelector(".ss").textContent = c.indirizzo || "Indirizzo da inserire";
     if (k === "indirizzo" && c.pos && !c.place_id) delete c.pos; }
@@ -992,6 +1052,8 @@ $("#lp").addEventListener("click", e => {
   if (b.id === "ldel") { eliminaL(); return; }
   const card = b.closest(".stp"); if (!card) return; const i = +card.dataset.i, C = L.clienti;
   if (b.dataset.act === "toggle") { LOPEN = LOPEN === i ? -1 : i; pannelloL(); if (LOPEN >= 0 && C[i].pos && MAP) MAP.panTo(C[i].pos); return; }
+  if (b.dataset.act === "fascia" && LEDIT) { C[i]._fa = true; pannelloL(); const el = $(`#lp .stp[data-i="${i}"] [data-c="app_ora_a"]`); if (el) el.focus(); return; }
+  if (b.dataset.act === "nofascia" && LEDIT) { delete C[i].app_ora_a; delete C[i]._fa; PREV = null; salvaBozzaL(); pannelloL(); return; }
   if (b.dataset.act === "del") { if (C[i]._del) { C.splice(i, 1); LOPEN = -1; PREV = null; salvaBozzaL(); pannelloL(); } else { C[i]._del = 1; b.textContent = "Tocca di nuovo per togliere"; setTimeout(() => { delete C[i]?._del; }, 4000); } }
 });
 async function salvaL(){
@@ -1003,17 +1065,17 @@ async function salvaL(){
   if (!CTX.tok) { toast("Il salvataggio non è ancora attivo: l'amministratore deve inserire la chiave GitHub nelle impostazioni. La lista resta come bozza su questo dispositivo.", true); return; }
   const ora = new Date().toISOString(), vecchio = L.id;
   const X = { id: L.id || ("l-" + iso(d0).replace(/-/g, "") + "-" + Math.random().toString(36).slice(2, 8)), titolo: L.titolo.trim(), zona: String(L.zona || "").trim(),
-    autore: L.autore || CTX.nome, condiviso: L.condiviso || [], archiviato: !!L.archiviato, creato: L.creato || ora, modificato: ora,
-    clienti: L.clienti.map(c => { const o = {}; ["azienda","indirizzo","telefono","referente","orari","note","app_data","app_ora","place_id","maps","aggiunto"].forEach(k => { const v = String(c[k] ?? "").trim(); if (v) o[k] = v; });
-      o.appuntamento = !!c.appuntamento; if (!o.appuntamento) { delete o.app_data; delete o.app_ora; } if (c.pos) o.pos = c.pos; if (c.periodi) o.periodi = c.periodi; return o; }) };
+    autore: L.autore || CTX.nome, condiviso: L.condiviso || [], archiviato: !!L.archiviato, creato: L.creato || ora, modificato: ora, modificato_da: CTX.nome,
+    clienti: L.clienti.map(c => { const o = {}; ["azienda","indirizzo","telefono","referente","orari","note","app_data","app_ora","app_ora_a","place_id","maps","aggiunto"].forEach(k => { const v = String(c[k] ?? "").trim(); if (v) o[k] = v; });
+      o.stato = statoC(c); o.appuntamento = o.stato === "appuntamento"; if (!o.appuntamento || !o.app_ora) { delete o.app_ora_a; } if (!o.appuntamento) { delete o.app_data; delete o.app_ora; } if (c.pos) o.pos = c.pos; if (c.periodi) o.periodi = c.periodi; return o; }) };
   if (!L.id) X.creato = X.modificato;
   b.disabled = true; b.textContent = "Salvataggio…";
   try {
-    await RT.salvaLista(CTX, X);
+    await salvaSicuro(base => RT.salvaLista(CTX, X, base), vecchio ? (L.modificato || "") : null, "questa lista");
     togliBozzaL(vecchio); togliBozzaL(X.id); dirty = false;
     const i = LISTE.findIndex(l => l.id === X.id); if (i >= 0) LISTE[i] = X; else LISTE.push(X);
     if (!vecchio) { try { localStorage.setItem(GSK + X.id, JSON.stringify(GS)); } catch(e) {} }
-    Object.assign(L, { id: X.id, autore: X.autore, creato: X.creato, modificato: X.modificato }); history.replaceState(null, "", location.pathname + location.search + "#raccogli/" + encodeURIComponent(X.id));
+    Object.assign(L, { id: X.id, autore: X.autore, creato: X.creato, modificato: X.modificato, modificato_da: X.modificato_da }); history.replaceState(null, "", location.pathname + location.search + "#raccogli/" + encodeURIComponent(X.id));
     $("#pl-tit").textContent = "Lista clienti";
     toast("Lista salvata" + ((X.condiviso || []).length ? ": la vedono anche " + X.condiviso.join(", ") + "." : "."));
     pannelloL();
@@ -1141,7 +1203,7 @@ function aggiungiImp(){
   for (const c of S) {
     const b = c.v && c.v.best, info = !!(b && c.usaInfo), pos = !!(b && b.pos && (info || c.usaPos));
     const x = { azienda: c.azienda, indirizzo: info && b.indirizzo ? b.indirizzo : c.indirizzo, telefono: c.telefono || (info ? b.tel : ""), referente: c.referente || "", orari: c.orari || (info ? b.orari : ""),
-      note: c.note || "", appuntamento: !!c.appuntamento, app_data: c.app_data || "", app_ora: c.app_ora || "", aggiunto: CTX.nome };
+      note: c.note || "", appuntamento: !!c.appuntamento, stato: c.appuntamento ? "appuntamento" : "passaggio", app_data: c.app_data || "", app_ora: c.app_ora || "", aggiunto: CTX.nome };
     if (pos) x.pos = b.pos; else senza++;
     if (info) { x.place_id = b.id; if (b.maps) x.maps = b.maps; if (b.periodi && b.periodi.length) x.periodi = b.periodi; }
     L.clienti.push(x);
@@ -1253,7 +1315,9 @@ function mostraPrev(){
   else if (stime) avv.unshift("Per " + stime + " tratte Google non ha trovato un percorso in auto: il tempo è stimato in linea d'aria.");
   const nomeP = part.nome || opz.partenza;
   const chiusi = r.giorni.reduce((k, g) => k + g.visite.filter(v => v.chiuso).length, 0);
-  if (chiusi) avv.push(chiusi + (chiusi === 1 ? " visita cade" : " visite cadono") + " in un orario in cui di solito il cliente è chiuso (in arancione): nel giro sono segnate con «Attenzione».");
+  if (chiusi) avv.push(chiusi + (chiusi === 1 ? " visita cade" : " visite cadono") + " in un orario in cui di solito il cliente è chiuso: nel giro sono segnate con «Attenzione».");
+  const nCt = r.giorni.reduce((k, g) => k + g.visite.filter(v => statoC(sel[v.k - 1]) === "contattare").length, 0);
+  if (nCt) avv.push(nCt + (nCt === 1 ? " cliente è ancora da contattare" : " clienti sono ancora da contattare") + " per l'appuntamento: nel giro sono segnati in arancione.");
   if (r.giorni.length < (+opz.giorni || 1)) avv.push("Per questi clienti bastano " + r.giorni.length + (r.giorni.length === 1 ? " giorno" : " giorni") + " invece di " + opz.giorni + ".");
   out.innerHTML = `<p class="tot"><b>${tot} ${tot === 1 ? "visita" : "visite"} in ${r.giorni.length} ${r.giorni.length === 1 ? "giorno" : "giorni"}</b>${r.fuori.length + senzaPos.length ? " · " + (r.fuori.length + senzaPos.length) + " fuori dal giro" : ""}</p>
   ${avv.length ? `<ul class="av">${avv.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}
@@ -1261,12 +1325,15 @@ function mostraPrev(){
     const da = gi === 0 ? nomeP : "zona di " + (citta(sel[g.partenza - 1].indirizzo) || sel[g.partenza - 1].azienda);
     return `<div class="pday"><h4><i style="background:${COLG[gi % COLG.length]}"></i>${esc(dataBreve(g.iso))}<em>${g.visite.length} ${g.visite.length === 1 ? "visita" : "visite"} · partenza ${esc(hh(GEN.min(opz.ora) ?? 510))} da ${esc(da)}</em></h4><ul>
     ${g.visite.map((v, vi) => { const c = sel[v.k - 1];
-      const info = [v.viaggio + " min di viaggio", v.attesa > 0 ? "attesa " + v.attesa + " min" : ""].filter(Boolean).join(" · ");
-      return `<li><b>${v.fisso ? hh(v.inizio) : (vi + 1) + "."}</b><div>${esc(c.azienda)}${v.fisso ? ` <span class="ap" style="display:inline">· APPUNTAMENTO ORE ${esc(hh(v.m))}</span>` : c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span>${v.ritardo > 0 ? `<span class="ko">Arrivo in ritardo di ${v.ritardo} min sull'appuntamento</span>` : ""}${v.chiuso ? `<span class="ko">Di solito chiuso a quest'ora${c.orari ? " (" + esc(c.orari) + ")" : ""}</span>` : ""}</div></li>`; }).join("")}
+      // orari stimati: servono a vedere come si è messi prima di ogni appuntamento (nel giro l'ora resta solo sugli appuntamenti)
+      const da = vi ? sel[g.visite[vi - 1].k - 1].azienda : (gi === 0 ? nomeP : "la zona della notte"), partito = vi ? g.visite[vi - 1].fine : (GEN.min(opz.ora) ?? 510);
+      const info = ["arrivo verso le " + hh(v.arrivo), v.viaggio + " min di viaggio da " + da, v.attesa > 0 ? "attesa " + v.attesa + " min" : "", "ripartenza verso le " + hh(v.fine)].filter(Boolean).join(" · ");
+      const lim = v.fisso ? (v.z != null ? v.z : v.m) : null;
+      return `<li><b>${v.fisso ? hh(v.inizio) : (vi + 1) + "."}</b><div>${esc(c.azienda)}${v.fisso ? ` <span class="ap" style="display:inline">· APPUNTAMENTO ${v.z != null ? "DALLE " + esc(hh(v.m)) + " ALLE " + esc(hh(v.z)) : "ORE " + esc(hh(v.m))}</span>` : c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento</span>' : statoC(c) === "contattare" ? ' <span class="ct" style="display:inline">· da contattare</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span>${v.ritardo > 0 ? `<span class="ko">NON CI SI ARRIVA IN TEMPO: da ${esc(da)} si riparte verso le ${hh(partito)}, servono ${v.viaggio} min e si arriva verso le ${hh(v.arrivo)} invece che entro le ${hh(lim)} (${v.ritardo} min di ritardo). Anticipa la partenza, togli una visita prima o sposta l'appuntamento.</span>` : ""}${v.chiuso ? `<span class="ko">Di solito chiuso a quest'ora${c.orari ? " (" + esc(c.orari) + ")" : ""}</span>` : ""}</div></li>`; }).join("")}
     </ul><span class="end">${ult ? "Rientro a " + esc(nomeP) + " verso le " + hh(g.rientro.ora) + " (" + g.rientro.viaggio + " min)" : "Notte in zona " + esc(citta(last.indirizzo) || last.azienda) + ": da compilare nel pianificatore"}</span></div>`; }).join("")}
   ${r.fuori.length || senzaPos.length ? `<p class="tot"><b>Fuori dal giro</b></p><ul class="av">${r.fuori.map(f => `<li>${esc(sel[f.k - 1].azienda)}: ${esc(f.motivo)}</li>`).join("")}${senzaPos.map(c => `<li>${esc(c.azienda || "Cliente senza nome")}: non trovato sulla mappa, completa l'indirizzo</li>`).join("")}</ul>` : ""}
   ${r.giorni.length ? `<div class="pfoot"><button class="btn red" type="button" id="gen-apri" style="margin:0">Apri nel pianificatore</button></div>` : ""}
-  <p class="hint">È una proposta: l'ordine delle visite è calcolato, l'ora la metti tu (è già scritta solo per gli appuntamenti). Controlla appuntamenti e note prima di salvare. Tempi in auto senza traffico più ${GEN.MARGINE} min di margine per ogni spostamento${M.nuovi ? " · " + M.nuovi + " nuovi calcoli Google, gli altri già salvati su questo dispositivo" : ""}.</p>`;
+  <p class="hint">È una proposta: l'ordine delle visite è calcolato e gli orari di arrivo sono stimati, per controllare come si è messi prima di ogni appuntamento. Nel giro l'ora resta scritta solo sugli appuntamenti. Controlla appuntamenti e note prima di salvare. Tempi in auto senza traffico più ${GEN.MARGINE} min di margine per ogni spostamento${M.nuovi ? " · " + M.nuovi + " nuovi calcoli Google, gli altri già salvati su questo dispositivo" : ""}.</p>`;
 }
 function aGiro(){
   if (!PREV || !PREV.r.giorni.length) return;
@@ -1278,9 +1345,11 @@ function aGiro(){
     giorni: giorniTra(dal, al).map(i => {
       const gi = r.giorni.findIndex(g => g.iso === i); if (gi < 0) return { iso: i, percorso: "", notte: "", tappe: [] };
       const g = r.giorni[gi], ult = gi === r.giorni.length - 1;
-      const tappe = g.visite.map(v => { const c = sel[v.k - 1];
-        return { ora: v.fisso ? hh(v.inizio) : "", azienda: c.azienda || "", indirizzo: c.indirizzo || "", telefono: c.telefono || "", referente: c.referente || "", orari: c.orari || "(da verificare)", note: c.note || "", portare: "",
-          etichette: [c.appuntamento ? "appuntamento" : "prospezione"].concat(v.chiuso ? ["attenzione"] : []), pos: c.pos, place_id: c.place_id || "", maps: c.maps || "" }; });
+      const tappe = g.visite.map(v => { const c = sel[v.k - 1], st = statoC(c);
+        // appuntamento con fascia: nel giro resta la fascia (dalle… alle…); con l'ora precisa resta l'ora
+        const fa = v.fisso && v.z != null;
+        return { ora: v.fisso ? (fa ? hh(v.m) : hh(v.inizio)) : "", ora_a: fa ? hh(v.z) : "", azienda: c.azienda || "", indirizzo: c.indirizzo || "", telefono: c.telefono || "", referente: c.referente || "", orari: c.orari || "(da verificare)", note: c.note || "", portare: "",
+          etichette: [st === "appuntamento" ? "appuntamento" : st === "contattare" ? "contattare" : "prospezione"].concat(v.chiuso ? ["attenzione"] : []), pos: c.pos, place_id: c.place_id || "", maps: c.maps || "" }; });
       const luoghi = []; [gi === 0 ? nomeP : citta(sel[g.partenza - 1].indirizzo), ...g.visite.map(v => citta(sel[v.k - 1].indirizzo))].forEach(x => { if (x && luoghi[luoghi.length - 1] !== x) luoghi.push(x); });
       if (ult && luoghi[luoghi.length - 1] !== nomeP) luoghi.push(nomeP);
       return { iso: i, percorso: luoghi.join(" → ") + (ult ? " (rientro verso le " + hh(g.rientro.ora) + ")" : ""), notte: "", tappe };
@@ -1330,9 +1399,9 @@ function segnaposti(centra){
   if (!P) return;
   const pts = [];
   P.giorni.forEach((g, k) => g.tappe.forEach((t, i) => { if (!t.pos) return;
-    const att = k === CUR, isApp = tipo(t) === "appuntamento";
-    const col = !att ? "#8a8b92" : isApp ? "#16a34a" : (getComputedStyle(document.documentElement).getPropertyValue("--red").trim() || "#e41519");
-    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: t.pos, title: (i+1) + ". " + t.azienda + (isApp ? " · APPUNTAMENTO" : "") + " · " + etDay(g), content: pin(i + 1, col, !att ? "#5f6066" : isApp ? "#14532d" : "#7f0d0f"), zIndex: att ? (isApp ? 12 : 10) : 1 });
+    const att = k === CUR, ti = tipo(t), isApp = ti === "appuntamento", isCt = ti === "contattare";
+    const col = !att ? "#8a8b92" : isApp ? "#16a34a" : isCt ? "#f97316" : (getComputedStyle(document.documentElement).getPropertyValue("--red").trim() || "#e41519");
+    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: t.pos, title: (i+1) + ". " + t.azienda + (isApp ? " · APPUNTAMENTO" : isCt ? " · DA CONTATTARE" : "") + " · " + etDay(g), content: pin(i + 1, col, !att ? "#5f6066" : isApp ? "#14532d" : isCt ? "#7c2d12" : "#7f0d0f"), zIndex: att ? (isApp || isCt ? 12 : 10) : 1 });
     m.addListener("click", () => { CUR = k; OPEN = i; pannello(); const el = $(`#pp .stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
     MK.push(m); if (att) pts.push(t.pos); }));
   if (centra) adatta(pts);
@@ -1342,10 +1411,11 @@ function segnapostiL(centra){
   const pts = [], posto = new Map();
   if (PREV) PREV.r.giorni.forEach((g, gi) => g.visite.forEach((v, j) => posto.set(PREV.sel[v.k - 1], { gi, j })));
   L.clienti.forEach((c, i) => { if (!c.pos) return;
-    const p = posto.get(c);
-    const content = PREV ? (p ? pin(p.j + 1, COLG[p.gi % COLG.length], c.appuntamento ? "#22c55e" : "#1118") : pin("×", "#8a8b92", "#5f6066")) : pin(i + 1, c.appuntamento ? "#16a34a" : "#26272b", c.appuntamento ? "#14532d" : "#000");
-    if (c.appuntamento) content.style.borderWidth = "3px";
-    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: c.pos, title: c.azienda + (c.appuntamento ? " · APPUNTAMENTO" : "") + (p ? " · " + dataBreve(PREV.r.giorni[p.gi].iso) : ""), content, zIndex: (p ? 10 : 2) + (c.appuntamento ? 2 : 0) });
+    const p = posto.get(c), st = statoC(c), isApp = st === "appuntamento", isCt = st === "contattare";
+    const content = PREV ? (p ? pin(p.j + 1, COLG[p.gi % COLG.length], isApp ? "#22c55e" : isCt ? "#f97316" : "#1118") : pin("×", "#8a8b92", "#5f6066"))
+      : pin(i + 1, isApp ? "#16a34a" : isCt ? "#f97316" : "#26272b", isApp ? "#14532d" : isCt ? "#7c2d12" : "#000");
+    if (isApp || isCt) content.style.borderWidth = "3px";
+    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: c.pos, title: c.azienda + (isApp ? " · APPUNTAMENTO" : isCt ? " · DA CONTATTARE" : "") + (p ? " · " + dataBreve(PREV.r.giorni[p.gi].iso) : ""), content, zIndex: (p ? 10 : 2) + (isApp || isCt ? 2 : 0) });
     m.addListener("click", () => { LOPEN = i; pannelloL(); const el = $(`#lp .stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
     MK.push(m); pts.push(c.pos); });
   if (PREV && PREV.part) { MK.push(new LIB.mk.AdvancedMarkerElement({ map: MAP, position: PREV.part.pos, title: "Partenza: " + PREV.part.nome, content: pin("P", "#0c0c0d", "#000"), zIndex: 20 })); pts.push(PREV.part.pos); }
@@ -1354,7 +1424,7 @@ function segnapostiL(centra){
 const indirizzoBreve = a => String(a || "").replace(/,\s*(Italia|Italy)$/i, "");
 function orariBrevi(desc){
   if (!desc || !desc.length) return "";
-  const rows = desc.map(s => { const i = s.indexOf(":"); return [s.slice(0, i).trim().toLowerCase(), s.slice(i + 1).trim().replace(/^Chiuso$/i, "chiuso").replace(/[  ]/g, " ")]; });
+  const rows = desc.map(s => { const i = s.indexOf(":"); return [s.slice(0, i).trim().toLowerCase(), s.slice(i + 1).trim().replace(/^Chiuso$/i, "chiuso").replace(/[  ]/g, " ")]; });
   const gruppi = []; rows.forEach(([g, h]) => { const u = gruppi[gruppi.length - 1]; if (u && u.h === h) u.a = g; else gruppi.push({ da: g, a: g, h }); });
   return gruppi.map(x => (x.da === x.a ? x.da.slice(0, 3) : x.da.slice(0, 3) + "–" + x.a.slice(0, 3)) + " " + x.h).join(" · ");
 }
@@ -1421,9 +1491,9 @@ async function dettaglio(placeId, place){
     $("#pcx").onclick = () => pc.hidden = true;
     const add = $("#pcadd");
     if (add) add.onclick = () => {
-      if (MODE === "lista") { const c = Object.assign({}, SEL); delete c.etichette; delete c.portare; if (!orari) c.orari = ""; if (periodi) c.periodi = periodi; aggiungiL(c); pc.hidden = true; toast("Aggiunta alla lista: se serve scrivi una nota o segna l'appuntamento."); return; }
+      if (MODE === "lista") { const c = Object.assign({}, SEL); delete c.etichette; delete c.portare; if (!orari) c.orari = ""; if (periodi) c.periodi = periodi; aggiungiL(c); pc.hidden = true; toast("Aggiunta alla lista: se serve scrivi una nota o segna lo stato (da contattare, appuntamento)."); return; }
       const sd = $("#pcday"); if (sd) CUR = +sd.value; const giorno = P.giorni[CUR] ? etDay(P.giorni[CUR]) : "il giro";
-      aggiungi(Object.assign({}, SEL)); pc.hidden = true; toast("Aggiunta a " + giorno + ": completa note e tipo di visita nel pannello."); };
+      aggiungi(Object.assign({}, SEL)); pc.hidden = true; toast("Aggiunta a " + giorno + ": completa note e stato della visita nel pannello."); };
   } catch(e) { pc.innerHTML = '<button class="x" type="button" onclick="this.parentNode.hidden=true">×</button><p>Non riesco a leggere i dati di questo luogo da Google.</p>'; }
 }
 
@@ -1450,18 +1520,18 @@ function admin(){
     B.onclick = async e => { const b = e.target.closest("button"); if (!b) return;
       if (b.id === "arc-all") { const C = GIRI.filter(g => !g.archiviato && stato(g) === "f");
         if (!confirm("Archiviare " + C.length + " giri conclusi?")) return;
-        await lavora("Archiviazione", async () => { for (const g of C) { await RT.salvaGiro(CTX, Object.assign({}, g, { archiviato: true, modificato: new Date().toISOString() })); g.archiviato = true; } });
+        await lavora("Archiviazione", async () => { for (const g of C) { await RT.salvaGiro(CTX, Object.assign({}, g, { archiviato: true, modificato: new Date().toISOString(), modificato_da: CTX.nome })); g.archiviato = true; } });
         toast("Giri conclusi archiviati."); admin(); return; }
       const id = b.closest("tr") && b.closest("tr").dataset.id, g = GIRI.find(x => x.id === id); if (!g) return;
       if (b.dataset.a === "arc") { const v = !g.archiviato;
-        if (await lavora(v ? "Archiviazione" : "Ripristino", () => RT.salvaGiro(CTX, Object.assign({}, g, { archiviato: v, modificato: new Date().toISOString() })))) { g.archiviato = v; toast(v ? "Giro archiviato." : "Giro ripristinato."); admin(); } }
+        if (await lavora(v ? "Archiviazione" : "Ripristino", () => RT.salvaGiro(CTX, Object.assign({}, g, { archiviato: v, modificato: new Date().toISOString(), modificato_da: CTX.nome })))) { g.archiviato = v; toast(v ? "Giro archiviato." : "Giro ripristinato."); admin(); } }
       if (b.dataset.a === "del") { if (!confirm("Eliminare definitivamente «" + g.titolo + "»?")) return;
         if (await lavora("Eliminazione", () => RT.eliminaGiro(CTX, g.id, g.titolo))) { GIRI = GIRI.filter(x => x.id !== g.id); toast("Giro eliminato."); admin(); } }
     };
   }
   else if (ATAB === "team") {
     const ruolo = u => u.admin ? "admin" : u.tutti ? "tutti" : "suoi";
-    B.innerHTML = `<div class="box"><h3>Team</h3><p>«Vede tutti i giri»: vede anche i giri e le liste clienti degli altri (solo in lettura). «Solo i suoi»: vede i giri e le liste creati da lui e quelli condivisi con lui. Gli strumenti di amministrazione sono solo per gli amministratori.</p>
+    B.innerHTML = `<div class="box"><h3>Team</h3><p>«Vede tutti i giri»: vede anche i giri e le liste clienti degli altri (in lettura, salvo quelli condivisi o assegnati a lui). «Solo i suoi»: vede i giri e le liste creati da lui e quelli condivisi con lui. Chi riceve un giro o una lista, o è in «Il giro è per», può modificarli. Gli strumenti di amministrazione sono solo per gli amministratori.</p>
       <div class="tw"><table class="t"><thead><tr><th>Nome</th><th>Ruolo</th><th></th></tr></thead><tbody>
       ${CTX.utenti.map(u => `<tr data-n="${esc(u.nome)}"><td><b>${esc(u.nome)}</b>${u.nome === CTX.nome ? ' <span class="hint">(tu)</span>' : ""}</td>
         <td><select class="in" data-a="ruolo" style="max-width:240px" ${u.nome === CTX.nome ? "disabled" : ""}><option value="suoi" ${ruolo(u) === "suoi" ? "selected" : ""}>Solo i suoi giri</option><option value="tutti" ${ruolo(u) === "tutti" ? "selected" : ""}>Vede tutti i giri</option><option value="admin" ${ruolo(u) === "admin" ? "selected" : ""}>Amministratore</option></select></td>

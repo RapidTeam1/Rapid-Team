@@ -161,19 +161,28 @@ window.RT = (() => {
     const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", c.scuro);
   }
 
-  /* salva (crea o sostituisce) un oggetto cifrato in un elenco di buste */
-  async function salvaBusta(ctx, path, G, messaggio) {
+  /* salva (crea o sostituisce) un oggetto cifrato in un elenco di buste.
+     base = «modificato» della versione che si era aperta: se nel frattempo un collega ha salvato una versione diversa,
+     il salvataggio si ferma con e.conflitto = { da, quando } (chi chiama decide se sovrascrivere passando base = null). */
+  async function salvaBusta(ctx, path, G, messaggio, base) {
     const dest = destinatariGiro(G, ctx.utenti);
     const busta = Object.assign({ id: G.id }, await chiude(G, dest));
-    await modifica(path, ctx.tok, lista => {
+    await modifica(path, ctx.tok, async lista => {
       lista = Array.isArray(lista) ? lista : [];
       const i = lista.findIndex(b => b.id === G.id);
+      if (base != null && i >= 0) {
+        let cur = null; try { cur = await apre(lista[i], ctx.pk, ctx.nome); } catch (e) {}
+        if (cur && String(cur.modificato || "") !== String(base)) {
+          const e = new Error("Nel frattempo " + (cur.modificato_da || "un collega") + " ha salvato una versione più recente.");
+          e.conflitto = { da: cur.modificato_da || "", quando: cur.modificato || "" }; throw e;
+        }
+      }
       if (i >= 0) lista[i] = busta; else lista.push(busta);
       return lista;
     }, messaggio);
   }
-  const salvaGiro = (ctx, G) => salvaBusta(ctx, "dati/giri.json", G, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")");
-  const salvaLista = (ctx, L) => salvaBusta(ctx, "dati/liste.json", L, (L.creato === L.modificato ? "Nuova lista clienti: " : "Lista clienti aggiornata: ") + L.titolo + " (" + ctx.nome + ")");
+  const salvaGiro = (ctx, G, base) => salvaBusta(ctx, "dati/giri.json", G, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")", base);
+  const salvaLista = (ctx, L, base) => salvaBusta(ctx, "dati/liste.json", L, (L.creato === L.modificato ? "Nuova lista clienti: " : "Lista clienti aggiornata: ") + L.titolo + " (" + ctx.nome + ")", base);
   const eliminaGiro = (ctx, id, titolo) => modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
   const eliminaLista = (ctx, id, titolo) => modifica("dati/liste.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Lista clienti eliminata: " + titolo + " (" + ctx.nome + ")");
 

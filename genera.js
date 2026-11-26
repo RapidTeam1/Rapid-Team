@@ -2,13 +2,14 @@
 // rispettando gli orari di apertura (da Google) e gli appuntamenti fissati. Il risultato è una proposta.
 //
 // GEN.pianifica(o) con
-//   o.clienti  [{ azienda, periodi:[[giorno 0-6, apre min, chiude min]], appuntamento, app_data "AAAA-MM-GG", app_ora "H:MM" }]
+//   o.clienti  [{ azienda, periodi:[[giorno 0-6, apre min, chiude min]], appuntamento, app_data "AAAA-MM-GG", app_ora "H:MM", app_ora_a "H:MM" (fine della fascia, facoltativa) }]
 //   o.tempo    (i, j) => minuti di viaggio tra il punto i e il punto j (0 = partenza, 1..n = clienti)
 //   o.dal "AAAA-MM-GG", o.ora "H:MM" (partenza), o.durata (min), o.max (visite al giorno), o.fine "H:MM" (ultima visita finita entro),
 //   o.sabato (true = si lavora anche il sabato), o.giorni (giorni del giro scelti da chi lo prepara, predefinito 1),
 //   o.orari (true = gli orari di apertura sono un vincolo; false = solo indicativi: la visita fuori orario viene segnalata con «chiuso»)
-// restituisce { giorni:[{ iso, visite:[{ k, arrivo, inizio, fine, viaggio, attesa, ritardo, fisso, chiuso }], partenza, rientro }], fuori:[{ k, motivo }], avvisi:[] }
+// restituisce { giorni:[{ iso, visite:[{ k, arrivo, inizio, fine, viaggio, attesa, ritardo, fisso, m, z, chiuso }], partenza, rientro }], fuori:[{ k, motivo }], avvisi:[] }
 // Gli appuntamenti con giorno e ora sono l'unico vincolo fisso; con un solo giorno basta l'ora.
+// Appuntamento con fascia (26/11/2026, «passi dalle… alle…»): m = inizio fascia, z = fine fascia; la visita inizia tra m e z.
 //
 // Ordine delle visite (26/11/2026): l'ultimo giorno conta anche il viaggio di rientro alla partenza, così il giro non finisce
 // lontano da casa a zig-zag; a parità di tempo (entro 15 min) si parte dal cliente più vicino alla città di partenza
@@ -21,6 +22,9 @@
   const hhmm = m => Math.floor(m / 60) + ":" + String(Math.round(m) % 60).padStart(2, "0");
   const dt = s => { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, m - 1, d); };
   const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  // fine della fascia (null se l'appuntamento è a ora precisa o se la fascia non ha senso)
+  const fineFascia = (c, m) => { const z = min(c.app_ora_a); return z != null && m != null && z > m ? z : null; };
+  const limite = f => f.z != null ? f.z : f.m; // ultimo orario utile per iniziare la visita
 
   // finestre di apertura di un giorno della settimana, in minuti dalla mezzanotte
   function finestre(c, wd) {
@@ -46,7 +50,7 @@
     const IU = (c, wd, arr) => rispetta ? inizioUtile(c, wd, arr, dur) : arr;
     const T = (i, j) => i === j ? 0 : o.tempo(i, j) + MARGINE;
     const avvisi = [], fuori = [], fatti = new Set();
-    // appuntamenti fissati (giorno + ora)
+    // appuntamenti fissati (giorno + ora o fascia)
     const fissi = {};
     o.clienti.forEach((c, i) => {
       const k = i + 1;
@@ -54,11 +58,11 @@
       if (c.app_data < o.dal) { avvisi.push(`${c.azienda}: l'appuntamento del ${c.app_data.split("-").reverse().join("/")} è prima dell'inizio del giro, la visita è trattata come normale.`); return; }
       const m = min(c.app_ora);
       if (m == null) return; // solo il giorno: gestito come preferenza del giorno
-      (fissi[c.app_data] = fissi[c.app_data] || []).push({ k, m });
+      (fissi[c.app_data] = fissi[c.app_data] || []).push({ k, m, z: fineFascia(c, m) });
     });
     // giro di un giorno: un appuntamento con l'ora ma senza giorno vale per quel giorno
-    if (N === 1) o.clienti.forEach((c, i) => { const m = min(c.app_ora); if (c.appuntamento && !c.app_data && m != null) (fissi[o.dal] = fissi[o.dal] || []).push({ k: i + 1, m }); });
-    Object.values(fissi).forEach(l => l.sort((a, b) => a.m - b.m));
+    if (N === 1) o.clienti.forEach((c, i) => { const m = min(c.app_ora); if (c.appuntamento && !c.app_data && m != null) (fissi[o.dal] = fissi[o.dal] || []).push({ k: i + 1, m, z: fineFascia(c, m) }); });
+    Object.values(fissi).forEach(l => l.sort((a, b) => limite(a) - limite(b) || a.m - b.m));
     const soloGiorno = {}; // appuntamento con giorno ma senza ora
     o.clienti.forEach((c, i) => { if (c.appuntamento && c.app_data && c.app_data >= o.dal && min(c.app_ora) == null) (soloGiorno[c.app_data] = soloGiorno[c.app_data] || new Set()).add(i + 1); });
     const vincolati = new Set([...Object.values(fissi).flat().map(f => f.k), ...Object.values(soloGiorno).flatMap(s => [...s])]);
@@ -83,6 +87,12 @@
       let cur = pos, t = p0; const V = [];
       while (true) {
         const prossimo = F[0];
+        // un appuntamento con fascia già raggiungibile adesso si fa subito, così non si sfora la fascia
+        if (prossimo && prossimo.z != null && t + T(cur, prossimo.k) >= prossimo.m) {
+          F.shift(); const arr = t + T(cur, prossimo.k), s = Math.max(arr, prossimo.m);
+          V.push({ k: prossimo.k, arrivo: arr, inizio: s, fine: s + dur, viaggio: T(cur, prossimo.k), attesa: s - arr, ritardo: Math.max(0, arr - limite(prossimo)), fisso: true, m: prossimo.m, z: prossimo.z });
+          cur = prossimo.k; t = s + dur; continue;
+        }
         // candidati: clienti liberi + quelli con appuntamento solo per oggi
         let best = null;
         if (V.length + 1 + F.length <= quota) {
@@ -91,7 +101,7 @@
             if (vincolati.has(k) && !SG.has(k)) continue;
             const c = o.clienti[k - 1], arr = t + T(cur, k), s = IU(c, wd, arr);
             if (s == null || s + dur > fine) continue;
-            if (prossimo && s + dur + T(k, prossimo.k) > prossimo.m) continue;
+            if (prossimo && s + dur + T(k, prossimo.k) > limite(prossimo)) continue;
             // costo: viaggio + attesa, con il viaggio che pesa di più (con la stessa attesa, es. pausa pranzo, vince il più vicino);
             // i clienti con appuntamento oggi passano avanti
             const costo = (s - t) + 0.5 * T(cur, k) - (SG.has(k) ? 600 : 0) - raro[k] * 30;
@@ -101,7 +111,7 @@
         if (best) { V.push({ k: best.k, arrivo: best.arr, inizio: best.s, fine: best.s + dur, viaggio: T(cur, best.k), attesa: best.s - best.arr }); cur = best.k; t = best.s + dur; continue; }
         if (prossimo) {
           F.shift(); const arr = t + T(cur, prossimo.k), s = Math.max(arr, prossimo.m);
-          V.push({ k: prossimo.k, arrivo: arr, inizio: s, fine: s + dur, viaggio: T(cur, prossimo.k), attesa: s - arr, ritardo: Math.max(0, arr - prossimo.m), fisso: true, m: prossimo.m });
+          V.push({ k: prossimo.k, arrivo: arr, inizio: s, fine: s + dur, viaggio: T(cur, prossimo.k), attesa: s - arr, ritardo: Math.max(0, arr - limite(prossimo)), fisso: true, m: prossimo.m, z: prossimo.z });
           cur = prossimo.k; t = s + dur; continue;
         }
         break;
@@ -115,7 +125,7 @@
       for (const k of SG) if (!V.some(v => v.k === k)) { fuori.push({ k, motivo: "appuntamento del " + I.split("-").reverse().join("/") + ": non ci sta negli orari o nel numero massimo di visite" }); fatti.add(k); }
       // il giro va avanti a giorni consecutivi: se oggi non entra nessuno ci si ferma (salvo appuntamenti più avanti)
       if (!V.length) { if (I >= ultimaData) break; continue; }
-      V.forEach(v => { fatti.add(v.k); if (v.ritardo > 0) avvisi.push(`${o.clienti[v.k - 1].azienda}: con il percorso proposto si arriva circa ${v.ritardo} min dopo l'orario dell'appuntamento.`); });
+      V.forEach(v => { fatti.add(v.k); if (v.ritardo > 0) avvisi.push(`${o.clienti[v.k - 1].azienda}: con il percorso proposto si arriva circa ${v.ritardo} min dopo ${v.z != null ? "la fine della fascia dell'appuntamento" : "l'orario dell'appuntamento"}.`); });
       giorni.push({ iso: I, partenza: pos, visite: V });
       pos = V[V.length - 1].k;
     }
@@ -140,7 +150,7 @@
       for (const v of seq) {
         const c = o.clienti[v.k - 1], arr = t + T(cur, v.k);
         let s;
-        if (v.fisso) { if (arr > v.m) return null; s = v.m; }
+        if (v.fisso) { if (arr > limite(v)) return null; s = Math.max(arr, v.m); }
         else s = rispetta ? inizioUtile(c, wd, arr, dur) : arr;
         if (s == null || s + dur > fine) return null;
         viaggio += T(cur, v.k);
