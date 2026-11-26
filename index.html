@@ -186,6 +186,42 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 }
 @media(max-width:560px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding-bottom:58px}}
 
+/* ---------- cartelle ---------- */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:8px 0 6px}
+.cf{position:relative;display:grid;gap:4px;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:30px 16px 14px;background:var(--card);transition:transform .15s,border-color .15s}
+.cf:hover{transform:translateY(-2px);border-color:var(--ink)}
+.cf::before{content:"";position:absolute;left:14px;top:-1px;width:64px;height:12px;border-radius:0 0 8px 8px;background:var(--red)}
+.cf.sh::before{background:var(--blu)}
+.cf .av{position:absolute;right:14px;top:14px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--ink);color:var(--bg)}
+.cf b{font-size:19px;font-weight:800;padding-right:40px}
+.cf span{font-size:13px;color:var(--mut)}
+.cf .px{color:var(--ink);font-weight:600}
+.cf .ct{color:var(--or);font-weight:700}
+.stat-link{display:grid;gap:6px;text-decoration:none;color:var(--ink);background:linear-gradient(160deg,#1a1b20,#0c0c0d);color:#fff;border-color:#26272d;padding:20px}
+.stat-link b{font-size:20px}.stat-link span{color:#c4c5cb;font-size:14px}.stat-link em{font-style:normal;color:#fff;font-weight:700;font-size:14px}
+.cwrap,.swrap{max-width:1100px;padding-top:18px;padding-bottom:60px;display:grid;gap:18px}
+.ct-chi{margin:0;color:var(--mut);font-size:14px}
+.acc{border:1px dashed var(--line);border-radius:16px;padding:14px 16px}
+.acc h3{margin:0 0 4px;font-size:15px}.acc p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+/* ---------- statistiche ---------- */
+.sf{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.sf label{display:grid;gap:4px;font-size:13px;color:var(--mut);font-weight:600}
+.sf .in{min-width:170px}
+.sk{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.sk div{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--card)}
+.sk b{display:block;font-size:28px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.sk span{font-size:13px;color:var(--mut)}
+.s2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(460px,100%),1fr));gap:18px;align-items:start}
+.tb{width:100%;border-collapse:collapse;font-size:14px}
+.tb th{text-align:left;font-size:12px;color:var(--mut);font-weight:700;padding:6px 8px;border-bottom:2px solid var(--line);white-space:nowrap}
+.tb th.n,.tb td.n{text-align:right;font-variant-numeric:tabular-nums}
+.tb td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tb td.bar{width:34%;min-width:90px}
+.tb td.bar i{display:block;height:10px;border-radius:6px;background:var(--red);min-width:3px}
+.tb td small{display:block;color:var(--mut);font-size:12px}
+.tb tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+.more{margin-top:8px}
+
 /* ---------- barra delle viste di lavoro ---------- */
 .wb{position:sticky;top:0;z-index:30;background:var(--blk);color:#fff;display:flex;align-items:center;gap:10px;padding:10px max(2vw,12px);min-height:62px}
 .wb h1{margin:0 auto 0 4px;font-size:19px;font-weight:800;line-height:1.2}
@@ -440,15 +476,13 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
     <ol class="passi"><li><span><b>Raccogli</b> i clienti sulla mappa</span></li><li><span><b>Genera giro</b>: ordine, giorni e orari</span></li><li><span><b>Sistema</b> e salva</span></li></ol></div>
     <div class="acts"><button type="button" id="raccogli">Raccogli clienti sulla mappa</button><button type="button" class="sec" id="importa">Importa clienti da Excel</button><button type="button" class="sec" id="nuovo">Ho già il giro: pianifica</button></div>
   </section>
-  <section class="panel d-g">
-    <div class="ph"><h2>Giri</h2></div>
-    <div class="tabs" role="group" aria-label="Filtra i giri" id="tabs"></div>
-    <input class="srch" id="q" type="search" placeholder="Cerca giro, zona, azienda o collega" aria-label="Cerca giro">
-    <ul id="lista"></ul>
+  <section class="panel d-g" id="cart-s">
+    <div class="ph"><h2>Cartelle</h2><a class="mini" href="#statistiche">Statistiche dei viaggi →</a></div>
+    <div class="cgrid" id="cgrid"></div>
     <p class="note" id="nota"></p>
   </section>
   <div class="d-l colonna">
-  <section id="liste-s" class="panel"><div class="ph"><h2>Liste clienti</h2><span><a class="mini" href="#" id="importa2">Importa file</a> · <a class="mini" href="#raccogli">+ Nuova</a></span></div><ul id="liste"></ul></section>
+  <a class="panel stat-link" href="#statistiche"><b class="w">Statistiche dei viaggi</b><span>Dove siamo andati e quante volte: per regione, provincia e città, per persona e per anno.</span><em id="stat-k"></em></a>
   <details class="inst" id="inst">
     <summary>Installa l'app sul telefono</summary>
     <p><b>iPhone:</b> apri con Safari, tocca Condividi (il quadrato con la freccia) e poi «Aggiungi alla schermata Home».</p>
@@ -472,6 +506,28 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
       <div class="pc" id="pc" hidden></div>
     </div>
   </div>
+</div>
+
+<!-- CARTELLA di una persona: i suoi giri e le sue liste clienti -->
+<div id="v-cart" hidden>
+  <div class="wb"><a class="ghost" href="#">← Cartelle</a><h1 id="ct-tit">Cartella</h1><span class="msg" id="ct-msg"></span><button class="btn red" type="button" id="ct-nuovo">+ Nuovo giro</button></div>
+  <div class="wrap cwrap">
+    <p class="ct-chi" id="ct-chi"></p>
+    <div id="ct-acc"></div>
+    <section class="panel">
+      <div class="ph"><h2>Giri</h2></div>
+      <div class="tabs" role="group" aria-label="Filtra i giri" id="tabs"></div>
+      <input class="srch" id="q" type="search" placeholder="Cerca giro, zona, azienda o collega" aria-label="Cerca giro">
+      <ul id="lista"></ul>
+    </section>
+    <section id="liste-s" class="panel"><div class="ph"><h2>Liste clienti</h2><span><a class="mini" href="#" id="importa2">Importa file</a> · <a class="mini" href="#raccogli">+ Nuova</a></span></div><ul id="liste"></ul></section>
+  </div>
+</div>
+
+<!-- STATISTICHE DEI VIAGGI -->
+<div id="v-stat" hidden>
+  <div class="wb"><a class="ghost" href="#">← Cartelle</a><h1>Statistiche dei viaggi</h1><span class="msg" id="st-msg"></span></div>
+  <div class="wrap swrap" id="st-body"></div>
 </div>
 
 <!-- AMMINISTRAZIONE -->
@@ -639,13 +695,15 @@ addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.retur
 addEventListener("hashchange", () => { if (CTX) instrada(); });
 function instrada(){
   const h = decodeURIComponent(location.hash.slice(1));
-  ["#v-home","#v-plan","#v-adm"].forEach(v => $(v).hidden = true);
+  ["#v-home","#v-plan","#v-adm","#v-cart","#v-stat"].forEach(v => $(v).hidden = true);
   $("#pc").hidden = true; $("#sug").hidden = true;
   if (IMPP) { IMPP.stop = true; IMPP = null; } $("#imp").hidden = true;
   if (h.startsWith("pianifica")) { MODE = "giro"; $("#pp").hidden = false; $("#lp").hidden = true; const id = h.split("/")[1] || ""; apriPiano(id); $("#v-plan").hidden = false; }
   else if (h.startsWith("raccogli")) { MODE = "lista"; $("#pp").hidden = true; $("#lp").hidden = false; const id = h.split("/")[1] || ""; apriLista(id); $("#v-plan").hidden = false; }
   else if (h === "admin" && CTX.admin) { $("#v-adm").hidden = false; admin(); }
-  else { $("#v-home").hidden = false; cruscotto(); }
+  else if (h.startsWith("cartella/")) { CART = h.slice(9); filtro = "tutti"; $("#q").value = ""; $("#v-cart").hidden = false; cruscotto(); }
+  else if (h === "statistiche") { $("#v-stat").hidden = false; statistiche(); }
+  else { CART = ""; $("#v-home").hidden = false; cruscotto(); }
   scrollTo(0, 0);
 }
 
@@ -667,7 +725,15 @@ setInterval(() => { if (CTX && !$("#v-home").hidden && document.visibilityState 
 document.addEventListener("visibilitychange", () => { if (CTX && document.visibilityState === "visible" && !$("#v-home").hidden) rileggiSpunte(false); });
 /* permessi: chi ha creato il giro (o la lista) e gli amministratori decidono condivisione, «Il giro è per» ed eliminazione;
    chi lo riceve (condiviso o «Il giro è per») può modificare visite, stato, appuntamenti, ore e note */
-const coinvolto = x => (x.per || []).includes(CTX.nome) || (x.condiviso || []).includes(CTX.nome);
+const coinvolto = x => (x.per || []).includes(CTX.nome) || (x.condiviso || []).includes(CTX.nome) || ((CTX.io && CTX.io.cartelle) || []).some(c => RT.cartelleDi(x).includes(c));
+/* ---------------- cartelle ----------------
+   Ogni persona del team ha la sua cartella: dentro i giri fatti per lei («Il giro è per», altrimenti quelli che ha creato) e le liste clienti che ha creato.
+   Amministratori e chi «vede tutti i giri» entrano in tutte; gli altri nella propria e in quelle che un amministratore ha aperto per loro (utenti.json → cartelle).
+   Quello che è stato condiviso singolarmente (un giro, una lista) da una cartella in cui non si entra finisce in «Condivisi con me». */
+let CART = "", NUOVO_PER = null;
+const SH = "condivisi";
+const cartelleAperte = () => CTX.tutti ? CTX.utenti.map(u => u.nome) : [CTX.nome, ...((CTX.io && CTX.io.cartelle) || [])].filter((n, i, a) => a.indexOf(n) === i && CTX.utenti.some(u => u.nome === n));
+const nellaCartella = (x, c) => c === SH ? !RT.cartelleDi(x).some(n => cartelleAperte().includes(n)) : RT.cartelleDi(x).includes(c);
 const puoGestire = x => CTX.admin || x.autore === CTX.nome;
 const puoModificare = g => puoGestire(g) || coinvolto(g);
 // giro «mio»: assegnato a me con «Il giro è per», oppure creato da me se non è assegnato a nessuno
@@ -703,17 +769,19 @@ function cruscotto(){
       <div class="bar"><i><s style="width:${pc}%"></s></i>${f} di ${tot} fatte</div><span class="go">Apri il giro</span></a>`;
   } else $("#prossimo").innerHTML = '<h2>Prossimo giro</h2><p class="empty">Nessun giro in programma.</p>';
   // liste clienti (raccolta)
-  const LV = LISTE.filter(l => !l.archiviato).sort((a, b) => String(b.modificato).localeCompare(String(a.modificato)));
+  const GC = CART ? G.filter(g => nellaCartella(g, CART)) : G;
+  const LV = LISTE.filter(l => !l.archiviato && (!CART || nellaCartella(l, CART))).sort((a, b) => String(b.modificato).localeCompare(String(a.modificato)));
   $("#liste").innerHTML = LV.length ? LV.map(l => { const C = l.clienti || [], nc = C.length, na = C.filter(c => statoC(c) === "appuntamento").length, nct = C.filter(c => statoC(c) === "contattare").length;
     const chi = l.autore === CTX.nome ? ((l.condiviso||[]).length ? "condivisa con " + l.condiviso.join(", ") : "creata da te") : "di " + (l.autore || "—") + ((l.condiviso || []).includes(CTX.nome) ? " · condivisa con te" : "");
     return `<li class="gw"><a class="g" href="#raccogli/${esc(encodeURIComponent(l.id))}"><div class="dt ls"><b>${nc}</b><span>${nc === 1 ? "cliente" : "clienti"}</span></div>
       <div><h4>${esc(l.titolo)}</h4><p>${l.zona ? esc(l.zona) + " · " : ""}${na ? na + (na === 1 ? " appuntamento · " : " appuntamenti · ") : ""}${nct ? '<span class="ct">' + nct + (nct === 1 ? " appuntamento da prendere" : " appuntamenti da prendere") + "</span> · " : ""}${esc(chi)}</p></div><span class="st p">Lista</span></a></li>`; }).join("")
     : '<li class="vuoto">Nessuna lista ancora. Raccogli sulla mappa i clienti da visitare (o importali da un file Excel), condividili con i colleghi e genera il giro.<a href="#raccogli">Crea la prima lista →</a></li>';
-  const TABS = [["tutti","Tutti",G.length],["per","Per me",G.filter(mio).length],["c","In corso",n("c")],["p","In programma",n("p")],["f","Conclusi",n("f")],["miei","Creati da me",G.filter(g => g.autore === CTX.nome).length]];
+  const nC = k => GC.filter(g => g._s === k).length;
+  const TABS = [["tutti","Tutti",GC.length],["c","In corso",nC("c")],["p","In programma",nC("p")],["f","Conclusi",nC("f")]];
   const disegna = () => {
     $("#tabs").innerHTML = TABS.map(([k,l,c]) => `<button type="button" data-k="${k}" aria-pressed="${filtro === k}">${l}<em>${c}</em></button>`).join("");
     const q = $("#q").value.trim().toLowerCase();
-    const vis = G.filter(g => (filtro === "tutti" || g._s === filtro || (filtro === "miei" && g.autore === CTX.nome) || (filtro === "per" && mio(g))) &&
+    const vis = GC.filter(g => (filtro === "tutti" || g._s === filtro) &&
       (!q || [g.titolo, g.zona, g.autore, (g.per||[]).join(" "), (g.condiviso||[]).join(" "), tappe(g).map(t => t.azienda + " " + (t.indirizzo||"")).join(" ")].join(" ").toLowerCase().includes(q)));
     $("#lista").innerHTML = vis.length ? vis.map(g => { const a = dt(g.dal), tot = tappe(g).length, f = Math.min(fatte(g), tot), nct = conta(g, "contattare");
       const chi = chiGiro(g);
@@ -725,10 +793,148 @@ function cruscotto(){
   $("#tabs").onclick = e => { const b = e.target.closest("button[data-k]"); if (b) { filtro = b.dataset.k; disegna(); } };
   $("#q").oninput = disegna;
   disegna();
-  $("#nota").textContent = (CTX.tutti ? "Vedi tutti i giri del team." : "Vedi i giri creati da te e quelli che i colleghi hanno condiviso con te.")
-    + " Puoi modificare i giri creati da te e quelli che ti hanno condiviso o assegnato. L'avanzamento delle visite («N di M fatte») è condiviso: lo vedono tutti quelli che vedono il giro.";
+  $("#nota").textContent = (CTX.tutti ? "Entri in tutte le cartelle del team." : "Entri nella tua cartella e in quelle che un amministratore ha aperto per te; i giri e le liste che i colleghi ti condividono uno per uno sono in «Condivisi con me».")
+    + " L'avanzamento delle visite («N di M fatte») è condiviso: lo vedono tutti quelli che vedono il giro.";
+  disegnaCartelle(G); if (CART) testaCartella();
+  const sk = $("#stat-k"); if (sk) { const fatti = GIRI.filter(g => stato(g) === "f").length; sk.textContent = fatti + (fatti === 1 ? " giro concluso" : " giri conclusi") + " · apri le statistiche →"; }
   if (location.protocol === "https:" && navigator.onLine !== false) { try { fetch("giro.html", {cache:"no-cache"}).catch(() => {}); } catch(e) {} }
 }
+/* ---------------- statistiche dei viaggi ----------------
+   Dai giri visibili: dove siamo andati e quante volte (viaggi = giri distinti, giorni = giornate di giro distinte), per regione, provincia e città.
+   Il luogo si legge dall'indirizzo della visita (CAP, città, sigla della provincia); se manca la sigla si prova con il nome del capoluogo. */
+const PROVINCE = ("AG Agrigento Sicilia|AL Alessandria Piemonte|AN Ancona Marche|AO Aosta Valle d'Aosta|AP Ascoli Piceno Marche|AQ L'Aquila Abruzzo|AR Arezzo Toscana|AT Asti Piemonte|AV Avellino Campania|BA Bari Puglia|BG Bergamo Lombardia|BI Biella Piemonte|BL Belluno Veneto|BN Benevento Campania|BO Bologna Emilia-Romagna|BR Brindisi Puglia|BS Brescia Lombardia|BT Barletta-Andria-Trani Puglia|BZ Bolzano Trentino-Alto Adige|CA Cagliari Sardegna|CB Campobasso Molise|CE Caserta Campania|CH Chieti Abruzzo|CL Caltanissetta Sicilia|CN Cuneo Piemonte|CO Como Lombardia|CR Cremona Lombardia|CS Cosenza Calabria|CT Catania Sicilia|CZ Catanzaro Calabria|EN Enna Sicilia|FC Forlì-Cesena Emilia-Romagna|FE Ferrara Emilia-Romagna|FG Foggia Puglia|FI Firenze Toscana|FM Fermo Marche|FR Frosinone Lazio|GE Genova Liguria|GO Gorizia Friuli-Venezia Giulia|GR Grosseto Toscana|IM Imperia Liguria|IS Isernia Molise|KR Crotone Calabria|LC Lecco Lombardia|LE Lecce Puglia|LI Livorno Toscana|LO Lodi Lombardia|LT Latina Lazio|LU Lucca Toscana|MB Monza e Brianza Lombardia|MC Macerata Marche|ME Messina Sicilia|MI Milano Lombardia|MN Mantova Lombardia|MO Modena Emilia-Romagna|MS Massa-Carrara Toscana|MT Matera Basilicata|NA Napoli Campania|NO Novara Piemonte|NU Nuoro Sardegna|OR Oristano Sardegna|PA Palermo Sicilia|PC Piacenza Emilia-Romagna|PD Padova Veneto|PE Pescara Abruzzo|PG Perugia Umbria|PI Pisa Toscana|PN Pordenone Friuli-Venezia Giulia|PO Prato Toscana|PR Parma Emilia-Romagna|PT Pistoia Toscana|PU Pesaro e Urbino Marche|PV Pavia Lombardia|PZ Potenza Basilicata|RA Ravenna Emilia-Romagna|RC Reggio Calabria Calabria|RE Reggio Emilia Emilia-Romagna|RG Ragusa Sicilia|RI Rieti Lazio|RM Roma Lazio|RN Rimini Emilia-Romagna|RO Rovigo Veneto|SA Salerno Campania|SI Siena Toscana|SO Sondrio Lombardia|SP La Spezia Liguria|SR Siracusa Sicilia|SS Sassari Sardegna|SU Sud Sardegna Sardegna|SV Savona Liguria|TA Taranto Puglia|TE Teramo Abruzzo|TN Trento Trentino-Alto Adige|TO Torino Piemonte|TP Trapani Sicilia|TR Terni Umbria|TS Trieste Friuli-Venezia Giulia|TV Treviso Veneto|UD Udine Friuli-Venezia Giulia|VA Varese Lombardia|VB Verbano-Cusio-Ossola Piemonte|VC Vercelli Piemonte|VE Venezia Veneto|VI Vicenza Veneto|VR Verona Veneto|VT Viterbo Lazio|VV Vibo Valentia Calabria")
+  .split("|").reduce((o, r) => { const sig = r.slice(0, 2), rest = r.slice(3);
+    const reg = ["Emilia-Romagna","Friuli-Venezia Giulia","Trentino-Alto Adige","Valle d'Aosta"].find(x => rest.endsWith(" " + x)) || rest.split(" ").pop();
+    o[sig] = { nome: rest.slice(0, rest.length - reg.length - 1), reg }; return o; }, {});
+PROVINCE.FO = PROVINCE.FC; PROVINCE.PS = PROVINCE.PU;
+const PROV_NOME = Object.fromEntries(Object.entries(PROVINCE).map(([k, v]) => [v.nome.toLowerCase(), k]).concat([["forlì","FC"],["forli","FC"],["cesena","FC"],["pesaro","PU"],["urbino","PU"],["andria","BT"],["barletta","BT"],["trani","BT"],["monza","MB"],["massa","MS"],["carrara","MS"],["carbonia","SU"],["verbania","VB"]]));
+const PAESI = { francia: "Francia", france: "Francia", germania: "Germania", deutschland: "Germania", germany: "Germania", svizzera: "Svizzera", schweiz: "Svizzera", suisse: "Svizzera", switzerland: "Svizzera", austria: "Austria", österreich: "Austria", spagna: "Spagna", "españa": "Spagna", spain: "Spagna", "san marino": "San Marino", slovenia: "Slovenia", croazia: "Croazia", belgio: "Belgio", "paesi bassi": "Paesi Bassi", olanda: "Paesi Bassi", "regno unito": "Regno Unito", portogallo: "Portogallo", grecia: "Grecia", monaco: "Monaco", lussemburgo: "Lussemburgo" };
+const capW = s => { s = String(s || "").trim().replace(/\s+/g, " "); if (s !== s.toLowerCase() && s !== s.toUpperCase()) return s;
+  return s.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()); };
+function luogo(t){
+  const ind = String(t.indirizzo || t.ricerca || "").replace(/^da verificare:\s*/i, "").trim();
+  const parti = ind.split(",").map(x => x.trim()).filter(Boolean);
+  let paese = "Italia";
+  const ult = (parti[parti.length - 1] || "").toLowerCase();
+  if (PAESI[ult]) { paese = PAESI[ult]; parti.pop(); } else if (/^(italia|italy)$/.test(ult)) parti.pop();
+  if (paese === "Italia" && parti.some(p => /^(rsm|repubblica di san marino)$/i.test(p) || /\bSM\b$/.test(p) && /4789\d/.test(p))) paese = "San Marino";
+  if (paese !== "Italia") { const pc = [...parti].reverse().find(p => /\d{4,5}/.test(p)) || parti[parti.length - 1] || "";
+    return { paese, reg: paese, prov: "", provNome: paese, citta: capW(pc.replace(/[\dA-Z]{0,3}-?\d{4,5}[A-Z]{0,2}/, "").replace(/\b[A-Z]{2,3}\b$/, "")) || "—" }; }
+  let citta = "", sig = "";
+  for (let i = parti.length - 1; i >= 0 && !sig; i--) {
+    const p = parti[i];
+    let m = p.match(/^(?:\d{5}\s+)?(.+?)\s+\(?([A-Z]{2})\)?$/);
+    if (m && PROVINCE[m[2]]) { sig = m[2]; citta = m[1].replace(/^\d{5}\s*/, ""); break; }
+    m = p.match(/^\d{5}\s+(.+)$/); if (m) { citta = m[1]; break; }
+  }
+  if (!citta) citta = (parti[parti.length - 1] || "").replace(/^\d{5}\s*/, "").replace(/\s+[A-Z]{2}$/, "");
+  if (!sig) sig = PROV_NOME[citta.toLowerCase()] || IMPARATE[citta.toLowerCase()] || "";
+  citta = capW(citta) || "—";
+  const P = PROVINCE[sig];
+  return { paese, reg: P ? P.reg : "Non riconosciuta", prov: sig === "FO" ? "FC" : sig === "PS" ? "PU" : sig, provNome: P ? P.nome : "Non riconosciuta", citta };
+}
+let STATF = null, IMPARATE = {};
+// città senza sigla (es. «Via Emilia 20, Forlimpopoli»): la provincia si prende da un altro indirizzo della stessa città che ce l'ha
+function imparaCitta(){ IMPARATE = {}; const tutti = GIRI.flatMap(g => (g.giorni || []).flatMap(d => d.tappe || [])).concat(LISTE.flatMap(l => l.clienti || []));
+  for (const t of tutti) { const L = luogo(t); if (L.paese === "Italia" && L.prov && L.citta !== "—") IMPARATE[L.citta.toLowerCase()] = L.prov; } }
+function statistiche(){
+  const B = $("#st-body"), anni = [...new Set(GIRI.map(g => String(g.dal || "").slice(0, 4)).filter(Boolean))].sort().reverse();
+  const persone = [...new Set(GIRI.flatMap(g => RT.cartelleDi(g)))].filter(Boolean).sort();
+  STATF = STATF || { anno: "", chi: "", prog: false };
+  B.innerHTML = `<div class="sf">
+    <label>Periodo<select class="in" id="sf-a"><option value="">Tutti gli anni</option><option value="12">Ultimi 12 mesi</option>${anni.map(a => `<option value="${a}">${a}</option>`).join("")}</select></label>
+    <label>Persona<select class="in" id="sf-p"><option value="">Tutto il team</option>${persone.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}</select></label>
+    <label class="chk" style="margin:0 0 10px"><input type="checkbox" id="sf-g"> Conta anche i giri in programma</label></div>
+    <div id="st-out"></div>
+    <p class="hint">Contano i giri che vedi tu, anche archiviati${CTX.tutti ? " (tu vedi quelli di tutto il team)" : ""}. «Viaggi» = in quanti giri ci siamo andati; «Giorni» = in quante giornate; «Visite» = visite in programma nei giri; «Fatte» = visite segnate come fatte. Il luogo si legge dall'indirizzo della visita: gli indirizzi incompleti finiscono in «Non riconosciuta».</p>`;
+  $("#sf-a").value = STATF.anno; $("#sf-p").value = STATF.chi; $("#sf-g").checked = STATF.prog;
+  B.onchange = () => { STATF = { anno: $("#sf-a").value, chi: $("#sf-p").value, prog: $("#sf-g").checked }; calcolaStat(); };
+  calcolaStat();
+}
+function calcolaStat(){
+  imparaCitta();
+  const F = STATF, oggi = iso(d0), unAnno = new Date(d0); unAnno.setFullYear(unAnno.getFullYear() - 1);
+  const G = GIRI.filter(g => (F.prog || String(g.dal) <= oggi) && (!F.chi || RT.cartelleDi(g).includes(F.chi))
+    && (!F.anno || (F.anno === "12" ? String(g.al || g.dal) >= iso(unAnno) : String(g.dal).startsWith(F.anno))));
+  const agg = () => ({ giri: new Set(), giorni: new Set(), visite: 0, fatte: 0, clienti: new Set(), ultima: "", extra: "" });
+  const R = {}, P = {}, C = {}, U = {}, V = [], tot = agg();
+  const add = (M, k, g, d, t, fatta, extra) => { const x = M[k] || (M[k] = agg()); x.giri.add(g.id); x.giorni.add(g.id + d); x.visite++; if (fatta) x.fatte++;
+    x.clienti.add(String(t.azienda || "").trim().toLowerCase()); const di = d || g.dal; if (di > x.ultima) x.ultima = di; if (extra) x.extra = extra; };
+  for (const g of G) {
+    const S = RT.applica((SPUNTE || {})[g.id], RT.coda.get(g.id)), regs = new Set(), provs = new Set(); let nv = 0, nf = 0;
+    (g.giorni || []).forEach((d, i) => (d.tappe || []).forEach(t => {
+      const L = luogo(t), f = !!S[RT.chiaveVisita(t)], dd = d.iso || g.dal + "#" + i;
+      add(R, L.reg, g, dd, t, f); add(P, L.prov ? L.provNome + " (" + L.prov + ")" : L.provNome, g, dd, t, f, L.reg);
+      add(C, L.citta + (L.prov ? " (" + L.prov + ")" : L.paese !== "Italia" ? " (" + L.paese + ")" : ""), g, dd, t, f, L.reg);
+      RT.cartelleDi(g).forEach(n => add(U, n, g, dd, t, f));
+      add({ x: tot }, "x", g, dd, t, f); regs.add(L.reg); if (L.prov) provs.add(L.prov); nv++; if (f) nf++; }));
+    V.push({ g, regs: [...regs].join(", "), provs: [...provs].join(", "), nv, nf, gg: (g.giorni || []).length });
+  }
+  const righe = M => Object.entries(M).map(([k, x]) => ({ k, giri: x.giri.size, giorni: x.giorni.size, visite: x.visite, fatte: x.fatte, clienti: x.clienti.size, ultima: String(x.ultima).slice(0, 10), extra: x.extra }))
+    .sort((a, b) => b.giri - a.giri || b.visite - a.visite || a.k.localeCompare(b.k));
+  const dataIt = s => { if (!s) return ""; const d = dt(s.slice(0, 10)); return isNaN(d) ? "" : d.getDate() + " " + MESI[d.getMonth()] + " " + d.getFullYear(); };
+  const tabella = (id, tit, nome, rr, conExtra, max) => { const top = Math.max(1, ...rr.map(r => r.giri)), corte = max && rr.length > max;
+    return `<section class="panel"><div class="ph"><h2>${tit} (${rr.length})</h2><a class="mini" href="#" data-csv="${id}">Scarica per Excel</a></div><div class="tw"><table class="tb"><thead><tr><th>${nome}</th><th class="n">Viaggi</th><th></th><th class="n">Giorni</th><th class="n">Visite</th><th class="n">Fatte</th><th class="n">Clienti</th><th>Ultima volta</th></tr></thead><tbody>
+    ${rr.map((r, i) => `<tr${corte && i >= max ? ' class="xtra" hidden' : ""}><td><b>${esc(r.k)}</b>${conExtra && r.extra ? `<small>${esc(r.extra)}</small>` : ""}</td><td class="n"><b>${r.giri}</b></td><td class="bar"><i style="width:${Math.round(r.giri / top * 100)}%"></i></td><td class="n">${r.giorni}</td><td class="n">${r.visite}</td><td class="n">${r.fatte}</td><td class="n">${r.clienti}</td><td>${esc(dataIt(r.ultima))}</td></tr>`).join("") || '<tr><td colspan="8" class="hint">Nessun dato.</td></tr>'}
+    </tbody></table></div>${corte ? `<button class="btn sm more" type="button" data-more="1">Mostra tutte (${rr.length})</button>` : ""}</section>`; };
+  const rR = righe(R), rP = righe(P), rC = righe(C), rU = righe(U);
+  const T = { giri: tot.giri.size, giorni: tot.giorni.size, visite: tot.visite, fatte: tot.fatte, clienti: tot.clienti.size };
+  V.sort((a, b) => String(b.g.dal).localeCompare(String(a.g.dal)));
+  $("#st-out").innerHTML = `<div class="sk"><div><b>${T.giri}</b><span>viaggi (giri)</span></div><div><b>${T.giorni}</b><span>giorni in viaggio</span></div><div><b>${T.visite}</b><span>visite</span></div><div><b>${T.fatte}</b><span>visite fatte</span></div><div><b>${T.clienti}</b><span>clienti diversi</span></div><div><b>${rC.length}</b><span>città</span></div><div><b>${rP.filter(r => !/Non riconosciuta/.test(r.k)).length}</b><span>province</span></div></div>
+    <div class="s2">${tabella("reg", "Regioni e Paesi", "Regione", rR, false)}${tabella("per", "Per persona", "Persona", rU, false)}</div>
+    ${tabella("prov", "Province", "Provincia", rP, true, 15)}
+    ${tabella("cit", "Città", "Città", rC, true, 20)}
+    <section class="panel"><div class="ph"><h2>Elenco dei viaggi (${V.length})</h2><a class="mini" href="#" data-csv="via">Scarica per Excel</a></div><div class="tw"><table class="tb"><thead><tr><th>Date</th><th>Giro</th><th>Per</th><th>Regioni</th><th>Province</th><th class="n">Giorni</th><th class="n">Visite</th><th class="n">Fatte</th></tr></thead><tbody>
+    ${V.map(v => `<tr><td>${esc(periodo(v.g))} ${esc(String(v.g.dal).slice(0, 4))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a></td><td>${esc(RT.cartelleDi(v.g).join(", "))}</td><td>${esc(v.regs)}</td><td>${esc(v.provs)}</td><td class="n">${v.gg}</td><td class="n">${v.nv}</td><td class="n">${v.nf}</td></tr>`).join("") || '<tr><td colspan="8" class="hint">Nessun giro in questo periodo.</td></tr>'}
+    </tbody></table></div></section>`;
+  const CSV = { reg: ["Regione", rR], per: ["Persona", rU], prov: ["Provincia", rP], cit: ["Città", rC] };
+  $("#st-out").onclick = e => {
+    const m = e.target.closest("[data-more]"); if (m) { m.closest("section").querySelectorAll("tr.xtra").forEach(r => r.hidden = false); m.remove(); return; }
+    const a = e.target.closest("[data-csv]"); if (!a) return; e.preventDefault();
+    const q = v => '"' + String(v ?? "").replace(/"/g, '""') + '"'; let rows;
+    if (a.dataset.csv === "via") rows = [["Dal", "Al", "Giro", "Per", "Regioni", "Province", "Giorni", "Visite", "Fatte"], ...V.map(v => [v.g.dal, v.g.al || v.g.dal, v.g.titolo, RT.cartelleDi(v.g).join(", "), v.regs, v.provs, v.gg, v.nv, v.nf])];
+    else { const [n, rr] = CSV[a.dataset.csv]; rows = [[n, ...(a.dataset.csv === "prov" || a.dataset.csv === "cit" ? ["Regione"] : []), "Viaggi", "Giorni", "Visite", "Fatte", "Clienti", "Ultima volta"],
+      ...rr.map(r => [r.k, ...(a.dataset.csv === "prov" || a.dataset.csv === "cit" ? [r.extra] : []), r.giri, r.giorni, r.visite, r.fatte, r.clienti, r.ultima])]; }
+    const blob = new Blob(["﻿" + rows.map(r => r.map(q).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" });
+    const u = URL.createObjectURL(blob), l = document.createElement("a"); l.href = u; l.download = "statistiche-" + a.dataset.csv + "-" + iso(d0) + ".csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+  };
+}
+function disegnaCartelle(G){
+  const tutteL = LISTE.filter(l => !l.archiviato), ap = cartelleAperte();
+  const card = (c, nome, sh) => {
+    const g = G.filter(x => nellaCartella(x, c)), att = g.filter(x => x._s !== "f").sort((a, b) => String(a.dal).localeCompare(String(b.dal))), l = tutteL.filter(x => nellaCartella(x, c));
+    const nct = g.filter(x => x._s !== "f").reduce((k, x) => k + conta(x, "contattare"), 0) + l.reduce((k, x) => k + (x.clienti || []).filter(y => statoC(y) === "contattare").length, 0);
+    const px = att[0];
+    return `<a class="cf${sh ? " sh" : ""}" href="#cartella/${esc(encodeURIComponent(c))}"><span class="av">${sh ? "↗" : esc(nome.charAt(0).toUpperCase())}</span><b>${esc(nome)}</b>
+      <span>${att.length} ${att.length === 1 ? "giro attivo" : "giri attivi"} · ${g.length - att.length} ${g.length - att.length === 1 ? "concluso" : "conclusi"} · ${l.length} ${l.length === 1 ? "lista" : "liste"}</span>
+      ${px ? `<span class="px">Prossimo: ${esc(periodo(px))} · ${esc(px.titolo)}</span>` : '<span>Nessun giro in programma</span>'}
+      ${nct ? `<span class="ct">${nct} ${nct === 1 ? "appuntamento" : "appuntamenti"} da prendere</span>` : ""}</a>`; };
+  const ordine = [CTX.nome, ...ap.filter(n => n !== CTX.nome)];
+  const shG = G.filter(x => nellaCartella(x, SH)).length + tutteL.filter(x => nellaCartella(x, SH)).length;
+  $("#cgrid").innerHTML = ordine.map(n => card(n, n === CTX.nome ? n + " (tu)" : n, false)).join("") + (shG ? card(SH, "Condivisi con me", true) : "");
+}
+function testaCartella(){
+  const c = CART, sh = c === SH;
+  if (!sh && !cartelleAperte().includes(c)) { $("#ct-tit").textContent = "Cartella non accessibile"; $("#ct-chi").textContent = "Non hai accesso a questa cartella: chiedilo a un amministratore."; $("#ct-acc").innerHTML = ""; return; }
+  $("#ct-tit").textContent = sh ? "Condivisi con me" : c === CTX.nome ? "La mia cartella" : "Cartella di " + c;
+  $("#ct-nuovo").hidden = sh;
+  const entra = CTX.utenti.filter(u => u.admin || u.tutti || u.nome === c || (u.cartelle || []).includes(c)).map(u => u.nome);
+  $("#ct-chi").textContent = sh ? "Giri e liste che i colleghi hanno condiviso con te uno per uno." : "Possono entrare: " + entra.join(", ") + ". Dentro: i giri per " + c + " (o creati da " + c + " senza «Il giro è per») e le liste clienti create da " + c + ".";
+  // accesso alla cartella: lo danno gli amministratori
+  const altri = CTX.utenti.filter(u => !u.admin && !u.tutti && u.nome !== c);
+  $("#ct-acc").innerHTML = !CTX.admin || sh || !altri.length ? "" : `<div class="acc"><h3>Chi altro può entrare in questa cartella</h3><p>Chi ha accesso vede e può modificare tutti i giri e le liste della cartella, anche quelli futuri. Per un solo giro o una sola lista usa invece «Condividi» dentro il giro o la lista.</p>
+    <div class="share" id="ct-share">${altri.map(u => `<label class="${(u.cartelle || []).includes(c) ? "on" : ""}"><input type="checkbox" value="${esc(u.nome)}" ${(u.cartelle || []).includes(c) ? "checked" : ""}>${esc(u.nome)}</label>`).join("")}</div>
+    <div class="pfoot"><button class="btn dk sm" type="button" id="ct-save" disabled>Salva accesso</button></div></div>`;
+  const sb = $("#ct-share");
+  if (sb) { sb.onchange = () => { $$("#ct-share label").forEach(l => l.classList.toggle("on", l.querySelector("input").checked)); $("#ct-save").disabled = false; };
+    $("#ct-save").onclick = async () => { const si = $$("#ct-share input:checked").map(x => x.value), b = $("#ct-save");
+      const U = CTX.utenti.map(u => { if (u.admin || u.tutti || u.nome === c) return u; const k = (u.cartelle || []).filter(x => x !== c); if (si.includes(u.nome)) k.push(c); return Object.assign({}, u, { cartelle: k }); });
+      b.disabled = true; b.textContent = "Salvataggio… (riconsegno le chiavi)"; $("#ct-msg").textContent = "";
+      try { await aggiornaTeam(U); GIRI = await RT.giri(CTX); LISTE = await RT.liste(CTX); toast("Accesso alla cartella di " + c + " aggiornato."); }
+      catch(x) { toast(x.message || "Salvataggio non riuscito.", true); }
+      cruscotto(); }; }
+}
+$("#ct-nuovo").addEventListener("click", () => { NUOVO_PER = CART && CART !== SH ? CART : null; location.hash = "pianifica"; });
 $("#nuovo").addEventListener("click", () => { location.hash = "pianifica"; });
 $("#raccogli").addEventListener("click", () => { location.hash = "raccogli"; });
 $("#importa").addEventListener("click", () => scegliFile());
@@ -770,7 +976,8 @@ function allineaGiorni(){
 const etDay = g => { if (!g.iso) return "Giorno"; const d = dt(g.iso); return cap(GIORNI[d.getDay()]).slice(0,3) + " " + d.getDate() + " " + MESI[d.getMonth()]; };
 function nuovoP(){
   const dom = new Date(d0); dom.setDate(dom.getDate() + 1);
-  return { id: "", titolo: "", sottotitolo: "", dal: iso(dom), al: iso(dom), zona: "", prima: "", condiviso: [], per: [], giorni: [], autore: CTX.nome, creato: "", archiviato: false };
+  const per = NUOVO_PER && NUOVO_PER !== CTX.nome ? [NUOVO_PER] : []; NUOVO_PER = null;
+  return { id: "", titolo: "", sottotitolo: "", dal: iso(dom), al: iso(dom), zona: "", prima: "", condiviso: [], per, giorni: [], autore: CTX.nome, creato: "", archiviato: false };
 }
 function daGiro(G){
   const per = [...(G.per || [])];
@@ -1642,7 +1849,8 @@ async function salvaConfig(cambi){
 async function aggiornaTeam(U){
   if (!CTX.tok) throw new Error("Prima inserisci la chiave GitHub nelle impostazioni.");
   if (!U.some(u => u.admin)) throw new Error("Deve restare almeno un amministratore.");
-  const pub = U.map(({ nome, admin, tutti, it, salt, iv, ct, pub, cambia }) => Object.assign({ nome, admin: !!admin, tutti: !!tutti, it, salt, iv, ct, pub }, cambia ? { cambia: true } : {}));
+  const pub = U.map(({ nome, admin, tutti, it, salt, iv, ct, pub, cambia, cartelle }) => Object.assign({ nome, admin: !!admin, tutti: !!tutti, it, salt, iv, ct, pub },
+    cambia ? { cambia: true } : {}, (cartelle || []).length ? { cartelle: cartelle.filter(c => U.some(x => x.nome === c) && c !== nome) } : {}));
   for (const path of RT.BUSTE) {
     await RT.modifica(path, CTX.tok, async lista => {
       const out = [];

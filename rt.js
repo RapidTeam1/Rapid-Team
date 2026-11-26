@@ -84,7 +84,11 @@ window.RT = (() => {
   }
 
   /* chi vede un giro o una lista: chi l'ha creato, i colleghi con cui è condiviso, chi vede tutti i giri, gli amministratori */
-  const destinatariGiro = (G, utenti) => utenti.filter(u => u.admin || u.tutti || u.nome === G.autore || (G.condiviso || []).includes(u.nome));
+  // cartelle: un giro sta nella cartella di chi lo farà («Il giro è per»), altrimenti in quella di chi l'ha creato; una lista in quella di chi l'ha creata.
+  // u.cartelle = cartelle di altri colleghi in cui u può entrare (accesso dato da un amministratore): vede e modifica quello che c'è dentro.
+  const cartelleDi = G => (G.per || []).length ? G.per.slice() : [G.autore];
+  const destinatariGiro = (G, utenti) => utenti.filter(u => u.admin || u.tutti || u.nome === G.autore || (G.condiviso || []).includes(u.nome)
+    || (G.per || []).includes(u.nome) || (u.cartelle || []).some(c => cartelleDi(G).includes(c)));
 
   /* ---------- lettura dati ---------- */
   const utf8b64 = s => tob64(enc.encode(s));
@@ -142,7 +146,9 @@ window.RT = (() => {
     if (!io) throw new Error("utente sconosciuto");
     const pk = await privata(s.jwk);
     let tok = null; try { if (config.gh) tok = (await apre(config.gh, pk, s.nome)) || null; } catch (e) {}
-    const ctx = { utenti, config, io, pk, tok, nome: s.nome, admin: !!io.admin, tutti: !!(io.admin || io.tutti) };
+    // con la chiave GitHub l'elenco del team si rilegge subito dal repository (il sito pubblicato può essere indietro di qualche minuto: es. accesso a una cartella appena dato)
+    if (tok && navigator.onLine !== false) { try { const x = await daAPI("dati/utenti.json", tok); if (Array.isArray(x.data) && x.data.some(u => u.nome === s.nome)) { utenti.length = 0; utenti.push(...x.data); } } catch (e) {} }
+    const ctx = { utenti, config, io: utenti.find(u => u.nome === s.nome) || io, pk, tok, nome: s.nome, admin: !!io.admin, tutti: !!(io.admin || io.tutti) };
     // controllo: la chiave pubblica salvata deve corrispondere a quella privata appena aperta
     try { const pub = await S.importKey("jwk", { kty: "RSA", n: s.jwk.n, e: s.jwk.e, alg: "RSA-OAEP-256", ext: true }, { name: "RSA-OAEP", hash: "SHA-256" }, true, ["encrypt"]);
       ctx.pubGiusta = tob64(await S.exportKey("spki", pub)); ctx.pubErrata = ctx.pubGiusta !== io.pub; } catch (e) { ctx.pubErrata = false; }
@@ -270,5 +276,5 @@ window.RT = (() => {
 
   return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, ricifraChiave, chiude, apre, riconsegna,
     destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori,
-    SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
+    cartelleDi, SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
 })();

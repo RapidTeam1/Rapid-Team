@@ -440,7 +440,7 @@ function giro(G, indietro){
   const nApp = tutte.filter(x => ha(x.t, "appuntamento")).length, nCt = tutte.filter(x => ha(x.t, "contattare")).length;
   const kick = [G.zona ? esc(G.zona) : "", G.archiviato ? '<span class="pill gy">Archiviato</span>' : (iOggi >= 0 ? '<span class="pill">In corso oggi</span>' : "")].filter(Boolean).join("");
   // modifica: chi l'ha creato, gli amministratori e chi lo riceve (condiviso o «Il giro è per»)
-  const puoModificare = CTX && (CTX.admin || G.autore === CTX.nome || (G.per || []).includes(CTX.nome) || (G.condiviso || []).includes(CTX.nome));
+  const puoModificare = CTX && (CTX.admin || G.autore === CTX.nome || (G.per || []).includes(CTX.nome) || (G.condiviso || []).includes(CTX.nome) || ((CTX.io && CTX.io.cartelle) || []).some(c => RT.cartelleDi(G).includes(c)));
   app.innerHTML = `
   <header class="top">${ONDE}
     <div class="wrap">
