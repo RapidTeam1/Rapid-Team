@@ -1,5 +1,5 @@
 // Rapid Team: funzionamento offline. Pagine, script e dati: prima la rete (per avere sempre l'ultima versione), poi la copia salvata.
-const CACHE = "rapid-team-v19", DATI = "rapid-team-dati";
+const CACHE = "rapid-team-v20", DATI = "rapid-team-dati";
 const BASE = ["./", "index.html", "giro.html", "rt.js", "genera.js", "importa.js", "manifest.webmanifest", "icona-180.png", "icona-192.png", "icona-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(n => n !== CACHE && n !== DATI).map(n => caches.delete(n)))).then(() => self.clients.claim())); });

@@ -765,7 +765,7 @@ function pannello(bozza){
     <div class="two"><label class="fl"><span>Percorso del giorno</span><input class="in" data-g="percorso" value="${esc(g.percorso)}" placeholder="Es. Ravenna → Faenza → Forlì"></label><label class="fl"><span>Notte</span><input class="in" data-g="notte" value="${esc(g.notte)}" placeholder="Es. Hotel a Savona"></label></div>
     <div id="stops">${g.tappe.length ? g.tappe.map((t,i) => scheda(t, i)).join("") : `<p class="hint" style="margin:4px 0 10px">${CTX.config.gmaps_key ? "Cerca un'azienda sulla mappa e premi «Aggiungi»: la visita compare qui." : "Aggiungi le visite a mano con il bottone qui sotto."}</p>`}</div>
     <button class="btn addm" type="button" id="addm">+ Aggiungi visita a mano</button>
-    <div class="pfoot">${g.tappe.length > 1 ? '<button class="btn sm" type="button" id="ord">Ordina per orario</button>' : ""}</div>
+    <div class="pfoot">${g.tappe.length > 1 && g.tappe.every(t => t.ora) ? '<button class="btn sm" type="button" id="ord">Ordina per orario</button>' : ""}</div>
   </fieldset>`;
   segnaposti();
 }
@@ -773,10 +773,10 @@ function scheda(t, i){
   const ap = i === OPEN, alt = P.giorni.map((d,k) => k === CUR ? "" : `<option value="${k}">${esc(etDay(d))}</option>`).join("");
   const isApp = tipo(t) === "appuntamento";
   return `<div class="stp${ap ? " open" : ""}${isApp ? " app" : ""}" data-i="${i}">
-    <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : ""}">${i+1}</span><div><div class="tt">${esc(t.ora || "--:--")} · ${esc(t.azienda || "Nuova visita")}</div><div class="ss">${isApp ? '<b style="color:var(--ok)">Appuntamento</b> · ' : ""}${esc(t.indirizzo || t.ricerca || "Indirizzo da inserire")}</div></div>
+    <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : ""}">${i+1}</span><div><div class="tt">${t.ora ? esc(t.ora) + " · " : ""}${esc(t.azienda || "Nuova visita")}</div><div class="ss">${isApp ? '<b style="color:var(--ok)">Appuntamento</b> · ' : ""}${esc(t.indirizzo || t.ricerca || "Indirizzo da inserire")}</div></div>
       <div class="mv"><button type="button" data-act="su" aria-label="Sposta su" ${i === 0 ? "disabled" : ""}>↑</button><button type="button" data-act="giu" aria-label="Sposta giù" ${i === (P.giorni[CUR].tappe.length - 1) ? "disabled" : ""}>↓</button></div></div>
     ${ap ? `<div class="bd">
-      <div class="two"><label class="fl"><span>Ora</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>Tipo visita</span><select class="in" data-k="tipo">${TIPI.map(([v,l]) => `<option value="${v}" ${tipo(t) === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
+      <div class="two"><label class="fl"><span>Ora (solo se c'è un appuntamento)</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>Tipo visita</span><select class="in" data-k="tipo">${TIPI.map(([v,l]) => `<option value="${v}" ${tipo(t) === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
       <label class="chk"><input type="checkbox" data-k="att" ${(t.etichette||[]).includes("attenzione") ? "checked" : ""}> Attenzione (segnale arancione)</label>
       <label class="fl"><span>Azienda</span><input class="in" data-k="azienda" value="${esc(t.azienda)}"></label>
       <label class="fl"><span>Indirizzo</span><input class="in" data-k="indirizzo" value="${esc(t.indirizzo)}"></label>
@@ -796,7 +796,7 @@ function oraSuccessiva(){ const T = P.giorni[CUR].tappe; if (!T.length) return "
   const m = minuti(T[T.length - 1].ora); if (m >= 9999) return ""; const n = Math.min(m + 30, 23 * 60 + 59); return Math.floor(n / 60) + ":" + String(n % 60).padStart(2, "0"); }
 function aggiungi(t){
   if (!P.giorni.length) allineaGiorni();
-  t.ora = t.ora || oraSuccessiva();
+  t.ora = t.ora || "";
   P.giorni[CUR].tappe.push(t); OPEN = P.giorni[CUR].tappe.length - 1; salvaBozza(); pannello();
   const el = $(`.stp[data-i="${OPEN}"]`); if (el) el.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
@@ -811,7 +811,7 @@ $("#pp").addEventListener("input", e => {
   else if (k === "att") { t.etichette = (t.etichette || []).filter(e => e !== "attenzione"); if (x.checked) t.etichette.push("attenzione"); }
   else t[k] = x.value;
   if (k === "ora" || k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
-    hd.querySelector(".tt").textContent = (t.ora || "--:--") + " · " + (t.azienda || "Nuova visita"); hd.querySelector(".ss").textContent = t.indirizzo || t.ricerca || "Indirizzo da inserire"; }
+    hd.querySelector(".tt").textContent = (t.ora ? t.ora + " · " : "") + (t.azienda || "Nuova visita"); hd.querySelector(".ss").textContent = t.indirizzo || t.ricerca || "Indirizzo da inserire"; }
   salvaBozza();
 });
 $("#pp").addEventListener("change", e => {
@@ -1260,13 +1260,13 @@ function mostraPrev(){
   ${r.giorni.map((g, gi) => { const ult = gi === r.giorni.length - 1, last = sel[g.visite[g.visite.length - 1].k - 1];
     const da = gi === 0 ? nomeP : "zona di " + (citta(sel[g.partenza - 1].indirizzo) || sel[g.partenza - 1].azienda);
     return `<div class="pday"><h4><i style="background:${COLG[gi % COLG.length]}"></i>${esc(dataBreve(g.iso))}<em>${g.visite.length} ${g.visite.length === 1 ? "visita" : "visite"} · partenza ${esc(hh(GEN.min(opz.ora) ?? 510))} da ${esc(da)}</em></h4><ul>
-    ${g.visite.map(v => { const c = sel[v.k - 1];
+    ${g.visite.map((v, vi) => { const c = sel[v.k - 1];
       const info = [v.viaggio + " min di viaggio", v.attesa > 0 ? "attesa " + v.attesa + " min" : ""].filter(Boolean).join(" · ");
-      return `<li><b>${hh(v.inizio)}</b><div>${esc(c.azienda)}${v.fisso ? ` <span class="ap" style="display:inline">· APPUNTAMENTO ORE ${esc(hh(v.m))}</span>` : c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span>${v.ritardo > 0 ? `<span class="ko">Arrivo in ritardo di ${v.ritardo} min sull'appuntamento</span>` : ""}${v.chiuso ? `<span class="ko">Di solito chiuso a quest'ora${c.orari ? " (" + esc(c.orari) + ")" : ""}</span>` : ""}</div></li>`; }).join("")}
+      return `<li><b>${v.fisso ? hh(v.inizio) : (vi + 1) + "."}</b><div>${esc(c.azienda)}${v.fisso ? ` <span class="ap" style="display:inline">· APPUNTAMENTO ORE ${esc(hh(v.m))}</span>` : c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span>${v.ritardo > 0 ? `<span class="ko">Arrivo in ritardo di ${v.ritardo} min sull'appuntamento</span>` : ""}${v.chiuso ? `<span class="ko">Di solito chiuso a quest'ora${c.orari ? " (" + esc(c.orari) + ")" : ""}</span>` : ""}</div></li>`; }).join("")}
     </ul><span class="end">${ult ? "Rientro a " + esc(nomeP) + " verso le " + hh(g.rientro.ora) + " (" + g.rientro.viaggio + " min)" : "Notte in zona " + esc(citta(last.indirizzo) || last.azienda) + ": da compilare nel pianificatore"}</span></div>`; }).join("")}
   ${r.fuori.length || senzaPos.length ? `<p class="tot"><b>Fuori dal giro</b></p><ul class="av">${r.fuori.map(f => `<li>${esc(sel[f.k - 1].azienda)}: ${esc(f.motivo)}</li>`).join("")}${senzaPos.map(c => `<li>${esc(c.azienda || "Cliente senza nome")}: non trovato sulla mappa, completa l'indirizzo</li>`).join("")}</ul>` : ""}
   ${r.giorni.length ? `<div class="pfoot"><button class="btn red" type="button" id="gen-apri" style="margin:0">Apri nel pianificatore</button></div>` : ""}
-  <p class="hint">È una proposta: controlla sempre orari, appuntamenti e note prima di salvare. Tempi in auto senza traffico più ${GEN.MARGINE} min di margine per ogni spostamento${M.nuovi ? " · " + M.nuovi + " nuovi calcoli Google, gli altri già salvati su questo dispositivo" : ""}.</p>`;
+  <p class="hint">È una proposta: l'ordine delle visite è calcolato, l'ora la metti tu (è già scritta solo per gli appuntamenti). Controlla appuntamenti e note prima di salvare. Tempi in auto senza traffico più ${GEN.MARGINE} min di margine per ogni spostamento${M.nuovi ? " · " + M.nuovi + " nuovi calcoli Google, gli altri già salvati su questo dispositivo" : ""}.</p>`;
 }
 function aGiro(){
   if (!PREV || !PREV.r.giorni.length) return;
@@ -1279,7 +1279,7 @@ function aGiro(){
       const gi = r.giorni.findIndex(g => g.iso === i); if (gi < 0) return { iso: i, percorso: "", notte: "", tappe: [] };
       const g = r.giorni[gi], ult = gi === r.giorni.length - 1;
       const tappe = g.visite.map(v => { const c = sel[v.k - 1];
-        return { ora: hh(v.inizio), azienda: c.azienda || "", indirizzo: c.indirizzo || "", telefono: c.telefono || "", referente: c.referente || "", orari: c.orari || "(da verificare)", note: c.note || "", portare: "",
+        return { ora: v.fisso ? hh(v.inizio) : "", azienda: c.azienda || "", indirizzo: c.indirizzo || "", telefono: c.telefono || "", referente: c.referente || "", orari: c.orari || "(da verificare)", note: c.note || "", portare: "",
           etichette: [c.appuntamento ? "appuntamento" : "prospezione"].concat(v.chiuso ? ["attenzione"] : []), pos: c.pos, place_id: c.place_id || "", maps: c.maps || "" }; });
       const luoghi = []; [gi === 0 ? nomeP : citta(sel[g.partenza - 1].indirizzo), ...g.visite.map(v => citta(sel[v.k - 1].indirizzo))].forEach(x => { if (x && luoghi[luoghi.length - 1] !== x) luoghi.push(x); });
       if (ult && luoghi[luoghi.length - 1] !== nomeP) luoghi.push(nomeP);
