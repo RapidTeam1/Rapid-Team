@@ -32,8 +32,8 @@
  },
  {
   "nome": "Andrea",
-  "admin": false,
-  "tutti": true,
+  "admin": true,
+  "tutti": false,
   "it": 600000,
   "salt": "+mvbd2VfMpY8Aww8fQ4fjg==",
   "iv": "PXkqxa0IDL2PTvAi",
