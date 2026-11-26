@@ -622,6 +622,27 @@ function archivio(A){
 /* avviso senza rete */
 const rete = () => { const o = $("#off"); if (o) o.hidden = navigator.onLine !== false; };
 addEventListener("online", rete); addEventListener("offline", rete); rete();
+/* aggiornamento automatico: quando si torna sull'app e ogni 15 minuti si controlla se su GitHub c'è una versione nuova (sw.js cambia a ogni rilascio).
+   Arrivata la versione nuova la pagina si ricarica da sola; se c'è lavoro non salvato compare la barra «Aggiorna». */
+if ("serviceWorker" in navigator && location.protocol === "https:") { try {
+  let primo = !navigator.serviceWorker.controller, fatto = false; // primo: la prima volta il cambio è solo l'installazione, non un aggiornamento
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    const controlla = () => { try { reg.update().catch(() => {}); } catch(e) {} };
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") controlla(); });
+    addEventListener("focus", controlla); setInterval(controlla, 15 * 60 * 1000);
+  }).catch(() => {});
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (primo) { primo = false; return; }
+    if (fatto) return; fatto = true;
+    if ($("#sh").hidden && $("#cw").hidden) { location.reload(); return; }
+    const b = document.createElement("div");
+    b.setAttribute("role", "status");
+    b.style.cssText = "position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:100;display:flex;gap:12px;align-items:center;max-width:min(560px,94vw);background:#1d8a4b;color:#fff;border-radius:14px;padding:12px 14px;font:600 15px/1.35 Archivo,system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.35)";
+    b.innerHTML = '<span>C\'è una nuova versione dell\'app. Salva quello che stai facendo e premi Aggiorna.</span><button type="button" style="flex:none;border:0;border-radius:10px;background:#fff;color:#14532d;font:800 15px Archivo,system-ui,sans-serif;padding:10px 14px;cursor:pointer">Aggiorna</button>';
+    b.querySelector("button").onclick = () => { location.reload(); };
+    document.body.appendChild(b);
+  });
+} catch(e) {} }
 /* account personali: il giro si apre con l'accesso fatto nella schermata iniziale e si legge da dati/giri.json */
 pw.hidden = true; lb.hidden = true;
 const vai = (msg) => { $("#lt").textContent = "Rapid Team"; $("#lh").className = ""; $("#lh").textContent = msg; err.textContent = "";
