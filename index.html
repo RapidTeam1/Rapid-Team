@@ -210,14 +210,20 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .sf label{display:grid;gap:4px;font-size:12px;color:#b9bac0;font-weight:600}
 .sf .in{min-width:160px;background:#1f2026;border-color:#33343b;color:#fff}
 .sf .sw2{display:flex;align-items:center;gap:8px;font-size:14px;color:#fff;min-height:42px;cursor:pointer}.sf .sw2 input{width:18px;height:18px;accent-color:var(--red)}
-.sk{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.sk>div{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--card);display:grid;align-content:center}
-.sk b{display:block;font-size:30px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
-.sk span{font-size:13px;color:var(--mut)}
+.sk{display:grid;grid-template-columns:minmax(200px,1.3fr) repeat(4,minmax(0,1fr));gap:10px}
+.sk>div{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--card);display:grid;align-content:center;gap:2px}
+.sk b{display:block;font-size:28px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
+.sk span{font-size:13px;color:var(--mut);line-height:1.3}
 .sk .ok b{color:var(--ok)}.sk .ko b{color:var(--att)}
-.sk .ring{position:relative;grid-row:span 1;justify-items:center;text-align:center;padding:10px}
-.sk .ring svg{width:74px;height:74px;transform:rotate(0)}.sk .ring .r0{fill:none;stroke:var(--line);stroke-width:4.5}.sk .ring .r1{fill:none;stroke:var(--ok);stroke-width:4.5;stroke-linecap:round}
-.sk .ring b{position:absolute;top:34px;left:0;right:0;font-size:18px}
+.sk .ring{grid-row:span 2;justify-items:center;text-align:center;gap:8px}
+.sk .rw{display:grid;place-items:center;width:104px;height:104px}
+.sk .rw>*{grid-area:1/1}
+.sk .rw svg{width:104px;height:104px}.sk .r0{fill:none;stroke:var(--line);stroke-width:4}.sk .r1{fill:none;stroke:var(--ok);stroke-width:4;stroke-linecap:round}
+.sk .rw b{font-size:22px}
+.sk .ring .n2{display:inline;font-size:15px;color:var(--ink)}
+.sk .ring .sbar{width:100%}
+@media(max-width:900px){.sk{grid-template-columns:repeat(2,minmax(0,1fr))}.sk .ring{grid-column:1/-1;grid-row:auto}}
+#st-out{display:grid;gap:18px}
 .s2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(440px,100%),1fr));gap:18px;align-items:start}
 .leg{font-size:12px;color:var(--mut);display:flex;gap:6px;align-items:center}.leg i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-left:6px}
 .leg .f,.sbar .f,.col .f{background:var(--ok)}.leg .m,.sbar .m,.col .m{background:var(--att)}.leg .d,.sbar .d,.col .d{background:var(--line)}
@@ -874,7 +880,7 @@ function statistiche(){
       ${CTX.admin ? `<label>Persona<select class="in" id="sf-p"><option value="">Tutto il team</option>${persone.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}</select></label>` : ""}
       <label class="sw2"><input type="checkbox" id="sf-g"> Anche i giri in programma</label></div></section>
     <div id="st-out"></div>
-    <p class="hint">«Viaggi» = in quanti giri ci siamo andati; «Giorni» = in quante giornate; «Fatte» = visite segnate come fatte; «Non visitate» = visite di giorni già passati rimaste senza spunta; «Completamento» = fatte su quelle che si dovevano già fare. Il luogo si legge dall'indirizzo della visita: gli indirizzi incompleti finiscono in «Non riconosciuta». ${CTX.admin ? "Le statistiche di tutto il team le vedono solo gli amministratori; gli altri vedono solo le proprie." : "Vedi solo le statistiche dei tuoi giri."}</p>`;
+    <p class="hint">«Viaggi» = in quanti giri ci siamo andati; «Giorni» = in quante giornate; «Fatte» = visite segnate come fatte; «Non visitate» = visite di giorni già passati rimaste senza spunta; «% fatte» = visite fatte su tutte le visite, comprese quelle ancora da fare (100% solo quando sono fatte tutte). Il luogo si legge dall'indirizzo della visita: gli indirizzi incompleti finiscono in «Non riconosciuta». ${CTX.admin ? "Le statistiche di tutto il team le vedono solo gli amministratori; gli altri vedono solo le proprie." : "Vedi solo le statistiche dei tuoi giri."}</p>`;
   $("#sf-a").value = STATF.anno; if ($("#sf-p")) $("#sf-p").value = STATF.chi; $("#sf-g").checked = STATF.prog;
   B.onchange = e => { if (!e.target.closest(".sf")) return; STATF = Object.assign(STATF, { anno: $("#sf-a").value, chi: $("#sf-p") ? $("#sf-p").value : "", prog: $("#sf-g").checked }); calcolaStat(); };
   calcolaStat(); rileggiSpunte(true);
@@ -905,7 +911,8 @@ function calcolaStat(){
     V.push({ g, regs: [...regs].join(", "), provs: [...provs].join(", "), nv, nf, nm, gg: (g.giorni || []).length,
       esito: !inizio ? ["p", "In programma"] : !fine ? ["c", "In corso"] : nm ? ["x", "Incompleto"] : ["ok", "Completato"] });
   }
-  const pc = x => x.fatte + x.mancate ? Math.round(x.fatte / (x.fatte + x.mancate) * 100) : null;
+  // % fatte = visite segnate come fatte su TUTTE le visite (anche quelle ancora da fare): arrotondata per difetto, 100% solo se tutte fatte
+  const pc = x => x.visite ? Math.floor(x.fatte / x.visite * 100) : null;
   const righe = Mp => Object.entries(Mp).map(([k, x]) => ({ k, giri: x.giri.size, giorni: x.giorni.size, visite: x.visite, fatte: x.fatte, mancate: x.mancate, clienti: x.clienti.size, ultima: x.ultima, extra: x.extra, pc: pc(x), pos: x.pos }))
     .sort((a, b) => b.giri - a.giri || b.visite - a.visite || a.k.localeCompare(b.k));
   const dataIt = s => { if (!s) return ""; const d = dt(String(s).slice(0, 10)); return isNaN(d) ? "" : d.getDate() + " " + MESI[d.getMonth()] + " " + d.getFullYear(); };
@@ -917,12 +924,14 @@ function calcolaStat(){
   const barra = r => { const tot = Math.max(1, r.visite), daf = r.visite - r.fatte - r.mancate;
     return `<span class="sbar" title="${r.fatte} fatte · ${r.mancate} non visitate · ${daf} da fare"><i class="f" style="width:${r.fatte / tot * 100}%"></i><i class="m" style="width:${r.mancate / tot * 100}%"></i><i class="d" style="width:${daf / tot * 100}%"></i></span>`; };
   const pcTxt = v => v == null ? '<span class="mut">—</span>' : `<b class="${v === 100 ? "ok" : v >= 80 ? "" : "ko"}">${v}%</b>`;
-  const anello = T.pc == null ? 0 : T.pc;
+  const anello = T.pc == null ? 0 : T.pc, daf = T.visite - T.fatte - T.mancate;
   const kpi = `<div class="sk">
-    <div class="ring"><svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="15.9" class="r0"/><circle cx="21" cy="21" r="15.9" class="r1" stroke-dasharray="${anello} ${100 - anello}" stroke-dashoffset="25"/></svg><b>${T.pc == null ? "—" : T.pc + "%"}</b><span>completamento</span></div>
+    <div class="ring"><div class="rw"><svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="15.9155" class="r0"/><circle cx="21" cy="21" r="15.9155" class="r1" stroke-dasharray="${anello} ${100 - anello}" stroke-dashoffset="25"/></svg><b>${T.pc == null ? "—" : T.pc + "%"}</b></div>
+      <span><b class="n2">${T.fatte} di ${T.visite}</b> visite fatte</span>${T.visite ? barra(T) : ""}</div>
     <div><b>${T.giri}</b><span>${T.giri === 1 ? "viaggio" : "viaggi"}</span></div><div><b>${T.giorni}</b><span>${T.giorni === 1 ? "giorno in viaggio" : "giorni in viaggio"}</span></div>
-    <div class="ok"><b>${T.fatte}</b><span>visite fatte</span></div><div class="${T.mancate ? "ko" : ""}"><b>${T.mancate}</b><span>non visitate</span></div>
-    <div><b>${T.clienti}</b><span>clienti diversi</span></div><div><b>${rC.length}</b><span>città · ${rP.filter(r => !/Non riconosciuta/.test(r.k)).length} province</span></div></div>`;
+    <div><b>${T.visite}</b><span>visite in totale</span></div><div class="ok"><b>${T.fatte}</b><span>fatte</span></div>
+    <div class="${T.mancate ? "ko" : ""}"><b>${T.mancate}</b><span>non visitate (giorni passati)</span></div><div><b>${daf}</b><span>ancora da fare</span></div>
+    <div><b>${T.clienti}</b><span>clienti diversi</span></div><div><b>${rC.length}</b><span>${rC.length === 1 ? "città" : "città"} · ${rP.filter(r => !/Non riconosciuta/.test(r.k)).length} province</span></div></div>`;
   // andamento per mese
   const mesi = Object.keys(M).sort().slice(-12), maxM = Math.max(1, ...mesi.map(m => M[m].visite));
   const trend = mesi.length ? `<section class="panel"><div class="ph"><h2>Mese per mese</h2><span class="leg"><i class="f"></i>fatte <i class="m"></i>non visitate <i class="d"></i>da fare</span></div>
@@ -934,7 +943,7 @@ function calcolaStat(){
   const luoghi = `<section class="panel"><div class="ph"><h2>Dove siamo andati</h2><a class="mini" href="#" data-csv="${F.tab}">Scarica per Excel</a></div>
     <div class="tabs" id="st-tab">${Object.entries(TAB).map(([k, v]) => `<button type="button" data-t="${k}" aria-pressed="${(F.tab || "reg") === k}">${v[0]}<em>${v[2].length}</em></button>`).join("")}</div>
     <input class="srch" id="st-q" type="search" placeholder="Cerca regione, provincia o città" value="${esc(F.q || "")}">
-    <div class="tw"><table class="tb"><thead><tr><th>${nome}</th><th class="n">Viaggi</th><th></th><th class="n">Giorni</th><th class="n">Visite</th><th>Fatte · non visitate · da fare</th><th class="n">Completamento</th><th>Ultima volta</th></tr></thead><tbody>
+    <div class="tw"><table class="tb"><thead><tr><th>${nome}</th><th class="n">Viaggi</th><th></th><th class="n">Giorni</th><th class="n">Visite</th><th>Fatte · non visitate · da fare</th><th class="n">% fatte</th><th>Ultima volta</th></tr></thead><tbody>
     ${rv.map((r, i) => `<tr${i >= 25 ? ' class="xtra" hidden' : ""}><td><b>${esc(r.k)}</b>${F.tab !== "reg" && r.extra ? `<small>${esc(r.extra)}</small>` : ""}</td><td class="n"><b>${r.giri}</b></td><td class="bar"><i style="width:${Math.round(r.giri / top * 100)}%"></i></td><td class="n">${r.giorni}</td><td class="n">${r.visite}</td><td>${barra(r)}<small>${r.fatte} · <span class="${r.mancate ? "ko" : ""}">${r.mancate}</span> · ${r.visite - r.fatte - r.mancate}</small></td><td class="n">${pcTxt(r.pc)}</td><td class="nw">${esc(dataIt(r.ultima))}</td></tr>`).join("") || '<tr><td colspan="8" class="hint">Nessun dato.</td></tr>'}
     </tbody></table></div>${rv.length > 25 ? `<button class="btn sm more" type="button" data-more="1">Mostra tutte (${rv.length})</button>` : ""}
     ${CTX.config.gmaps_key ? `<div class="pfoot"><button class="btn sm" type="button" id="st-map-b">${STATMAP ? "Aggiorna la mappa" : "Mostra sulla mappa"}</button><span class="hint">Cerchi grandi = più visite; verde = tutto fatto, arancione = qualcosa non visitato, grigio = ancora da fare. Aprire la mappa conta come un caricamento Google.</span></div><div id="st-map" class="smap"${STATMAP ? "" : " hidden"}></div>` : ""}</section>`;
@@ -943,7 +952,7 @@ function calcolaStat(){
     ${NV.length ? `<p class="hint" style="margin:0 0 8px">Visite di giorni già passati rimaste senza spunta verde: o non sono state fatte, o qualcuno ha dimenticato di segnarle.</p><ul class="nvl">${NV.map((x, i) => `<li${i >= 15 ? ' class="xtra" hidden' : ""}><span class="dot"></span><div><b>${esc(x.t.azienda || "—")}</b><span>${esc(x.citta)} · ${esc(dataIt(x.d))} · <a href="${esc(link(x.g))}">${esc(x.g.titolo)}</a> · ${esc(RT.cartelleDi(x.g).join(", "))}</span></div></li>`).join("")}</ul>${NV.length > 15 ? `<button class="btn sm more" type="button" data-more="1">Mostra tutti (${NV.length})</button>` : ""}`
       : '<p class="vuoto">Nessuna visita saltata: tutte le visite dei giorni passati sono segnate come fatte.</p>'}</section>`;
   // persone (solo amministratori, tutto il team)
-  const pers = CTX.admin && !F.chi && rU.length > 1 ? `<section class="panel"><div class="ph"><h2>Per persona</h2><a class="mini" href="#" data-csv="per">Scarica per Excel</a></div><div class="pgrid">${rU.map(r => `<div class="pcard"><b>${esc(r.k)}</b><span>${r.giri} ${r.giri === 1 ? "viaggio" : "viaggi"} · ${r.giorni} ${r.giorni === 1 ? "giorno" : "giorni"} · ${r.visite} visite</span>${barra(r)}<span>${r.fatte} fatte · <span class="${r.mancate ? "ko" : ""}">${r.mancate} non visitate</span> · completamento ${pcTxt(r.pc)}</span></div>`).join("")}</div></section>` : "";
+  const pers = CTX.admin && !F.chi && rU.length > 1 ? `<section class="panel"><div class="ph"><h2>Per persona</h2><a class="mini" href="#" data-csv="per">Scarica per Excel</a></div><div class="pgrid">${rU.map(r => `<div class="pcard"><b>${esc(r.k)}</b><span>${r.giri} ${r.giri === 1 ? "viaggio" : "viaggi"} · ${r.giorni} ${r.giorni === 1 ? "giorno" : "giorni"} · ${r.visite} visite</span>${barra(r)}<span>${r.fatte} fatte · <span class="${r.mancate ? "ko" : ""}">${r.mancate} non visitate</span> · ${pcTxt(r.pc)} fatte</span></div>`).join("")}</div></section>` : "";
   // elenco dei viaggi
   const viaggi = `<section class="panel"><div class="ph"><h2>Elenco dei viaggi (${V.length})</h2><a class="mini" href="#" data-csv="via">Scarica per Excel</a></div><div class="tw"><table class="tb"><thead><tr><th>Date</th><th>Giro</th><th>Esito</th><th>Fatte · non visitate · da fare</th><th>Regioni</th><th class="n">Giorni</th></tr></thead><tbody>
     ${V.map(v => `<tr><td class="nw">${esc(periodo(v.g))} ${esc(String(v.g.dal).slice(0, 4))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a><small>${esc(RT.cartelleDi(v.g).join(", "))}</small></td><td><span class="es ${v.esito[0]}">${v.esito[1]}</span></td><td>${barra({ visite: v.nv, fatte: v.nf, mancate: v.nm })}<small>${v.nf} · <span class="${v.nm ? "ko" : ""}">${v.nm}</span> · ${v.nv - v.nf - v.nm} di ${v.nv}</small></td><td>${esc(v.regs)}</td><td class="n">${v.gg}</td></tr>`).join("") || '<tr><td colspan="6" class="hint">Nessun giro in questo periodo.</td></tr>'}
