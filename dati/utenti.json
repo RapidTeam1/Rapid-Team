@@ -12,7 +12,7 @@
  {
   "nome": "Marco",
   "admin": false,
-  "tutti": true,
+  "tutti": false,
   "it": 600000,
   "salt": "LjOTLRIEeLQTEaB/agN46Q==",
   "iv": "D116n15KuZTa07YV",
