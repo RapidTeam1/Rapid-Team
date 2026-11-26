@@ -230,6 +230,12 @@ ol.stops{list-style:none;margin:0;padding:0}
 .call .nm label{font-size:13px;color:var(--mut)}
 .call .ln{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .call small{display:block;margin-top:12px;color:var(--mut);font-size:13px}
+.call.esi{text-align:left}.call.esi .ic{margin-left:0}
+.call textarea{width:100%;box-sizing:border-box;margin-top:12px;min-height:96px;resize:vertical;border:1px solid var(--line);border-radius:14px;padding:12px;font:inherit;font-size:16px;background:var(--card);color:var(--ink)}
+.call textarea:focus{outline:2px solid var(--red);outline-offset:1px}
+.esb{display:inline-flex;align-items:center;gap:6px;margin-top:8px;border:1px dashed var(--ok);background:none;color:var(--ok);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.esb.ok{border-style:solid}
+.next .esq{margin:12px 0 0;padding:10px 12px;border-radius:14px;background:var(--okbg);font-size:14px}.next .esq button{border:0;background:none;color:var(--ok);font:inherit;font-weight:800;cursor:pointer;padding:2px 4px;text-decoration:underline}
 
 #off{position:sticky;top:0;z-index:40;background:#b45309;color:#fff;font-size:14px;font-weight:600;padding:10px max(4vw,14px)}
 #stampa{display:none}
@@ -424,6 +430,23 @@ function chiama(t){
     catch(x) { b.textContent = "Copia non riuscita: tieni premuto il numero"; }
   });
 }
+/* ---------- «Com'è andata?»: esito della visita, va nel CRM come nota «Viaggio <sigla>» ---------- */
+const siglaMia = () => { const n = CTX ? CTX.nome : ""; try { return (localStorage.getItem("rt-sigla-" + n) || n.slice(0, 3)).toUpperCase(); } catch(e) { return n.slice(0, 3).toUpperCase(); } };
+function esito(t, fine){
+  const cw = $("#cw"), c = $("#cwc"); c.classList.add("esi");
+  c.innerHTML = `<div class="ic">${ICO.edt}</div><p>Com'è andata?</p><h2 id="cwn">${esc(t.azienda)}</h2>
+    <textarea id="est" rows="3" maxlength="2000" placeholder="Due righe: interesse, prodotti, cosa fare dopo…" aria-label="Esito della visita"></textarea>
+    <small>Facoltativo. Va nella scheda del cliente nel CRM come nota «Viaggio ${esc(siglaMia())}» di oggi; se il cliente non c'è viene creato come «Potenziale».${CTX && CTX.tok ? "" : " Il salvataggio non è attivo su questo telefono (manca la chiave GitHub)."}</small>
+    <div class="ln"><button class="btn red" type="button" id="esk">Salva</button><button class="btn gy" type="button" id="esx">Salta</button></div>`;
+  cw.hidden = false;
+  const ta = $("#est"); setTimeout(() => ta.focus(), 60);
+  const chiudi = v => { cw.hidden = true; c.classList.remove("esi"); document.removeEventListener("keydown", k); fine(v); };
+  const k = e => { if (e.key === "Escape") chiudi(null); };
+  document.addEventListener("keydown", k);
+  $("#esk").addEventListener("click", () => { const v = ta.value.trim(); if (!v) { ta.focus(); ta.placeholder = "Scrivi due righe oppure premi «Salta»"; return; } chiudi(v); });
+  $("#esx").addEventListener("click", () => chiudi(null));
+  cw.onclick = e => { if (e.target === cw) chiudi(null); };
+}
 const tags = t => (t.etichette||[]).map(e => ETICHETTE[e] ? `<b class="t ${ETICHETTE[e][0]}">${esc(nomeEt(t, e))}</b>` : "").join("");
 const indirizzo = t => t.indirizzo ? `<p class="ad">${ICO.pin}<span>${esc(t.indirizzo)}</span></p>` : `<p class="ad nv">${ICO.pin}<span>Indirizzo da verificare: Maps cerca «${esc(t.ricerca || t.azienda)}»</span></p>`;
 const referente = t => t.referente || t.telefono ? `<p class="ref">${ICO.usr}<span>${t.referente ? `<b>${esc(t.referente)}</b>` : ""}${t.referente && t.telefono ? " · " : ""}${t.telefono ? esc(t.telefono) : ""}</span></p>` : "";
@@ -469,7 +492,7 @@ function giro(G, indietro){
         <ol class="stops">${g.tappe.map((t,j) => `<li class="st${classeSt(t)}" id="g${i+1}s${j+1}">
           <div class="tm"><time>${esc(t.ora)}${t.ora && t.ora_a ? "<small>–" + esc(t.ora_a) + "</small>" : ""}</time><i class="dot" aria-hidden="true"></i></div>
           <div>
-            <h3>${esc(t.azienda)}</h3><p class="chi" hidden></p>
+            <h3>${esc(t.azienda)}</h3><p class="chi" hidden></p><button class="esb" type="button" hidden></button>
             ${(t.etichette||[]).length ? `<div class="tags">${tags(t)}</div>` : ""}
             ${indirizzo(t)}
             ${referente(t)}
@@ -496,13 +519,16 @@ function giro(G, indietro){
   const disegnaNext = () => {
     const nx = $("#nx"); if (!nx) return;
     const p = prossima();
-    if (!p) { nx.className = "next fine"; nx.innerHTML = `<p class="k"><b>Giro completato</b></p><h2 class="w">Tutte le ${tutte.length} visite sono fatte.</h2><p class="ad">Buon rientro. Per ricominciare da capo usa «Azzera spunte» in fondo alla pagina.</p>`; return; }
+    // ultima visita segnata da me oggi senza esito: la domanda compare qui, quando si torna nell'app (mai mentre si guida)
+    const ult = tutte.filter(x => S[x.id] && CTX && S[x.id].da === CTX.nome && gm(S[x.id].quando) === gm(Date.now()) && !esSt(x.id)).sort((a, b) => String(S[b.id].quando).localeCompare(String(S[a.id].quando)))[0];
+    const esq = ult ? `<p class="esq">Com'è andata da <b>${esc(ult.t.azienda)}</b>? <button type="button" data-a="esi" data-id="${ult.id}">Scrivi l'esito</button><button type="button" data-a="nox" data-id="${ult.id}">No, grazie</button></p>` : "";
+    if (!p) { nx.className = "next fine"; nx.innerHTML = `<p class="k"><b>Giro completato</b></p><h2 class="w">Tutte le ${tutte.length} visite sono fatte.</h2><p class="ad">Buon rientro. Per ricominciare da capo usa «Azzera spunte» in fondo alla pagina.</p>${esq}`; return; }
     const g = G.giorni[p.i], t = p.t;
     nx.className = "next" + classeSt(t); nx.dataset.id = p.id;
     nx.innerHTML = `<p class="k"><b>Prossima visita</b><span>${esc(g.nome)}${g.data ? " " + esc(g.data) : ""}${t.ora ? " · " + esc(oraTesto(t)) : ""}</span></p>
       <h2>${esc(t.azienda)}</h2>${(t.etichette||[]).length ? `<div class="tags">${tags(t)}</div>` : ""}
       ${indirizzo(t)}${referente(t)}
-      <div class="acts"><button class="btn red" type="button" data-a="nav">${ICO.nav}Naviga</button>${t.telefono ? `<button class="btn gr" type="button" data-a="tel">${ICO.tel}Chiama</button>` : ""}</div><a class="lnk" href="#${p.id}">Vedi nella lista ↓</a>`;
+      <div class="acts"><button class="btn red" type="button" data-a="nav">${ICO.nav}Naviga</button>${t.telefono ? `<button class="btn gr" type="button" data-a="tel">${ICO.tel}Chiama</button>` : ""}</div><a class="lnk" href="#${p.id}">Vedi nella lista ↓</a>${esq}`;
   };
   const upd = () => {
     const n = Object.keys(S).filter(k => mappa[k]).length;
@@ -524,9 +550,13 @@ function giro(G, indietro){
     tutte.forEach(x => { const v = V[kOf[x.id]]; if (v) S[x.id] = v; });
     app.querySelectorAll(".st").forEach(li => { const v = S[li.id], c = li.querySelector(".chi");
       li.classList.toggle("done", !!v); li.querySelector(".ck").setAttribute("aria-pressed", !!v);
+      const eb = li.querySelector(".esb"); if (eb) { eb.hidden = !v || !CTX; const ok = esSt(li.id) === "s"; eb.classList.toggle("ok", ok); eb.textContent = ok ? "✓ Esito nel CRM · aggiungi" : "Com'è andata? Scrivi l'esito"; }
       if (c) { c.hidden = !v; c.textContent = v ? "✓ Fatta" + (v.da ? " da " + (CTX && v.da === CTX.nome ? "te" : v.da) : "") + (v.quando ? (gm(v.quando) !== gm(Date.now()) ? " il " + gm(v.quando) : "") + " alle " + hm(v.quando) : "") : ""; } });
     const nc = RT.coda.get(G.id).length, m = $("#msg");
     if (m && !m.dataset.fisso) m.textContent = !CTX || !CTX.tok ? "Le spunte restano su questo telefono: il salvataggio condiviso non è attivo (manca la chiave GitHub)." : nc ? (navigator.onLine === false ? "Senza rete: " : "") + nc + (nc === 1 ? " spunta da inviare" : " spunte da inviare") + ": partono da sole appena possibile." : "";
+    if (m && !m.dataset.fisso && CTX && CTX.tok) { const nn = RT.codaNote.tutte().length;
+      if (nn) m.textContent += (m.textContent ? " " : "") + (navigator.onLine === false && !m.textContent ? "Senza rete: " : "") + nn + (nn === 1 ? " esito da inviare al CRM." : " esiti da inviare al CRM.");
+      else if (Date.now() - esOk < 6000) m.textContent += (m.textContent ? " " : "") + "Esito salvato nel CRM."; }
     upd();
   };
   const invia = async () => {
@@ -552,13 +582,35 @@ function giro(G, indietro){
   const set = (id, v) => { if (!!S[id] === !!v) return; const q = RT.coda.get(G.id);
     q.push({ k: kOf[id], v: !!v, da: CTX ? CTX.nome : "", quando: new Date().toISOString() }); RT.coda.set(G.id, q);
     disegnaSpunte(); clearTimeout(invio); invio = setTimeout(invia, 1200); };
+  /* esiti: segnati su questo telefono («s» salvato, «x» saltato) per non chiedere due volte; le note vanno in coda e poi nel CRM */
+  const chiaveEs = id => G.id + "|" + kOf[id];
+  const esSt = id => (ls.get("rt-esiti", {}) || {})[chiaveEs(id)] || "";
+  const esSet = (id, v) => { const o = ls.get("rt-esiti", {}) || {}; o[chiaveEs(id)] = v; ls.set("rt-esiti", o); };
+  let invN = null, inN = false, esOk = 0;
+  const inviaN = async () => {
+    clearTimeout(invN); invN = null;
+    if (inN || !CTX || !CTX.tok || navigator.onLine === false || !RT.codaNote.tutte().length) return;
+    inN = true;
+    try { if (await RT.inviaNote(CTX)) esOk = Date.now(); } catch(e) { invN = setTimeout(inviaN, 20000); }
+    inN = false; disegnaSpunte(); if (esOk) setTimeout(disegnaSpunte, 6100);
+  };
+  const chiediEsito = id => { const t = mappa[id]; if (!t || !CTX) return;
+    esito(t, testo => {
+      if (testo) { RT.codaNote.add({ nid: "n-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), titolo: "Viaggio " + siglaMia(), testo, data: oggiIso(), chi: CTX.nome, giro: G.titolo || "",
+          t: { azienda: t.azienda || "", indirizzo: t.indirizzo || "", telefono: t.telefono || "", place_id: t.place_id || "", referente: t.referente || "", cli: t.cli || "" } });
+        esSet(id, "s"); inviaN(); }
+      else if (!esSt(id)) esSet(id, "x");
+      disegnaSpunte(); }); };
   app.querySelectorAll(".st").forEach(li => {
-    li.querySelector(".ck").addEventListener("click", () => set(li.id, !li.classList.contains("done")));
+    li.querySelector(".ck").addEventListener("click", () => { const era = li.classList.contains("done"); set(li.id, !era); if (!era && CTX && !esSt(li.id)) chiediEsito(li.id); });
+    li.querySelector(".esb").addEventListener("click", () => chiediEsito(li.id));
     li.querySelector(".nav").addEventListener("click", () => scheda(mappa[li.id], li.id, set, G));
     const tb = li.querySelector(".tel"); if (tb) tb.addEventListener("click", () => chiama(mappa[li.id]));
   });
   const nx = $("#nx");
-  if (nx) nx.addEventListener("click", e => { const b = e.target.closest("button[data-a]"); if (!b) return; const id = nx.dataset.id, t = mappa[id]; if (!t) return;
+  if (nx) nx.addEventListener("click", e => { const b = e.target.closest("button[data-a]"); if (!b) return;
+    if (b.dataset.a === "esi") { chiediEsito(b.dataset.id); return; } if (b.dataset.a === "nox") { esSet(b.dataset.id, "x"); disegnaSpunte(); return; }
+    const id = nx.dataset.id, t = mappa[id]; if (!t) return;
     if (b.dataset.a === "nav") scheda(t, id, set, G); else chiama(t); });
   const rs = $("#rs");
   rs.addEventListener("click", () => {
@@ -580,10 +632,10 @@ function giro(G, indietro){
   }
   disegnaSpunte();
   if (CTX) {
-    (async () => { await rileggi(true); migra(); disegnaSpunte(); invia(); })();
+    (async () => { await rileggi(true); migra(); disegnaSpunte(); invia(); inviaN(); })();
     const T = setInterval(() => { if (!document.getElementById("nx") && !app.querySelector(".st")) { clearInterval(T); return; } rileggi(false); }, 25000);
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") rileggi(false); });
-    addEventListener("online", () => { disegnaSpunte(); invia(); }); addEventListener("offline", disegnaSpunte);
+    addEventListener("online", () => { disegnaSpunte(); invia(); inviaN(); }); addEventListener("offline", disegnaSpunte);
   }
 }
 

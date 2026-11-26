@@ -737,6 +737,8 @@ async function entra(s){
   const m = new URLSearchParams(location.search).get("modifica");
   if (m) { history.replaceState(null, "", location.pathname + "#pianifica/" + encodeURIComponent(m)); }
   instrada();
+  // esiti delle visite rimasti in coda sul telefono (scritti senza rete): entrano nel CRM appena si apre l'app
+  if (RT.codaNote.tutte().length) RT.inviaNote(CTX).then(n => { if (n) { CLI_OK = false; toast(n === 1 ? "Un esito di visita è entrato nel CRM." : n + " esiti di visita sono entrati nel CRM."); } }).catch(() => {});
 }
 /* se la chiave pubblica salvata non corrisponde all'account: la corregge (serve la chiave GitHub) e, se admin, riconsegna i giri */
 async function correggiChiave(){
@@ -1179,7 +1181,7 @@ function schedaCli(c){
         <textarea class="in" id="crm-nx" rows="3" placeholder="Testo della nota"></textarea>
         <div class="pfoot" style="margin:0"><input class="in" type="date" id="crm-nd" value="${iso(d0)}" style="max-width:170px"><button class="btn dk sm" type="button" id="crm-nsave">Salva nota</button></div></div>
       ${(c.note || []).length ? `<ul class="nlist">${c.note.map(n => `<li class="${CRM.notaAperta === n.id ? "open" : ""}"><button type="button" class="nh" data-nopen="${esc(n.id)}" aria-expanded="${CRM.notaAperta === n.id}"><b>${esc(n.titolo || "Nota")}</b><span class="mono">${esc(dataIt2(n.data))}</span><span>${esc(n.chi || "")}</span><em>${CRM.notaAperta === n.id ? "Chiudi" : "Apri"}</em></button>
-        ${CRM.notaAperta === n.id ? `<div class="nb">${esc(n.testo || "(nessun testo)")}${CTX.admin || n.chi === CTX.nome ? `<div class="pfoot"><button class="btn sm dang" type="button" data-ndel="${esc(n.id)}">Elimina nota</button></div>` : ""}</div>` : ""}</li>`).join("")}</ul>` : '<p class="hint">Nessuna nota.</p>'}</fieldset>
+        ${CRM.notaAperta === n.id ? `<div class="nb">${esc(n.testo || "(nessun testo)")}${n.giro ? `<small style="display:block;margin-top:8px;opacity:.7">Dal giro «${esc(n.giro)}»</small>` : ""}${CTX.admin || n.chi === CTX.nome ? `<div class="pfoot"><button class="btn sm dang" type="button" data-ndel="${esc(n.id)}">Elimina nota</button></div>` : ""}</div>` : ""}</li>`).join("")}</ul>` : '<p class="hint">Nessuna nota.</p>'}</fieldset>
     <fieldset><legend>06 · Visite nei giri (${V.length})</legend>
       ${V.length ? `<table class="tc2 sto"><tbody>${V.map(v => `<tr><td class="mono nw">${esc(dataIt2(v.d))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a><small>${esc(RT.cartelleDi(v.g).join(", "))}${v.t.note ? " · " + esc(v.t.note) : ""}</small></td><td>${v.fatta ? '<span class="cs cliente">Fatta</span>' : String(v.d) < iso(d0) ? '<span class="cs ex">Non visitata</span>' : '<span class="cs potenziale">Da fare</span>'}</td></tr>`).join("")}</tbody></table>` : '<p class="hint">Nessuna visita trovata nei giri.</p>'}</fieldset>
     ${CTX.admin && CLI.some(x => x.id === c.id) ? '<div class="pfoot"><button class="btn sm dang" type="button" id="crm-del">Elimina cliente</button></div>' : ""}

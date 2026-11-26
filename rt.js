@@ -297,9 +297,65 @@ window.RT = (() => {
   // quante visite del giro risultano fatte (avanzamento condiviso + spunte di questo dispositivo non ancora inviate)
   const fatteGiro = (G, M) => { const S = applica((M || {})[G.id], coda.get(G.id));
     return (G.giorni || []).reduce((n, d) => n + (d.tappe || []).filter(t => S[chiaveVisita(t)]).length, 0); };
+  /* ---------- esito della visita dal telefono → nota nel CRM ----------
+     La nota si mette in una coda sul telefono (funziona anche senza rete) e poi entra nella scheda del cliente giusto:
+     stesso cliente del CRM (t.cli), stesso luogo Google (place_id) oppure stesso nome con il comune dentro l'indirizzo.
+     Se il cliente non c'è, lo crea come «Potenziale» con i dati della visita. Nessuna chiamata a Google. */
+  const normC = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\b(s\.?r\.?l\.?s?|s\.?p\.?a\.?|s\.?n\.?c\.?|s\.?a\.?s\.?|di|e|&)\b/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
+  const CODA_NOTE = "rt-coda-note";
+  const codaNote = {
+    tutte() { try { const x = JSON.parse(localStorage.getItem(CODA_NOTE) || "[]"); return Array.isArray(x) ? x : []; } catch (e) { return []; } },
+    set(l) { try { if (l.length) localStorage.setItem(CODA_NOTE, JSON.stringify(l)); else localStorage.removeItem(CODA_NOTE); } catch (e) {} },
+    add(x) { const l = this.tutte(); l.push(x); this.set(l); },
+    del(ids) { this.set(this.tutte().filter(x => !ids.includes(x.nid))); }
+  };
+  const NAZ = { italia: "Italia", italy: "Italia", "san marino": "San Marino", rsm: "San Marino", francia: "Francia", france: "Francia", germania: "Germania", deutschland: "Germania", germany: "Germania",
+    svizzera: "Svizzera", schweiz: "Svizzera", suisse: "Svizzera", switzerland: "Svizzera", austria: "Austria", "österreich": "Austria", spagna: "Spagna", "españa": "Spagna", spain: "Spagna",
+    belgio: "Belgio", belgique: "Belgio", "paesi bassi": "Paesi Bassi", nederland: "Paesi Bassi", slovenia: "Slovenia", croazia: "Croazia", hrvatska: "Croazia", "regno unito": "Regno Unito", "united kingdom": "Regno Unito", uk: "Regno Unito" };
+  // scheda nuova dai dati della visita (la regione la ricava il CRM dalla provincia)
+  function clienteDaVisita(t, chi) {
+    const ind = String(t.indirizzo || "").replace(/^da verificare:\s*/i, "").trim();
+    let parti = ind.split(",").map(x => x.trim()).filter(Boolean), nazione = "Italia";
+    const u = (parti[parti.length - 1] || "").toLowerCase(); if (NAZ[u]) { nazione = NAZ[u]; parti.pop(); }
+    let comune = "", prov = "", cap = (ind.match(/\b(\d{5})\b/) || [])[1] || "", via = parti.slice();
+    for (let i = parti.length - 1; i >= 0; i--) {
+      const m = parti[i].match(/^(?:[A-Z]{0,2}-?\d{4,5}\s+)?(.+?)(?:\s+\(?([A-Z]{2})\)?)?$/);
+      if (i > 0 || /\d{4,5}/.test(parti[i])) { if (m) { comune = m[1].replace(/^\d{4,5}\s*/, ""); prov = nazione === "Italia" ? (m[2] || "") : ""; } via = parti.slice(0, i); break; }
+    }
+    if (!comune && parti.length === 1 && !/\d/.test(parti[0])) { comune = parti[0]; via = []; }
+    const ora = new Date().toISOString();
+    return { id: "c-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), codice: "", ragione: String(t.azienda || "").trim(), tipo: "", stato: "potenziale", piva: "", sdi: "",
+      indirizzo: via.join(", "), cap, comune, prov, regione: "", nazione, tel: t.telefono || "", email: "", resp: chi, place_id: t.place_id || "",
+      referenti: t.referente ? [{ nome: t.referente, ruolo: "", tel: "", email: "" }] : [], sconto: "", scontoProd: {}, note: [], creato: ora, modificato: ora, modificato_da: chi };
+  }
+  const stessoCliente = (c, t) => (t.cli && c.id === t.cli) || (t.place_id && c.place_id === t.place_id)
+    || (normC(c.ragione) && normC(c.ragione) === normC(t.azienda) && (!normC(c.comune) || (" " + normC(t.indirizzo) + " ").includes(" " + normC(c.comune) + " ")));
+  // invia le note in coda (tutte in un solo salvataggio); restituisce quante ne sono entrate nel CRM
+  async function inviaNote(ctx) {
+    const q = codaNote.tutte(); if (!q.length || !ctx.tok || navigator.onLine === false) return 0;
+    const fatte = [];
+    await modifica(CLIENTI, ctx.tok, async lista => {
+      lista = Array.isArray(lista) ? lista : []; fatte.length = 0;
+      const aperti = [];
+      for (const b of lista) { let c = null; try { c = await apre(b, ctx.pk, ctx.nome); } catch (e) {} aperti.push(c); }
+      let max = lista.reduce((m, b) => Math.max(m, parseInt(String(b.cod || "").replace(/\D/g, ""), 10) || 0), 0);
+      const toccati = new Set();
+      for (const x of q) {
+        let i = aperti.findIndex(c => c && stessoCliente(c, x.t));
+        if (i < 0) { const n = clienteDaVisita(x.t, x.chi); n.codice = "C" + String(++max).padStart(4, "0"); lista.push({ id: n.id, cod: n.codice }); aperti.push(n); i = aperti.length - 1; }
+        const c = aperti[i]; if (!Array.isArray(c.note)) c.note = c.note ? [{ id: "n-v" + i, titolo: "Note", testo: String(c.note), data: "", chi: "" }] : [];
+        if (!c.note.some(n => n.id === x.nid)) c.note.unshift({ id: x.nid, titolo: x.titolo, testo: x.testo, data: x.data, chi: x.chi, giro: x.giro || "" });
+        c.modificato = new Date().toISOString(); c.modificato_da = x.chi; toccati.add(i); fatte.push(x.nid);
+      }
+      for (const i of toccati) lista[i] = Object.assign({ id: aperti[i].id, cod: aperti[i].codice || lista[i].cod }, await chiude(aperti[i], ctx.utenti));
+      return lista;
+    }, "CRM: " + (q.length === 1 ? "esito visita " + (q[0].t.azienda || "") : q.length + " esiti visita") + " (" + ctx.nome + ")");
+    codaNote.del(fatte);
+    return fatte.length;
+  }
   const eliminaLista = (ctx, id, titolo) => modifica("dati/liste.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Lista clienti eliminata: " + titolo + " (" + ctx.nome + ")");
 
   return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, ricifraChiave, chiude, apre, riconsegna,
     destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori,
-    CLIENTI, clienti, salvaClienti, eliminaCliente, cartelleDi, SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
+    CLIENTI, clienti, salvaClienti, normC, codaNote, inviaNote, clienteDaVisita, stessoCliente, eliminaCliente, cartelleDi, SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
 })();
