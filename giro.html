@@ -279,8 +279,8 @@ ol.stops{list-style:none;margin:0;padding:0}
 <script>{
 const LOGO_B = "logo-bianco.png", LOGO_N = "logo-nero.png";
 let TEAM = ["Susannah", "Marco", "Pietro", "Andrea", "Dana"], CTX = null;
-// stato della visita: "prospezione" = appuntamento senza orario (etichetta «Appuntamento»), "contattare" = da contattare per appuntamento (arancione), "appuntamento" = fissato (verde)
-const ETICHETTE = {"appuntamento":["ok","Appuntamento"],"contattare":["ct","Da contattare per appuntamento"],"priorita":["pr","Priorità"],"partner":["pa","Partner"],"attenzione":["wa","Attenzione"],"senza-appuntamento":["","Senza appuntamento"],"prospezione":["","Appuntamento"]};
+// stato della visita: "prospezione" = senza appuntamento, "contattare" = da contattare per appuntamento (arancione), "appuntamento" = fissato (verde)
+const ETICHETTE = {"appuntamento":["ok","Appuntamento"],"contattare":["ct","Da contattare per appuntamento"],"priorita":["pr","Priorità"],"partner":["pa","Partner"],"attenzione":["wa","Attenzione"],"senza-appuntamento":["","Senza appuntamento"],"prospezione":["","Senza appuntamento"]};
 const ha = (t, e) => (t.etichette || []).includes(e);
 // ora dell'appuntamento: precisa («ore 10:30») o fascia («dalle 10:00 alle 12:00»)
 const oraTesto = t => !t.ora ? "" : t.ora_a ? "dalle " + t.ora + " alle " + t.ora_a : "ore " + t.ora;
@@ -440,7 +440,7 @@ function giro(G, indietro){
         <div class="r"><b id="k-f">0/${tutte.length}</b><span>visite fatte</span><span class="pbar"><i id="pb"></i></span></div>
         <div><b id="k-d">${tutte.length}</b><span>da fare</span></div>
         ${nCt ? `<div class="ct"><b>${nCt}</b><span>da contattare</span></div>` : `<div><b>${G.giorni.length}</b><span>${G.giorni.length === 1 ? "giorno" : "giorni"}</span></div>`}
-        <div><b>${nApp}</b><span>con orario</span></div>
+        <div><b>${nApp}</b><span>${nApp === 1 ? "appuntamento" : "appuntamenti"}</span></div>
       </div>
       <span id="pt" hidden></span>
     </div>
