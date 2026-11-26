@@ -203,6 +203,45 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .ct-chi{margin:0;color:var(--mut);font-size:14px}
 .acc{border:1px dashed var(--line);border-radius:16px;padding:14px 16px}
 .acc h3{margin:0 0 4px;font-size:15px}.acc p{margin:0 0 8px;font-size:13px;color:var(--mut)}
+/* ---------- CRM (stile terminale: denso, a campi, da tastiera) ---------- */
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;font-variant-numeric:tabular-nums}
+.crm-link{background:linear-gradient(160deg,#3a0a0b,#0c0c0d);border-color:#4a1416}
+#crm-body{display:grid;grid-template-rows:minmax(0,1fr) auto;height:calc(100vh - 62px);height:calc(100dvh - 62px)}
+.crm{display:grid;grid-template-columns:minmax(0,1fr);min-height:0}
+.crm.con{grid-template-columns:minmax(360px,.9fr) minmax(0,1.1fr)}
+.cl{display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr);min-height:0;border-right:1px solid var(--line);padding:12px 12px 0}
+.crm:not(.con) .cs2{display:none}
+.cbar{display:flex;gap:8px}.cbar .in{flex:1;font-size:15px}
+.cfil{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}.cfil .in{min-height:36px;padding:5px 8px;font-size:13px}
+.cinfo{margin:8px 2px 6px;font-size:13px;color:var(--mut)}
+.cimp{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.3);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:13px}
+.ctab{overflow:auto;min-height:0;border-top:2px solid var(--ink)}
+.tc2{width:100%;border-collapse:collapse;font-size:13px}
+.tc2 th{position:sticky;top:0;background:var(--bg);text-align:left;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);padding:6px 8px;border-bottom:1px solid var(--line);z-index:1}
+.tc2 td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.tc2 td small{display:block;color:var(--mut);font-size:11px}
+.tc2 tbody tr[data-id]{cursor:pointer}.tc2 tbody tr[data-id]:hover{background:var(--card)}
+.tc2 tr.sel{box-shadow:inset 3px 0 0 var(--red);background:var(--card)}
+.tc2 tr.on{background:rgba(228,21,25,.08)}
+.tc2 .nw{white-space:nowrap}.tc2 td.a{text-align:right;width:40px}
+.cs{display:inline-block;font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;white-space:nowrap;border:1px solid currentColor}
+.cs.potenziale{color:var(--blu)}.cs.cliente{color:var(--ok)}.cs.partner{color:#7c3aed}.cs.non-interessato{color:var(--mut)}.cs.ex{color:var(--att)}
+.cs2{overflow:auto;min-height:0;padding:14px 18px 40px}
+.sh2{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:start;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:10px}
+.sh2 h2{margin:2px 0 0;font-size:22px;color:var(--ink);line-height:1.2}.sh2 .cod{font-size:12px;color:var(--red);font-weight:700}.sh2 p{margin:2px 0 0}
+.acts2{display:flex;flex-wrap:wrap;gap:6px}
+.cfm fieldset{border:0;border-top:1px solid var(--line);margin:0;padding:10px 0 12px}
+.cfm legend{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;font-weight:700;color:var(--red);padding:0 8px 0 0;letter-spacing:.03em}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px 8px}
+.cf2{display:grid;gap:2px;margin:0 0 4px}.cf2>span{font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.cfm .in{min-height:34px;padding:5px 8px;font-size:14px;border-radius:6px}
+.cfm textarea.in{min-height:0}
+.rif{display:grid;grid-template-columns:1.3fr 1fr 1fr 1.3fr auto;gap:6px;margin-bottom:6px}
+.nst{display:grid;grid-template-columns:140px 130px 1fr 1.4fr auto;gap:6px;margin-bottom:8px}
+.sto td{font-size:13px}.sto a{color:var(--ink)}
+.fkeys{display:flex;flex-wrap:wrap;gap:4px 16px;padding:6px 12px;background:var(--blk);color:#c4c5cb;font-size:12px}.fkeys b{color:#fff;background:#26272d;border-radius:3px;padding:0 5px;margin-right:4px}
+@media(max-width:900px){#crm-body{height:auto}.crm.con{grid-template-columns:1fr}.crm.con .cl{display:none}.cl{border-right:0}.ctab{max-height:none}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g4 .cf2{grid-column:span 2!important}.rif,.nst{grid-template-columns:1fr 1fr}.fkeys{display:none}}
+
 /* ---------- statistiche ---------- */
 .sh-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:14px;background:linear-gradient(160deg,#1a1b20,#0c0c0d);color:#fff;border-radius:20px;padding:20px 22px}
 .sh-top h2{color:#fff;margin:0;font-size:clamp(24px,3vw,32px);line-height:1.1}.sh-top p{margin:6px 0 0;color:#b9bac0;font-size:14px}
@@ -512,6 +551,7 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
     <p class="note" id="nota"></p>
   </section>
   <div class="d-l colonna">
+  <a class="panel stat-link crm-link" href="#crm"><b class="w">Clienti (CRM)</b><span>Schede clienti condivise con tutto il team: anagrafica, referenti, note, storico contatti e prossime azioni.</span><em id="crm-k">Apri l'anagrafica clienti →</em></a>
   <a class="panel stat-link" href="#statistiche"><b class="w">Statistiche dei viaggi</b><span>Dove siamo andati e quante volte: per regione, provincia e città, per persona e per anno.</span><em id="stat-k"></em></a>
   <details class="inst" id="inst">
     <summary>Installa l'app sul telefono</summary>
@@ -552,6 +592,12 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
     </section>
     <section id="liste-s" class="panel"><div class="ph"><h2>Liste clienti</h2><span><a class="mini" href="#" id="importa2">Importa file</a> · <a class="mini" href="#raccogli">+ Nuova</a></span></div><ul id="liste"></ul></section>
   </div>
+</div>
+
+<!-- CRM -->
+<div id="v-crm" hidden>
+  <div class="wb"><a class="ghost" href="#">← Cartelle</a><h1>Clienti <span class="mono" style="font-weight:600;opacity:.6;font-size:14px">CRM</span></h1><span class="msg" id="crm-msg"></span></div>
+  <div id="crm-body"></div>
 </div>
 
 <!-- STATISTICHE DEI VIAGGI -->
@@ -725,13 +771,15 @@ addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.retur
 addEventListener("hashchange", () => { if (CTX) instrada(); });
 function instrada(){
   const h = decodeURIComponent(location.hash.slice(1));
-  ["#v-home","#v-plan","#v-adm","#v-cart","#v-stat"].forEach(v => $(v).hidden = true);
+  if (!$("#v-crm").hidden && CRM.dirtyC && !h.startsWith("crm")) { if (!confirm("Ci sono modifiche non salvate a un cliente. Uscire lo stesso?")) { history.replaceState(null, "", "#crm"); return; } CRM.dirtyC = false; dirty = false; CRM.aperto = null; }
+  ["#v-home","#v-plan","#v-adm","#v-cart","#v-stat","#v-crm"].forEach(v => $(v).hidden = true);
   $("#pc").hidden = true; $("#sug").hidden = true;
   if (IMPP) { IMPP.stop = true; IMPP = null; } $("#imp").hidden = true;
   if (h.startsWith("pianifica")) { MODE = "giro"; $("#pp").hidden = false; $("#lp").hidden = true; const id = h.split("/")[1] || ""; apriPiano(id); $("#v-plan").hidden = false; }
   else if (h.startsWith("raccogli")) { MODE = "lista"; $("#pp").hidden = true; $("#lp").hidden = false; const id = h.split("/")[1] || ""; apriLista(id); $("#v-plan").hidden = false; }
   else if (h === "admin" && CTX.admin) { $("#v-adm").hidden = false; admin(); }
   else if (h.startsWith("cartella/")) { CART = h.slice(9); filtro = "tutti"; $("#q").value = ""; $("#v-cart").hidden = false; cruscotto(); }
+  else if (h === "crm" || h.startsWith("crm/")) { $("#v-crm").hidden = false; crm(h.split("/")[1] || ""); }
   else if (h === "statistiche") { $("#v-stat").hidden = false; statistiche(); }
   else { CART = ""; $("#v-home").hidden = false; cruscotto(); }
   scrollTo(0, 0);
@@ -1000,6 +1048,189 @@ async function mappaStat(){
     const bt = $("#st-map-b"); if (bt) bt.textContent = "Aggiorna la mappa";
   } catch(e) { box.innerHTML = '<p class="hint" style="padding:16px">La mappa non si carica (rete o limite giornaliero Google raggiunto).</p>'; }
 }
+/* ---------------- CRM: anagrafica clienti condivisa con tutto il team ----------------
+   Stile «AS400»: elenco denso a sinistra, scheda a campi a destra, tutto da tastiera
+   (/ cerca, ↑↓ scorre, Invio apre, Alt+N nuovo, Ctrl+S salva, Esc chiude). */
+let CLI = [], CLI_OK = false, CRM = { q: "", stato: "", tipo: "", resp: "", sel: -1, aperto: null, bozza: null, dirtyC: false };
+const CRM_TIPI = ["Rivenditore", "Serramentista", "Ferramenta", "Distributore", "Impresa edile", "Progettista / studio tecnico", "Ente pubblico", "Privato", "Altro"];
+const CRM_STATI = [["potenziale", "Potenziale"], ["cliente", "Cliente"], ["partner", "Partner"], ["non-interessato", "Non interessato"], ["ex", "Ex cliente"]];
+const CRM_PROD = ["CLICK", "MODERNA", "CLOSE", "FULL", "CLEAR", "GATE", "MOD", "MODU", "TORRICELLI"];
+const CRM_CONT = ["Visita", "Telefonata", "Email", "Offerta", "Ordine", "Fiera", "Altro"];
+const normC = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\b(s\.?r\.?l\.?s?|s\.?p\.?a\.?|s\.?n\.?c\.?|s\.?a\.?s\.?|di|e|&)\b/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
+const chiaveCli = c => c.place_id ? "p:" + c.place_id : "n:" + normC(c.ragione || c.azienda) + "|" + normC(c.comune || (luogo(c).citta || ""));
+const nuovoCli = () => ({ id: "c-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), codice: "", ragione: "", tipo: "", stato: "potenziale", piva: "", cf: "", sdi: "", pec: "",
+  indirizzo: "", cap: "", comune: "", prov: "", nazione: "Italia", tel: "", cell: "", email: "", sito: "", resp: CTX.nome, fonte: "", prodotti: [], condizioni: "", note: "",
+  referenti: [], storico: [], prossima: { data: "", cosa: "" }, creato: "", modificato: "", modificato_da: "" });
+async function caricaCRM(forza){ if (CLI_OK && !forza) return; try { CLI = await RT.clienti(CTX); CLI_OK = true; } catch(e) { if (!CLI_OK) CLI = []; } }
+// visite dei giri che riguardano questo cliente (stesso luogo Google, oppure stesso nome e stessa città)
+function visiteCli(c){
+  const k1 = c.place_id || "", k2 = normC(c.ragione) + "|" + normC(c.comune), out = [];
+  for (const g of GIRI) { const S = RT.applica((SPUNTE || {})[g.id], RT.coda.get(g.id));
+    (g.giorni || []).forEach(d => (d.tappe || []).forEach(t => { const L = luogo(t);
+      if ((k1 && t.place_id === k1) || normC(t.azienda) + "|" + normC(L.citta) === k2) out.push({ g, d: d.iso || g.dal, t, fatta: !!S[RT.chiaveVisita(t)] }); })); }
+  return out.sort((a, b) => String(b.d).localeCompare(String(a.d)));
+}
+const scaduta = c => c.prossima && c.prossima.data && c.prossima.data <= iso(d0);
+function crm(id){
+  $("#crm-body").innerHTML = '<p class="hint" style="padding:20px">Carico i clienti…</p>';
+  caricaCRM(true).then(() => { if (id) { const c = CLI.find(x => x.id === id); if (c) apriCli(c); } disegnaCRM(); });
+}
+function filtraCli(){
+  const q = normC(CRM.q);
+  return CLI.filter(c => (!CRM.stato || c.stato === CRM.stato) && (!CRM.tipo || c.tipo === CRM.tipo) && (!CRM.resp || c.resp === CRM.resp)
+    && (!q || normC([c.codice, c.ragione, c.comune, c.prov, c.piva, c.tel, c.cell, c.email, (c.referenti || []).map(r => r.nome).join(" "), c.note].join(" ")).includes(q)))
+    .sort((a, b) => String(a.ragione).localeCompare(String(b.ragione), "it"));
+}
+function disegnaCRM(){
+  const L = filtraCli(), nScad = CLI.filter(scaduta).length, resp = [...new Set(CLI.map(c => c.resp).filter(Boolean))].sort();
+  if (CRM.sel >= L.length) CRM.sel = L.length - 1;
+  const daImp = clientiDaImportare();
+  $("#crm-body").innerHTML = `<div class="crm${CRM.aperto ? " con" : ""}">
+   <div class="cl">
+    <div class="cbar"><input id="crm-q" class="in mono" type="search" placeholder="Cerca: nome, comune, P.IVA, telefono, referente…  ( / )" value="${esc(CRM.q)}" autocomplete="off">
+      <button class="btn red sm" type="button" id="crm-new" title="Alt+N">+ Nuovo</button></div>
+    <div class="cfil">
+      <select class="in" id="crm-st"><option value="">Tutti gli stati</option>${CRM_STATI.map(([v, l]) => `<option value="${v}"${CRM.stato === v ? " selected" : ""}>${l}</option>`).join("")}</select>
+      <select class="in" id="crm-tp"><option value="">Tutti i tipi</option>${CRM_TIPI.map(t => `<option${CRM.tipo === t ? " selected" : ""}>${esc(t)}</option>`).join("")}</select>
+      <select class="in" id="crm-rs"><option value="">Tutti i responsabili</option>${resp.map(r => `<option${CRM.resp === r ? " selected" : ""}>${esc(r)}</option>`).join("")}</select></div>
+    <p class="cinfo">${L.length} di ${CLI.length} clienti${nScad ? ` · <b class="ko">${nScad} ${nScad === 1 ? "azione scaduta" : "azioni scadute"}</b>` : ""}</p>
+    ${daImp.length ? `<div class="cimp"><b>${daImp.length} ${daImp.length === 1 ? "azienda dei giri e delle liste non è" : "aziende dei giri e delle liste non sono"} ancora nel CRM.</b><button class="btn sm dk" type="button" id="crm-imp">Caricale nel CRM</button></div>` : ""}
+    <div class="ctab" role="listbox" aria-label="Clienti">${L.length ? `<table class="tc2"><thead><tr><th>Cod.</th><th>Ragione sociale</th><th>Comune</th><th>Pr.</th><th>Stato</th><th>Prossima azione</th></tr></thead><tbody>
+      ${L.map((c, i) => `<tr data-id="${esc(c.id)}" class="${i === CRM.sel ? "sel" : ""}${CRM.aperto && CRM.aperto.id === c.id ? " on" : ""}" tabindex="-1"><td class="mono">${esc(c.codice || "—")}</td><td><b>${esc(c.ragione || "(senza nome)")}</b>${c.tipo ? `<small>${esc(c.tipo)}</small>` : ""}</td><td>${esc(c.comune)}</td><td class="mono">${esc(c.prov)}</td><td><span class="cs ${esc(c.stato)}">${esc((CRM_STATI.find(s => s[0] === c.stato) || ["", "—"])[1])}</span></td><td class="${scaduta(c) ? "ko" : ""}">${c.prossima && c.prossima.data ? esc(dataBreve(c.prossima.data)) + (c.prossima.cosa ? " · " + esc(c.prossima.cosa) : "") : ""}</td></tr>`).join("")}</tbody></table>`
+      : `<p class="vuoto">${CLI.length ? "Nessun cliente con questi filtri." : "Il CRM è vuoto. Carica le aziende dei giri e delle liste, oppure crea un cliente con «+ Nuovo»."}</p>`}</div>
+   </div>
+   <div class="cs2" id="crm-sch">${CRM.aperto ? schedaCli(CRM.aperto) : '<p class="hint" style="padding:20px">Scegli un cliente dall\'elenco (frecce ↑↓ e Invio) o creane uno nuovo.</p>'}</div>
+  </div>
+  <div class="fkeys mono"><span><b>/</b> Cerca</span><span><b>↑↓</b> Scorri</span><span><b>Invio</b> Apri</span><span><b>Alt+N</b> Nuovo</span><span><b>Ctrl+S</b> Salva</span><span><b>Esc</b> Chiudi</span></div>`;
+  $("#crm-msg").textContent = "";
+}
+function campoC(k, et, v, o = {}){ const t = o.tipo || "text", w = o.w ? ` style="grid-column:span ${o.w}"` : "";
+  if (o.sel) return `<label class="cf2"${w}><span>${et}</span><select class="in" data-f="${k}"><option value=""></option>${o.sel.map(x => { const [val, lab] = Array.isArray(x) ? x : [x, x]; return `<option value="${esc(val)}"${String(v) === val ? " selected" : ""}>${esc(lab)}</option>`; }).join("")}</select></label>`;
+  if (o.area) return `<label class="cf2"${w}><span>${et}</span><textarea class="in" rows="${o.area}" data-f="${k}">${esc(v)}</textarea></label>`;
+  return `<label class="cf2"${w}><span>${et}</span><input class="in${o.mono ? " mono" : ""}" type="${t}" data-f="${k}" value="${esc(v)}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ""}></label>`; }
+function schedaCli(c){
+  const V = c.id && CLI.some(x => x.id === c.id) ? visiteCli(c) : [];
+  const tel = n => n ? `<a class="btn sm" href="tel:${esc(String(n).replace(/[^\d+]/g, ""))}">Chiama</a>` : "";
+  return `<div class="sh2"><div><span class="mono cod">${esc(c.codice || "NUOVO")}</span><h2>${esc(c.ragione || "Nuovo cliente")}</h2>
+      <p class="hint">${c.modificato ? "Ultima modifica: " + esc(c.modificato_da || "") + " il " + esc(new Date(c.modificato).toLocaleString("it-IT", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })) : "Non ancora salvato"}</p></div>
+    <div class="acts2">${tel(c.tel || c.cell)}${c.email ? `<a class="btn sm" href="mailto:${esc(c.email)}">Email</a>` : ""}${c.indirizzo || c.comune ? `<a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([c.ragione, c.indirizzo, c.cap, c.comune, c.prov].filter(Boolean).join(" "))}">Mappa</a>` : ""}
+      <button class="btn red sm" type="button" id="crm-save" title="Ctrl+S">Salva</button><button class="btn sm" type="button" id="crm-x" title="Esc">Chiudi</button></div></div>
+  <form class="cfm" id="crm-f" autocomplete="off" onsubmit="return false">
+    <fieldset><legend>01 · Anagrafica</legend><div class="g4">
+      ${campoC("ragione", "Ragione sociale", c.ragione, { w: 4 })}
+      ${campoC("tipo", "Tipo", c.tipo, { sel: CRM_TIPI, w: 2 })}${campoC("stato", "Stato", c.stato, { sel: CRM_STATI, w: 2 })}
+      ${campoC("piva", "Partita IVA", c.piva, { mono: 1 })}${campoC("cf", "Codice fiscale", c.cf, { mono: 1 })}${campoC("sdi", "Codice SDI", c.sdi, { mono: 1 })}${campoC("pec", "PEC", c.pec)}</div></fieldset>
+    <fieldset><legend>02 · Sede e recapiti</legend><div class="g4">
+      ${campoC("indirizzo", "Indirizzo", c.indirizzo, { w: 4 })}
+      ${campoC("cap", "CAP", c.cap, { mono: 1 })}${campoC("comune", "Comune", c.comune, { w: 2 })}${campoC("prov", "Prov.", c.prov, { mono: 1 })}
+      ${campoC("nazione", "Nazione", c.nazione)}${campoC("tel", "Telefono", c.tel, { tipo: "tel" })}${campoC("cell", "Cellulare", c.cell, { tipo: "tel" })}${campoC("email", "Email", c.email, { tipo: "email" })}
+      ${campoC("sito", "Sito web", c.sito, { w: 4 })}</div></fieldset>
+    <fieldset><legend>03 · Referenti</legend>
+      ${(c.referenti || []).map((r, i) => `<div class="rif" data-r="${i}"><input class="in" data-rf="nome" placeholder="Nome e cognome" value="${esc(r.nome)}"><input class="in" data-rf="ruolo" placeholder="Ruolo" value="${esc(r.ruolo)}"><input class="in" type="tel" data-rf="tel" placeholder="Telefono" value="${esc(r.tel)}"><input class="in" type="email" data-rf="email" placeholder="Email" value="${esc(r.email)}"><button class="btn sm dang" type="button" data-rdel="${i}" aria-label="Togli referente">✕</button></div>`).join("") || '<p class="hint">Nessun referente.</p>'}
+      <button class="btn sm" type="button" id="crm-radd">+ Referente</button></fieldset>
+    <fieldset><legend>04 · Commerciale</legend><div class="g4">
+      ${campoC("resp", "Responsabile nel team", c.resp, { sel: CTX.utenti.map(u => u.nome), w: 2 })}${campoC("fonte", "Come ci ha conosciuto", c.fonte, { w: 2, ph: "Es. fiera, sito, passaparola, giro" })}</div>
+      <div class="cf2"><span>Prodotti di interesse</span><div class="share" id="crm-prod">${CRM_PROD.map(p => `<label class="${(c.prodotti || []).includes(p) ? "on" : ""}"><input type="checkbox" value="${p}" ${(c.prodotti || []).includes(p) ? "checked" : ""}>${p}</label>`).join("")}</div></div>
+      <div class="g4">${campoC("condizioni", "Condizioni commerciali (sconti, pagamento, trasporto)", c.condizioni, { area: 2, w: 4 })}${campoC("note", "Note", c.note, { area: 4, w: 4 })}</div></fieldset>
+    <fieldset><legend>05 · Prossima azione</legend><div class="g4">
+      <label class="cf2"><span>Entro il</span><input class="in" type="date" data-p="data" value="${esc(c.prossima && c.prossima.data)}"></label>
+      <label class="cf2" style="grid-column:span 3"><span>Cosa fare</span><input class="in" data-p="cosa" value="${esc(c.prossima && c.prossima.cosa)}" placeholder="Es. richiamare per l'offerta, mandare il catalogo"></label></div></fieldset>
+    <fieldset><legend>06 · Storico contatti (${(c.storico || []).length})</legend>
+      <div class="nst"><input class="in" type="date" id="st-d" value="${iso(d0)}"><select class="in" id="st-t">${CRM_CONT.map(t => `<option>${t}</option>`).join("")}</select><input class="in" id="st-e" placeholder="Esito"><input class="in" id="st-n" placeholder="Note"><button class="btn sm dk" type="button" id="crm-sadd">Aggiungi</button></div>
+      ${(c.storico || []).length ? `<table class="tc2 sto"><tbody>${c.storico.map((x, i) => `<tr><td class="mono nw">${esc(x.data ? x.data.split("-").reverse().join("/") : "")}</td><td><b>${esc(x.tipo)}</b><small>${esc(x.chi || "")}</small></td><td>${esc(x.esito || "")}${x.note ? `<small>${esc(x.note)}</small>` : ""}</td><td class="a"><button class="btn sm dang" type="button" data-sdel="${i}" aria-label="Togli">✕</button></td></tr>`).join("")}</tbody></table>` : '<p class="hint">Nessun contatto registrato.</p>'}</fieldset>
+    <fieldset><legend>07 · Visite nei giri (${V.length})</legend>
+      ${V.length ? `<table class="tc2 sto"><tbody>${V.map(v => `<tr><td class="mono nw">${esc(String(v.d).split("-").reverse().join("/"))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a><small>${esc(RT.cartelleDi(v.g).join(", "))}${v.t.note ? " · " + esc(v.t.note) : ""}</small></td><td>${v.fatta ? '<span class="cs cliente">Fatta</span>' : String(v.d) < iso(d0) ? '<span class="cs ex">Non visitata</span>' : '<span class="cs potenziale">Da fare</span>'}</td></tr>`).join("")}</tbody></table>` : '<p class="hint">Nessuna visita trovata nei giri (si cercano lo stesso luogo Google, oppure lo stesso nome nello stesso comune).</p>'}</fieldset>
+    ${CTX.admin && c.id && CLI.some(x => x.id === c.id) ? '<div class="pfoot"><button class="btn sm dang" type="button" id="crm-del">Elimina cliente</button></div>' : ""}
+  </form>`;
+}
+function apriCli(c){ CRM.aperto = JSON.parse(JSON.stringify(Object.assign(nuovoCli(), c))); CRM.dirtyC = false; dirty = false; }
+const chiudiCli = () => { if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate a questo cliente. Chiudere lo stesso?")) return false; CRM.aperto = null; CRM.dirtyC = false; dirty = false; disegnaCRM(); return true; };
+async function salvaCli(){
+  const c = CRM.aperto; if (!c) return;
+  if (!String(c.ragione || "").trim()) { toast("Scrivi la ragione sociale.", true); const x = $('[data-f="ragione"]'); if (x) x.focus(); return; }
+  if (!CTX.tok) { toast("Il salvataggio non è attivo: manca la chiave GitHub.", true); return; }
+  const dop = CLI.find(x => x.id !== c.id && chiaveCli(x) === chiaveCli(c));
+  if (dop && !confirm("Esiste già «" + dop.ragione + "» (" + (dop.codice || "") + ") nello stesso comune. Salvare lo stesso questo cliente?")) return;
+  const ora = new Date().toISOString(), base = c.modificato || null, nuovo = !CLI.some(x => x.id === c.id);
+  c.ragione = c.ragione.trim(); c.prov = String(c.prov || "").toUpperCase().trim(); c.referenti = (c.referenti || []).filter(r => [r.nome, r.ruolo, r.tel, r.email].some(Boolean));
+  const X = Object.assign({}, c, { creato: c.creato || ora, modificato: ora, modificato_da: CTX.nome });
+  const b = $("#crm-save"); if (b) { b.disabled = true; b.textContent = "Salvataggio…"; }
+  try {
+    let fatto = null;
+    await salvaSicuro(async bs => { fatto = await RT.salvaClienti(CTX, [X], nuovo ? null : bs); }, base, "questo cliente");
+    const s = fatto[0], i = CLI.findIndex(x => x.id === s.id); if (i >= 0) CLI[i] = s; else CLI.push(s);
+    apriCli(s); toast("Cliente salvato" + (nuovo ? " con il codice " + s.codice : "") + ": lo vede tutto il team."); history.replaceState(null, "", "#crm/" + encodeURIComponent(s.id));
+  } catch(x) { toast(x.message || "Salvataggio non riuscito.", true); }
+  disegnaCRM();
+}
+// aziende dei giri e delle liste che non sono ancora nel CRM (una sola volta per luogo/nome+comune)
+function clientiDaImportare(){
+  const gia = new Set(CLI.map(chiaveCli)), visti = new Map();
+  const prendi = (t, chi, fonte) => { if (!String(t.azienda || "").trim()) return; const L = luogo(t);
+    // indirizzo senza CAP, comune e provincia (vanno nei loro campi); se resta solo il comune, l'indirizzo rimane vuoto
+    let via = String(t.indirizzo || "").replace(/,\s*\d{5}\s.*$/, "").split(",").map(x => x.trim()).filter(Boolean);
+    if (via.length > 1 && normC(via[via.length - 1]).includes(normC(L.citta))) via.pop();
+    if (via.length === 1 && normC(via[0]) === normC(L.citta)) via = [];
+    const c = { ragione: String(t.azienda).trim(), indirizzo: via.join(", "), comune: L.citta !== "—" ? L.citta : "", prov: L.prov || "", nazione: L.paese || "Italia",
+      cap: (String(t.indirizzo || "").match(/\b(\d{5})\b/) || [])[1] || "", tel: t.telefono || "", place_id: t.place_id || "", note: t.note || "", referente: t.referente || "", fonte, resp: chi };
+    const k = chiaveCli(c); if (gia.has(k)) return;
+    const v = visti.get(k); if (v) { if (c.note && !v.note.includes(c.note)) v.note = (v.note ? v.note + "\n" : "") + c.note; if (!v.tel && c.tel) v.tel = c.tel; return; }
+    visti.set(k, c); };
+  for (const g of GIRI) (g.giorni || []).forEach(d => (d.tappe || []).forEach(t => prendi(t, RT.cartelleDi(g)[0] || g.autore, "Giro: " + g.titolo)));
+  for (const l of LISTE) (l.clienti || []).forEach(t => prendi(t, l.autore, "Lista: " + l.titolo));
+  return [...visti.values()];
+}
+async function importaCRM(){
+  const A = clientiDaImportare(); if (!A.length) return;
+  if (!confirm("Caricare nel CRM " + A.length + " aziende prese dai giri e dalle liste?\n\nOgnuna riceve un codice cliente, stato «Potenziale», il responsabile del giro e le note delle visite. I doppioni (stesso luogo Google, oppure stesso nome nello stesso comune) vengono uniti.")) return;
+  const ora = new Date().toISOString();
+  const N = A.map(a => Object.assign(nuovoCli(), a, { referenti: a.referente ? [{ nome: a.referente, ruolo: "", tel: "", email: "" }] : [], creato: ora, modificato: ora, modificato_da: CTX.nome }));
+  N.forEach(n => delete n.referente);
+  const b = $("#crm-imp"); if (b) { b.disabled = true; b.textContent = "Carico…"; }
+  try { const fatto = await RT.salvaClienti(CTX, N, null, "CRM: caricati " + N.length + " clienti dai giri e dalle liste (" + CTX.nome + ")"); CLI.push(...fatto); toast(fatto.length + " clienti caricati nel CRM."); }
+  catch(x) { toast(x.message || "Caricamento non riuscito.", true); }
+  disegnaCRM();
+}
+$("#crm-body").addEventListener("input", e => { const x = e.target, c = CRM.aperto;
+  if (x.id === "crm-q") { CRM.q = x.value; CRM.sel = 0; const p = x.selectionStart; disegnaCRM(); const n = $("#crm-q"); n.focus(); try { n.setSelectionRange(p, p); } catch(y) {} return; }
+  if (!c) return;
+  if (x.dataset.f) { c[x.dataset.f] = x.value; } else if (x.dataset.p) { c.prossima = Object.assign({ data: "", cosa: "" }, c.prossima, { [x.dataset.p]: x.value }); }
+  else if (x.dataset.rf) { c.referenti[+x.closest(".rif").dataset.r][x.dataset.rf] = x.value; } else return;
+  CRM.dirtyC = true; dirty = true; });
+$("#crm-body").addEventListener("change", e => { const x = e.target, c = CRM.aperto;
+  if (x.id === "crm-st") { CRM.stato = x.value; CRM.sel = 0; disegnaCRM(); return; } if (x.id === "crm-tp") { CRM.tipo = x.value; CRM.sel = 0; disegnaCRM(); return; } if (x.id === "crm-rs") { CRM.resp = x.value; CRM.sel = 0; disegnaCRM(); return; }
+  if (c && x.closest("#crm-prod")) { c.prodotti = $$("#crm-prod input:checked").map(i => i.value); $$("#crm-prod label").forEach(l => l.classList.toggle("on", l.querySelector("input").checked)); CRM.dirtyC = true; dirty = true; }
+  if (c && x.dataset.f) { c[x.dataset.f] = x.value; CRM.dirtyC = true; dirty = true; } });
+$("#crm-body").addEventListener("click", e => { const b = e.target.closest("button,tr[data-id]"); if (!b) return; const c = CRM.aperto;
+  if (b.matches("tr[data-id]")) { if (CRM.aperto && CRM.aperto.id === b.dataset.id) return; if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate. Aprire un altro cliente?")) return;
+    const L = filtraCli(); CRM.sel = L.findIndex(x => x.id === b.dataset.id); apriCli(L[CRM.sel]); history.replaceState(null, "", "#crm/" + encodeURIComponent(b.dataset.id)); disegnaCRM(); return; }
+  if (b.id === "crm-new") { if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate. Creare un nuovo cliente?")) return; apriCli(nuovoCli()); disegnaCRM(); const r = $('[data-f="ragione"]'); if (r) r.focus(); return; }
+  if (b.id === "crm-imp") { importaCRM(); return; }
+  if (b.id === "crm-save") { salvaCli(); return; }
+  if (b.id === "crm-x") { chiudiCli(); return; }
+  if (!c) return;
+  if (b.id === "crm-radd") { c.referenti = (c.referenti || []).concat([{ nome: "", ruolo: "", tel: "", email: "" }]); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); const r = $$("#crm-sch .rif input[data-rf=nome]").pop(); if (r) r.focus(); return; }
+  if (b.dataset.rdel != null) { c.referenti.splice(+b.dataset.rdel, 1); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); return; }
+  if (b.id === "crm-sadd") { const v = { data: $("#st-d").value, tipo: $("#st-t").value, esito: $("#st-e").value.trim(), note: $("#st-n").value.trim(), chi: CTX.nome };
+    if (!v.esito && !v.note) { toast("Scrivi almeno l'esito o una nota del contatto.", true); $("#st-e").focus(); return; }
+    c.storico = [v, ...(c.storico || [])].sort((a, z) => String(z.data).localeCompare(String(a.data))); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); toast("Contatto aggiunto: premi «Salva» per confermare."); return; }
+  if (b.dataset.sdel != null) { c.storico.splice(+b.dataset.sdel, 1); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); return; }
+  if (b.id === "crm-del") { if (!confirm("Eliminare definitivamente «" + c.ragione + "» dal CRM?")) return;
+    RT.eliminaCliente(CTX, c.id, c.ragione).then(() => { CLI = CLI.filter(x => x.id !== c.id); CRM.aperto = null; CRM.dirtyC = false; dirty = false; toast("Cliente eliminato."); disegnaCRM(); }).catch(x => toast(x.message || "Eliminazione non riuscita.", true)); }
+});
+document.addEventListener("keydown", e => {
+  if ($("#v-crm").hidden) return;
+  const inCampo = e.target.closest("input,textarea,select");
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); salvaCli(); return; }
+  if (e.altKey && e.key.toLowerCase() === "n") { e.preventDefault(); $("#crm-new") && $("#crm-new").click(); return; }
+  if (e.key === "Escape") { if (CRM.aperto) { e.preventDefault(); chiudiCli(); } else if (inCampo) e.target.blur(); return; }
+  if (e.key === "/" && !inCampo) { e.preventDefault(); $("#crm-q").focus(); return; }
+  if ((e.key === "ArrowDown" || e.key === "ArrowUp") && (!inCampo || e.target.id === "crm-q")) { const L = filtraCli(); if (!L.length) return; e.preventDefault();
+    CRM.sel = Math.max(0, Math.min(L.length - 1, CRM.sel + (e.key === "ArrowDown" ? 1 : -1))); $$("#crm-body tr[data-id]").forEach((r, i) => r.classList.toggle("sel", i === CRM.sel));
+    const r = $$("#crm-body tr[data-id]")[CRM.sel]; if (r) r.scrollIntoView({ block: "nearest" }); return; }
+  if (e.key === "Enter" && (!inCampo || e.target.id === "crm-q")) { const L = filtraCli(), c = L[Math.max(0, CRM.sel)]; if (!c) return; e.preventDefault();
+    if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate. Aprire un altro cliente?")) return; CRM.sel = Math.max(0, CRM.sel); apriCli(c); disegnaCRM(); const r = $('[data-f="ragione"]'); if (r) r.focus(); }
+});
 function disegnaCartelle(G){
   const tutteL = LISTE.filter(l => !l.archiviato), ap = cartelleAperte();
   const card = (c, nome, sh) => {
@@ -1955,7 +2186,7 @@ async function aggiornaTeam(U){
     await RT.modifica(path, CTX.tok, async lista => {
       const out = [];
       for (const b of (lista || [])) { const G = await RT.apre(b, CTX.pk, CTX.nome);
-        out.push(G ? Object.assign({ id: b.id }, await RT.riconsegna(b, CTX.pk, CTX.nome, RT.destinatariGiro(G, pub))) : b); }
+        out.push(G ? Object.assign({ id: b.id }, b.cod ? { cod: b.cod } : {}, await RT.riconsegna(b, CTX.pk, CTX.nome, path === RT.CLIENTI ? pub : RT.destinatariGiro(G, pub))) : b); }
       return out; }, "Team aggiornato: chiavi di " + path.replace("dati/", "") + " (" + CTX.nome + ")");
   }
   if (CTX.config.gh) { const gh = await RT.chiude(CTX.tok, pub); await salvaConfigRaw(c => Object.assign(c || {}, { gh })); }

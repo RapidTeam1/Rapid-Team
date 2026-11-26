@@ -9,7 +9,9 @@ window.RT = (() => {
   const COLORI = { accento: "#e41519", scuro: "#0c0c0d" };
   // dati/spunte.json: avanzamento dei giri (visite fatte), una busta per giro con gli stessi destinatari del giro
   const SPUNTE = "dati/spunte.json";
-  const BUSTE = ["dati/giri.json", "dati/liste.json", SPUNTE];
+  // dati/clienti.json: il CRM, condiviso con tutto il team (una busta per cliente, aperta da tutti; «cod» = codice cliente in chiaro per la numerazione)
+  const CLIENTI = "dati/clienti.json";
+  const BUSTE = ["dati/giri.json", "dati/liste.json", SPUNTE, CLIENTI];
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const tob64 = buf => { const u = buf instanceof Uint8Array ? buf : new Uint8Array(buf); let s = "";
     for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
@@ -193,6 +195,29 @@ window.RT = (() => {
     await salvaBusta(ctx, "dati/giri.json", G, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")", base);
     try { await destSpunte(ctx, G); } catch (e) {} // l'avanzamento segue la condivisione del giro
   }
+  /* ---------- CRM ---------- */
+  const clienti = ctx => buste(ctx, CLIENTI);
+  // salva uno o più clienti; i nuovi ricevono il codice C0001, C0002… (numerato dentro il salvataggio, così due colleghi non prendono lo stesso)
+  async function salvaClienti(ctx, elenco, base, messaggio) {
+    const out = [];
+    await modifica(CLIENTI, ctx.tok, async lista => {
+      lista = Array.isArray(lista) ? lista : []; out.length = 0;
+      let max = lista.reduce((m, b) => Math.max(m, parseInt(String(b.cod || "").replace(/\D/g, ""), 10) || 0), 0);
+      for (const c0 of elenco) {
+        const c = Object.assign({}, c0), i = lista.findIndex(b => b.id === c.id);
+        if (base != null && i >= 0 && elenco.length === 1) {
+          let cur = null; try { cur = await apre(lista[i], ctx.pk, ctx.nome); } catch (e) {}
+          if (cur && String(cur.modificato || "") !== String(base)) { const e = new Error("Nel frattempo " + (cur.modificato_da || "un collega") + " ha salvato questo cliente."); e.conflitto = { da: cur.modificato_da || "", quando: cur.modificato || "" }; throw e; }
+        }
+        if (!c.codice) c.codice = i >= 0 && lista[i].cod ? lista[i].cod : "C" + String(++max).padStart(4, "0");
+        const b = Object.assign({ id: c.id, cod: c.codice }, await chiude(c, ctx.utenti));
+        if (i >= 0) lista[i] = b; else lista.push(b); out.push(c);
+      }
+      return lista;
+    }, messaggio || (elenco.length === 1 ? "CRM: " + (elenco[0].ragione || "cliente") + " (" + ctx.nome + ")" : "CRM: " + elenco.length + " clienti (" + ctx.nome + ")"));
+    return out;
+  }
+  const eliminaCliente = (ctx, id, nome) => modifica(CLIENTI, ctx.tok, lista => (lista || []).filter(b => b.id !== id), "CRM: eliminato " + nome + " (" + ctx.nome + ")");
   const salvaLista = (ctx, L, base) => salvaBusta(ctx, "dati/liste.json", L, (L.creato === L.modificato ? "Nuova lista clienti: " : "Lista clienti aggiornata: ") + L.titolo + " (" + ctx.nome + ")", base);
   async function eliminaGiro(ctx, id, titolo) {
     await modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
@@ -276,5 +301,5 @@ window.RT = (() => {
 
   return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, ricifraChiave, chiude, apre, riconsegna,
     destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori,
-    cartelleDi, SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
+    CLIENTI, clienti, salvaClienti, eliminaCliente, cartelleDi, SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
 })();
