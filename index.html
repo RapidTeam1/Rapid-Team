@@ -153,7 +153,7 @@ details.inst b{color:var(--red)}
 .kpi span{font-size:13px}
 .kpi .r{background:linear-gradient(160deg,rgba(228,21,25,.35),rgba(228,21,25,.12));border-color:rgba(228,21,25,.45)}
 .kpi .r b{color:#fff;filter:none}
-main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);grid-template-areas:"p o" "g l";gap:20px 22px;align-items:start;margin-top:-34px;position:relative;z-index:2;padding-bottom:max(40px,env(safe-area-inset-bottom))}
+main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);grid-template-areas:"g o" "g l";gap:20px 22px;align-items:start;margin-top:-34px;position:relative;z-index:2;padding-bottom:max(40px,env(safe-area-inset-bottom))}
 .d-p{grid-area:p}.d-o{grid-area:o}.d-l{grid-area:l}.d-g{grid-area:g}
 .colonna{display:grid;gap:20px}
 #prossimo h2{display:none}
@@ -182,7 +182,7 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .vuoto a{font-weight:700;color:var(--red);text-decoration:none}
 .inst{margin:0}
 @media(max-width:900px){
-  main.dash{grid-template-columns:minmax(0,1fr);grid-template-areas:"p" "o" "l" "g";margin-top:-30px}
+  main.dash{grid-template-columns:minmax(0,1fr);grid-template-areas:"o" "g" "l";margin-top:-30px}
 }
 @media(max-width:560px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.top{padding-bottom:58px}}
 
@@ -204,22 +204,46 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .acc{border:1px dashed var(--line);border-radius:16px;padding:14px 16px}
 .acc h3{margin:0 0 4px;font-size:15px}.acc p{margin:0 0 8px;font-size:13px;color:var(--mut)}
 /* ---------- statistiche ---------- */
+.sh-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:14px;background:linear-gradient(160deg,#1a1b20,#0c0c0d);color:#fff;border-radius:20px;padding:20px 22px}
+.sh-top h2{color:#fff;margin:0;font-size:clamp(24px,3vw,32px);line-height:1.1}.sh-top p{margin:6px 0 0;color:#b9bac0;font-size:14px}
 .sf{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
-.sf label{display:grid;gap:4px;font-size:13px;color:var(--mut);font-weight:600}
-.sf .in{min-width:170px}
-.sk{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.sk div{border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:var(--card)}
-.sk b{display:block;font-size:28px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.sf label{display:grid;gap:4px;font-size:12px;color:#b9bac0;font-weight:600}
+.sf .in{min-width:160px;background:#1f2026;border-color:#33343b;color:#fff}
+.sf .sw2{display:flex;align-items:center;gap:8px;font-size:14px;color:#fff;min-height:42px;cursor:pointer}.sf .sw2 input{width:18px;height:18px;accent-color:var(--red)}
+.sk{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.sk>div{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--card);display:grid;align-content:center}
+.sk b{display:block;font-size:30px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums}
 .sk span{font-size:13px;color:var(--mut)}
-.s2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(460px,100%),1fr));gap:18px;align-items:start}
+.sk .ok b{color:var(--ok)}.sk .ko b{color:var(--att)}
+.sk .ring{position:relative;grid-row:span 1;justify-items:center;text-align:center;padding:10px}
+.sk .ring svg{width:74px;height:74px;transform:rotate(0)}.sk .ring .r0{fill:none;stroke:var(--line);stroke-width:4.5}.sk .ring .r1{fill:none;stroke:var(--ok);stroke-width:4.5;stroke-linecap:round}
+.sk .ring b{position:absolute;top:34px;left:0;right:0;font-size:18px}
+.s2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(440px,100%),1fr));gap:18px;align-items:start}
+.leg{font-size:12px;color:var(--mut);display:flex;gap:6px;align-items:center}.leg i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-left:6px}
+.leg .f,.sbar .f,.col .f{background:var(--ok)}.leg .m,.sbar .m,.col .m{background:var(--att)}.leg .d,.sbar .d,.col .d{background:var(--line)}
+.trend{display:flex;gap:6px;align-items:end;height:190px;padding:8px 0 4px;overflow-x:auto}
+.tc{flex:1;min-width:34px;display:grid;justify-items:center;gap:3px;height:100%;grid-template-rows:1fr auto auto}
+.tc .col{width:100%;max-width:38px;display:flex;flex-direction:column;justify-content:flex-end;border-radius:6px 6px 2px 2px;overflow:hidden}
+.tc .col i{display:block;width:100%}
+.tc b{font-size:12px;font-variant-numeric:tabular-nums}.tc span{font-size:11px;color:var(--mut);white-space:nowrap}
+.sbar{display:flex;height:9px;border-radius:6px;overflow:hidden;background:var(--line);min-width:110px;margin:3px 0}
+.sbar i{display:block;height:100%}
 .tb{width:100%;border-collapse:collapse;font-size:14px}
 .tb th{text-align:left;font-size:12px;color:var(--mut);font-weight:700;padding:6px 8px;border-bottom:2px solid var(--line);white-space:nowrap}
 .tb th.n,.tb td.n{text-align:right;font-variant-numeric:tabular-nums}
-.tb td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
-.tb td.bar{width:34%;min-width:90px}
-.tb td.bar i{display:block;height:10px;border-radius:6px;background:var(--red);min-width:3px}
-.tb td small{display:block;color:var(--mut);font-size:12px}
-.tb tr.tot td{font-weight:800;border-top:2px solid var(--line)}
+.tb td{padding:8px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tb td.bar{width:16%;min-width:70px}.tb td.bar i{display:block;height:10px;border-radius:6px;background:var(--red);min-width:3px}
+.tb td small{display:block;color:var(--mut);font-size:12px}.tb .nw{white-space:nowrap}
+.tb a{color:var(--ink);text-decoration:none}.tb a:hover{text-decoration:underline}
+.ko{color:var(--att)}.tb b.ok{color:var(--ok)}.tb b.ko{color:var(--att)}.mut{color:var(--mut)}
+.es{font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.es.ok{background:rgba(29,138,75,.13);color:var(--ok)}.es.x{background:rgba(220,38,38,.12);color:var(--att)}.es.c{background:var(--red);color:#fff}.es.p{background:var(--card);color:var(--mut)}
+.nvl{display:grid;gap:2px}.nvl li{display:grid;grid-template-columns:12px minmax(0,1fr);gap:10px;align-items:start;padding:8px 2px;border-bottom:1px solid var(--line)}
+.nvl .dot{width:10px;height:10px;border-radius:50%;background:var(--att);margin-top:6px}.nvl b{display:block;font-size:15px}.nvl span{font-size:13px;color:var(--mut)}.nvl a{color:var(--ink)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.pgrid .pcard{border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:3px;background:var(--card)}
+.pgrid .pcard b{font-size:17px}.pgrid .pcard>span{font-size:13px;color:var(--mut)}
+.smap{height:420px;border-radius:14px;overflow:hidden;margin-top:12px;background:var(--card)}
 .more{margin-top:8px}
 
 /* ---------- barra delle viste di lavoro ---------- */
@@ -466,11 +490,11 @@ details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--m
     <div class="row"><img class="lg" src="data:image/png;base64,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" alt="RAPID Flood Control Systems"><span class="hdr-acts"><button class="ghost tema" type="button" id="tema" aria-label="Cambia tema"></button><button class="ghost" type="button" id="cpw" aria-label="Cambia password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M16 7l3 3M18.5 4.5l2 2"/></svg><span class="tx">Password</span></button><a class="ghost" href="#admin" id="toadm" aria-label="Amministrazione" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span class="tx">Amministrazione</span></a><button class="ghost" type="button" id="esci" aria-label="Esci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg><span class="tx">Esci</span></button></span></div>
     <p class="sub" id="oggi"></p>
     <h1 class="w" id="ciao">Rapid Team</h1>
-    <div class="kpi" id="kpi"></div>
+    <div class="kpi" id="kpi" hidden></div>
   </div>
 </header>
 <main class="wrap dash">
-  <section id="prossimo" class="d-p"></section>
+  <section id="prossimo" class="d-p" hidden></section>
   <section class="org d-o">
     <div><h3 class="w">Organizza qui il tuo prossimo giro, Rapid ha bisogno anche di te!</h3>
     <ol class="passi"><li><span><b>Raccogli</b> i clienti sulla mappa</span></li><li><span><b>Genera giro</b>: ordine, giorni e orari</span></li><li><span><b>Sistema</b> e salva</span></li></ol></div>
@@ -720,9 +744,10 @@ const conta = (g, e) => tappe(g).filter(t => (t.etichette || []).includes(e)).le
 let SPUNTE = {};
 const fatte = g => { try { return RT.fatteGiro(g, SPUNTE); } catch(e) { return 0; } };
 async function rileggiSpunte(forza){ if (!CTX) return; try { const M = await RT.spunte(CTX, forza); const cambiato = M !== SPUNTE; SPUNTE = M;
-  if (cambiato && !$("#v-home").hidden && document.visibilityState !== "hidden") cruscotto(); } catch(e) {} }
-setInterval(() => { if (CTX && !$("#v-home").hidden && document.visibilityState !== "hidden") rileggiSpunte(false); }, 30000);
-document.addEventListener("visibilitychange", () => { if (CTX && document.visibilityState === "visible" && !$("#v-home").hidden) rileggiSpunte(false); });
+  if (cambiato && !$("#v-home").hidden && document.visibilityState !== "hidden") cruscotto();
+  if (cambiato && !$("#v-stat").hidden && STATF) calcolaStat(); } catch(e) {} }
+setInterval(() => { if (CTX && (!$("#v-home").hidden || !$("#v-stat").hidden) && document.visibilityState !== "hidden") rileggiSpunte(false); }, 30000);
+document.addEventListener("visibilitychange", () => { if (CTX && document.visibilityState === "visible" && (!$("#v-home").hidden || !$("#v-stat").hidden)) rileggiSpunte(false); });
 /* permessi: chi ha creato il giro (o la lista) e gli amministratori decidono condivisione, «Il giro è per» ed eliminazione;
    chi lo riceve (condiviso o «Il giro è per») può modificare visite, stato, appuntamenti, ore e note */
 const coinvolto = x => (x.per || []).includes(CTX.nome) || (x.condiviso || []).includes(CTX.nome) || ((CTX.io && CTX.io.cartelle) || []).some(c => RT.cartelleDi(x).includes(c));
@@ -796,7 +821,7 @@ function cruscotto(){
   $("#nota").textContent = (CTX.tutti ? "Entri in tutte le cartelle del team." : "Entri nella tua cartella e in quelle che un amministratore ha aperto per te; i giri e le liste che i colleghi ti condividono uno per uno sono in «Condivisi con me».")
     + " L'avanzamento delle visite («N di M fatte») è condiviso: lo vedono tutti quelli che vedono il giro.";
   disegnaCartelle(G); if (CART) testaCartella();
-  const sk = $("#stat-k"); if (sk) { const fatti = GIRI.filter(g => stato(g) === "f").length; sk.textContent = fatti + (fatti === 1 ? " giro concluso" : " giri conclusi") + " · apri le statistiche →"; }
+  const sk = $("#stat-k"); if (sk) { const fatti = baseStat().filter(g => stato(g) === "f").length; sk.textContent = fatti + (fatti === 1 ? " giro concluso" : " giri conclusi") + " · apri le statistiche →"; }
   if (location.protocol === "https:" && navigator.onLine !== false) { try { fetch("giro.html", {cache:"no-cache"}).catch(() => {}); } catch(e) {} }
 }
 /* ---------------- statistiche dei viaggi ----------------
@@ -838,66 +863,133 @@ let STATF = null, IMPARATE = {};
 function imparaCitta(){ IMPARATE = {}; const tutti = GIRI.flatMap(g => (g.giorni || []).flatMap(d => d.tappe || [])).concat(LISTE.flatMap(l => l.clienti || []));
   for (const t of tutti) { const L = luogo(t); if (L.paese === "Italia" && L.prov && L.citta !== "—") IMPARATE[L.citta.toLowerCase()] = L.prov; } }
 function statistiche(){
-  const B = $("#st-body"), anni = [...new Set(GIRI.map(g => String(g.dal || "").slice(0, 4)).filter(Boolean))].sort().reverse();
-  const persone = [...new Set(GIRI.flatMap(g => RT.cartelleDi(g)))].filter(Boolean).sort();
-  STATF = STATF || { anno: "", chi: "", prog: false };
-  B.innerHTML = `<div class="sf">
-    <label>Periodo<select class="in" id="sf-a"><option value="">Tutti gli anni</option><option value="12">Ultimi 12 mesi</option>${anni.map(a => `<option value="${a}">${a}</option>`).join("")}</select></label>
-    <label>Persona<select class="in" id="sf-p"><option value="">Tutto il team</option>${persone.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}</select></label>
-    <label class="chk" style="margin:0 0 10px"><input type="checkbox" id="sf-g"> Conta anche i giri in programma</label></div>
+  const B = $("#st-body"), base = baseStat();
+  const anni = [...new Set(base.map(g => String(g.dal || "").slice(0, 4)).filter(Boolean))].sort().reverse();
+  const persone = [...new Set(base.flatMap(g => RT.cartelleDi(g)))].filter(Boolean).sort();
+  STATF = STATF || { anno: "", chi: "", prog: false, tab: "reg", q: "" };
+  B.innerHTML = `<section class="sh-top">
+    <div><h2 class="w">${CTX.admin ? "Dove siamo andati" : "Dove sono andato"}</h2><p>${CTX.admin ? "Tutti i giri del team. Si aggiorna da solo a ogni visita segnata come fatta." : "I tuoi giri. Si aggiorna da solo a ogni visita segnata come fatta."}</p></div>
+    <div class="sf">
+      <label>Periodo<select class="in" id="sf-a"><option value="">Tutti gli anni</option><option value="12">Ultimi 12 mesi</option>${anni.map(a => `<option value="${a}">${a}</option>`).join("")}</select></label>
+      ${CTX.admin ? `<label>Persona<select class="in" id="sf-p"><option value="">Tutto il team</option>${persone.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join("")}</select></label>` : ""}
+      <label class="sw2"><input type="checkbox" id="sf-g"> Anche i giri in programma</label></div></section>
     <div id="st-out"></div>
-    <p class="hint">Contano i giri che vedi tu, anche archiviati${CTX.tutti ? " (tu vedi quelli di tutto il team)" : ""}. «Viaggi» = in quanti giri ci siamo andati; «Giorni» = in quante giornate; «Visite» = visite in programma nei giri; «Fatte» = visite segnate come fatte. Il luogo si legge dall'indirizzo della visita: gli indirizzi incompleti finiscono in «Non riconosciuta».</p>`;
-  $("#sf-a").value = STATF.anno; $("#sf-p").value = STATF.chi; $("#sf-g").checked = STATF.prog;
-  B.onchange = () => { STATF = { anno: $("#sf-a").value, chi: $("#sf-p").value, prog: $("#sf-g").checked }; calcolaStat(); };
-  calcolaStat();
+    <p class="hint">«Viaggi» = in quanti giri ci siamo andati; «Giorni» = in quante giornate; «Fatte» = visite segnate come fatte; «Non visitate» = visite di giorni già passati rimaste senza spunta; «Completamento» = fatte su quelle che si dovevano già fare. Il luogo si legge dall'indirizzo della visita: gli indirizzi incompleti finiscono in «Non riconosciuta». ${CTX.admin ? "Le statistiche di tutto il team le vedono solo gli amministratori; gli altri vedono solo le proprie." : "Vedi solo le statistiche dei tuoi giri."}</p>`;
+  $("#sf-a").value = STATF.anno; if ($("#sf-p")) $("#sf-p").value = STATF.chi; $("#sf-g").checked = STATF.prog;
+  B.onchange = e => { if (!e.target.closest(".sf")) return; STATF = Object.assign(STATF, { anno: $("#sf-a").value, chi: $("#sf-p") ? $("#sf-p").value : "", prog: $("#sf-g").checked }); calcolaStat(); };
+  calcolaStat(); rileggiSpunte(true);
 }
+// amministratori: tutti i giri; gli altri: solo quelli della propria cartella
+const baseStat = () => CTX.admin ? GIRI : GIRI.filter(g => RT.cartelleDi(g).includes(CTX.nome));
+let STATMAP = null;
 function calcolaStat(){
+  if (!$("#st-out")) return;
   imparaCitta();
   const F = STATF, oggi = iso(d0), unAnno = new Date(d0); unAnno.setFullYear(unAnno.getFullYear() - 1);
-  const G = GIRI.filter(g => (F.prog || String(g.dal) <= oggi) && (!F.chi || RT.cartelleDi(g).includes(F.chi))
+  const G = baseStat().filter(g => (F.prog || String(g.dal) <= oggi) && (!F.chi || RT.cartelleDi(g).includes(F.chi))
     && (!F.anno || (F.anno === "12" ? String(g.al || g.dal) >= iso(unAnno) : String(g.dal).startsWith(F.anno))));
-  const agg = () => ({ giri: new Set(), giorni: new Set(), visite: 0, fatte: 0, clienti: new Set(), ultima: "", extra: "" });
-  const R = {}, P = {}, C = {}, U = {}, V = [], tot = agg();
-  const add = (M, k, g, d, t, fatta, extra) => { const x = M[k] || (M[k] = agg()); x.giri.add(g.id); x.giorni.add(g.id + d); x.visite++; if (fatta) x.fatte++;
-    x.clienti.add(String(t.azienda || "").trim().toLowerCase()); const di = d || g.dal; if (di > x.ultima) x.ultima = di; if (extra) x.extra = extra; };
+  const agg = () => ({ giri: new Set(), giorni: new Set(), visite: 0, fatte: 0, mancate: 0, clienti: new Set(), ultima: "", extra: "", pos: [] });
+  const R = {}, P = {}, C = {}, U = {}, M = {}, V = [], NV = [], tot = agg();
+  const add = (Mp, k, g, d, t, st, extra) => { const x = Mp[k] || (Mp[k] = agg()); x.giri.add(g.id); x.giorni.add(g.id + d); x.visite++;
+    if (st === "f") x.fatte++; else if (st === "m") x.mancate++;
+    x.clienti.add(String(t.azienda || "").trim().toLowerCase()); const di = String(d).slice(0, 10); if (di > x.ultima) x.ultima = di; if (extra) x.extra = extra; if (t.pos) x.pos.push(t.pos); };
   for (const g of G) {
-    const S = RT.applica((SPUNTE || {})[g.id], RT.coda.get(g.id)), regs = new Set(), provs = new Set(); let nv = 0, nf = 0;
+    const S = RT.applica((SPUNTE || {})[g.id], RT.coda.get(g.id)), regs = new Set(), provs = new Set(); let nv = 0, nf = 0, nm = 0;
     (g.giorni || []).forEach((d, i) => (d.tappe || []).forEach(t => {
-      const L = luogo(t), f = !!S[RT.chiaveVisita(t)], dd = d.iso || g.dal + "#" + i;
-      add(R, L.reg, g, dd, t, f); add(P, L.prov ? L.provNome + " (" + L.prov + ")" : L.provNome, g, dd, t, f, L.reg);
-      add(C, L.citta + (L.prov ? " (" + L.prov + ")" : L.paese !== "Italia" ? " (" + L.paese + ")" : ""), g, dd, t, f, L.reg);
-      RT.cartelleDi(g).forEach(n => add(U, n, g, dd, t, f));
-      add({ x: tot }, "x", g, dd, t, f); regs.add(L.reg); if (L.prov) provs.add(L.prov); nv++; if (f) nf++; }));
-    V.push({ g, regs: [...regs].join(", "), provs: [...provs].join(", "), nv, nf, gg: (g.giorni || []).length });
+      const L = luogo(t), giorno = d.iso || g.dal, f = !!S[RT.chiaveVisita(t)], st = f ? "f" : giorno < oggi ? "m" : "d", dd = giorno + "#" + i;
+      const kc = L.citta + (L.prov ? " (" + L.prov + ")" : L.paese !== "Italia" ? " (" + L.paese + ")" : "");
+      add(R, L.reg, g, dd, t, st); add(P, L.prov ? L.provNome + " (" + L.prov + ")" : L.provNome, g, dd, t, st, L.reg); add(C, kc, g, dd, t, st, L.reg);
+      RT.cartelleDi(g).forEach(n => add(U, n, g, dd, t, st)); add(M, String(giorno).slice(0, 7), g, dd, t, st);
+      add({ x: tot }, "x", g, dd, t, st); regs.add(L.reg); if (L.prov) provs.add(L.prov); nv++; if (f) nf++; if (st === "m") { nm++; NV.push({ g, d: giorno, t, citta: kc }); } }));
+    const fine = String(g.al || g.dal) < oggi, inizio = String(g.dal) <= oggi;
+    V.push({ g, regs: [...regs].join(", "), provs: [...provs].join(", "), nv, nf, nm, gg: (g.giorni || []).length,
+      esito: !inizio ? ["p", "In programma"] : !fine ? ["c", "In corso"] : nm ? ["x", "Incompleto"] : ["ok", "Completato"] });
   }
-  const righe = M => Object.entries(M).map(([k, x]) => ({ k, giri: x.giri.size, giorni: x.giorni.size, visite: x.visite, fatte: x.fatte, clienti: x.clienti.size, ultima: String(x.ultima).slice(0, 10), extra: x.extra }))
+  const pc = x => x.fatte + x.mancate ? Math.round(x.fatte / (x.fatte + x.mancate) * 100) : null;
+  const righe = Mp => Object.entries(Mp).map(([k, x]) => ({ k, giri: x.giri.size, giorni: x.giorni.size, visite: x.visite, fatte: x.fatte, mancate: x.mancate, clienti: x.clienti.size, ultima: x.ultima, extra: x.extra, pc: pc(x), pos: x.pos }))
     .sort((a, b) => b.giri - a.giri || b.visite - a.visite || a.k.localeCompare(b.k));
-  const dataIt = s => { if (!s) return ""; const d = dt(s.slice(0, 10)); return isNaN(d) ? "" : d.getDate() + " " + MESI[d.getMonth()] + " " + d.getFullYear(); };
-  const tabella = (id, tit, nome, rr, conExtra, max) => { const top = Math.max(1, ...rr.map(r => r.giri)), corte = max && rr.length > max;
-    return `<section class="panel"><div class="ph"><h2>${tit} (${rr.length})</h2><a class="mini" href="#" data-csv="${id}">Scarica per Excel</a></div><div class="tw"><table class="tb"><thead><tr><th>${nome}</th><th class="n">Viaggi</th><th></th><th class="n">Giorni</th><th class="n">Visite</th><th class="n">Fatte</th><th class="n">Clienti</th><th>Ultima volta</th></tr></thead><tbody>
-    ${rr.map((r, i) => `<tr${corte && i >= max ? ' class="xtra" hidden' : ""}><td><b>${esc(r.k)}</b>${conExtra && r.extra ? `<small>${esc(r.extra)}</small>` : ""}</td><td class="n"><b>${r.giri}</b></td><td class="bar"><i style="width:${Math.round(r.giri / top * 100)}%"></i></td><td class="n">${r.giorni}</td><td class="n">${r.visite}</td><td class="n">${r.fatte}</td><td class="n">${r.clienti}</td><td>${esc(dataIt(r.ultima))}</td></tr>`).join("") || '<tr><td colspan="8" class="hint">Nessun dato.</td></tr>'}
-    </tbody></table></div>${corte ? `<button class="btn sm more" type="button" data-more="1">Mostra tutte (${rr.length})</button>` : ""}</section>`; };
+  const dataIt = s => { if (!s) return ""; const d = dt(String(s).slice(0, 10)); return isNaN(d) ? "" : d.getDate() + " " + MESI[d.getMonth()] + " " + d.getFullYear(); };
   const rR = righe(R), rP = righe(P), rC = righe(C), rU = righe(U);
-  const T = { giri: tot.giri.size, giorni: tot.giorni.size, visite: tot.visite, fatte: tot.fatte, clienti: tot.clienti.size };
-  V.sort((a, b) => String(b.g.dal).localeCompare(String(a.g.dal)));
-  $("#st-out").innerHTML = `<div class="sk"><div><b>${T.giri}</b><span>viaggi (giri)</span></div><div><b>${T.giorni}</b><span>giorni in viaggio</span></div><div><b>${T.visite}</b><span>visite</span></div><div><b>${T.fatte}</b><span>visite fatte</span></div><div><b>${T.clienti}</b><span>clienti diversi</span></div><div><b>${rC.length}</b><span>città</span></div><div><b>${rP.filter(r => !/Non riconosciuta/.test(r.k)).length}</b><span>province</span></div></div>
-    <div class="s2">${tabella("reg", "Regioni e Paesi", "Regione", rR, false)}${tabella("per", "Per persona", "Persona", rU, false)}</div>
-    ${tabella("prov", "Province", "Provincia", rP, true, 15)}
-    ${tabella("cit", "Città", "Città", rC, true, 20)}
-    <section class="panel"><div class="ph"><h2>Elenco dei viaggi (${V.length})</h2><a class="mini" href="#" data-csv="via">Scarica per Excel</a></div><div class="tw"><table class="tb"><thead><tr><th>Date</th><th>Giro</th><th>Per</th><th>Regioni</th><th>Province</th><th class="n">Giorni</th><th class="n">Visite</th><th class="n">Fatte</th></tr></thead><tbody>
-    ${V.map(v => `<tr><td>${esc(periodo(v.g))} ${esc(String(v.g.dal).slice(0, 4))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a></td><td>${esc(RT.cartelleDi(v.g).join(", "))}</td><td>${esc(v.regs)}</td><td>${esc(v.provs)}</td><td class="n">${v.gg}</td><td class="n">${v.nv}</td><td class="n">${v.nf}</td></tr>`).join("") || '<tr><td colspan="8" class="hint">Nessun giro in questo periodo.</td></tr>'}
+  const T = { giri: tot.giri.size, giorni: tot.giorni.size, visite: tot.visite, fatte: tot.fatte, mancate: tot.mancate, clienti: tot.clienti.size, pc: pc(tot) };
+  V.sort((a, b) => String(b.g.dal).localeCompare(String(a.g.dal))); NV.sort((a, b) => String(b.d).localeCompare(String(a.d)));
+  STATDATI = { rR, rP, rC, rU, V, NV };
+  // barra a tre colori: fatte (verde), non visitate (rosso), ancora da fare (grigio)
+  const barra = r => { const tot = Math.max(1, r.visite), daf = r.visite - r.fatte - r.mancate;
+    return `<span class="sbar" title="${r.fatte} fatte · ${r.mancate} non visitate · ${daf} da fare"><i class="f" style="width:${r.fatte / tot * 100}%"></i><i class="m" style="width:${r.mancate / tot * 100}%"></i><i class="d" style="width:${daf / tot * 100}%"></i></span>`; };
+  const pcTxt = v => v == null ? '<span class="mut">—</span>' : `<b class="${v === 100 ? "ok" : v >= 80 ? "" : "ko"}">${v}%</b>`;
+  const anello = T.pc == null ? 0 : T.pc;
+  const kpi = `<div class="sk">
+    <div class="ring"><svg viewBox="0 0 42 42" aria-hidden="true"><circle cx="21" cy="21" r="15.9" class="r0"/><circle cx="21" cy="21" r="15.9" class="r1" stroke-dasharray="${anello} ${100 - anello}" stroke-dashoffset="25"/></svg><b>${T.pc == null ? "—" : T.pc + "%"}</b><span>completamento</span></div>
+    <div><b>${T.giri}</b><span>${T.giri === 1 ? "viaggio" : "viaggi"}</span></div><div><b>${T.giorni}</b><span>${T.giorni === 1 ? "giorno in viaggio" : "giorni in viaggio"}</span></div>
+    <div class="ok"><b>${T.fatte}</b><span>visite fatte</span></div><div class="${T.mancate ? "ko" : ""}"><b>${T.mancate}</b><span>non visitate</span></div>
+    <div><b>${T.clienti}</b><span>clienti diversi</span></div><div><b>${rC.length}</b><span>città · ${rP.filter(r => !/Non riconosciuta/.test(r.k)).length} province</span></div></div>`;
+  // andamento per mese
+  const mesi = Object.keys(M).sort().slice(-12), maxM = Math.max(1, ...mesi.map(m => M[m].visite));
+  const trend = mesi.length ? `<section class="panel"><div class="ph"><h2>Mese per mese</h2><span class="leg"><i class="f"></i>fatte <i class="m"></i>non visitate <i class="d"></i>da fare</span></div>
+    <div class="trend">${mesi.map(m => { const x = M[m], [y, mm] = m.split("-"), h = v => v / maxM * 100;
+      return `<div class="tc" title="${MESI_L[+mm - 1]} ${y}: ${x.giri.size} viaggi, ${x.giorni.size} giorni, ${x.visite} visite, ${x.fatte} fatte, ${x.mancate} non visitate"><div class="col"><i class="d" style="height:${h(x.visite - x.fatte - x.mancate)}%"></i><i class="m" style="height:${h(x.mancate)}%"></i><i class="f" style="height:${h(x.fatte)}%"></i></div><b>${x.visite}</b><span>${MESI[+mm - 1]}${mesi.length > 1 && (m.endsWith("-01") || m === mesi[0]) ? " " + y.slice(2) : ""}</span></div>`; }).join("")}</div></section>` : "";
+  // luoghi: regioni / province / città, con ricerca
+  const TAB = { reg: ["Regioni e Paesi", "Regione", rR], prov: ["Province", "Provincia", rP], cit: ["Città", "Città", rC] };
+  const [, nome, rr] = TAB[F.tab] || TAB.reg, q = (F.q || "").toLowerCase(), rv = rr.filter(r => !q || (r.k + " " + r.extra).toLowerCase().includes(q)), top = Math.max(1, ...rr.map(r => r.giri));
+  const luoghi = `<section class="panel"><div class="ph"><h2>Dove siamo andati</h2><a class="mini" href="#" data-csv="${F.tab}">Scarica per Excel</a></div>
+    <div class="tabs" id="st-tab">${Object.entries(TAB).map(([k, v]) => `<button type="button" data-t="${k}" aria-pressed="${(F.tab || "reg") === k}">${v[0]}<em>${v[2].length}</em></button>`).join("")}</div>
+    <input class="srch" id="st-q" type="search" placeholder="Cerca regione, provincia o città" value="${esc(F.q || "")}">
+    <div class="tw"><table class="tb"><thead><tr><th>${nome}</th><th class="n">Viaggi</th><th></th><th class="n">Giorni</th><th class="n">Visite</th><th>Fatte · non visitate · da fare</th><th class="n">Completamento</th><th>Ultima volta</th></tr></thead><tbody>
+    ${rv.map((r, i) => `<tr${i >= 25 ? ' class="xtra" hidden' : ""}><td><b>${esc(r.k)}</b>${F.tab !== "reg" && r.extra ? `<small>${esc(r.extra)}</small>` : ""}</td><td class="n"><b>${r.giri}</b></td><td class="bar"><i style="width:${Math.round(r.giri / top * 100)}%"></i></td><td class="n">${r.giorni}</td><td class="n">${r.visite}</td><td>${barra(r)}<small>${r.fatte} · <span class="${r.mancate ? "ko" : ""}">${r.mancate}</span> · ${r.visite - r.fatte - r.mancate}</small></td><td class="n">${pcTxt(r.pc)}</td><td class="nw">${esc(dataIt(r.ultima))}</td></tr>`).join("") || '<tr><td colspan="8" class="hint">Nessun dato.</td></tr>'}
+    </tbody></table></div>${rv.length > 25 ? `<button class="btn sm more" type="button" data-more="1">Mostra tutte (${rv.length})</button>` : ""}
+    ${CTX.config.gmaps_key ? `<div class="pfoot"><button class="btn sm" type="button" id="st-map-b">${STATMAP ? "Aggiorna la mappa" : "Mostra sulla mappa"}</button><span class="hint">Cerchi grandi = più visite; verde = tutto fatto, arancione = qualcosa non visitato, grigio = ancora da fare. Aprire la mappa conta come un caricamento Google.</span></div><div id="st-map" class="smap"${STATMAP ? "" : " hidden"}></div>` : ""}</section>`;
+  // non visitati
+  const nonv = `<section class="panel"><div class="ph"><h2>Clienti non visitati (${NV.length})</h2>${NV.length ? '<a class="mini" href="#" data-csv="nv">Scarica per Excel</a>' : ""}</div>
+    ${NV.length ? `<p class="hint" style="margin:0 0 8px">Visite di giorni già passati rimaste senza spunta verde: o non sono state fatte, o qualcuno ha dimenticato di segnarle.</p><ul class="nvl">${NV.map((x, i) => `<li${i >= 15 ? ' class="xtra" hidden' : ""}><span class="dot"></span><div><b>${esc(x.t.azienda || "—")}</b><span>${esc(x.citta)} · ${esc(dataIt(x.d))} · <a href="${esc(link(x.g))}">${esc(x.g.titolo)}</a> · ${esc(RT.cartelleDi(x.g).join(", "))}</span></div></li>`).join("")}</ul>${NV.length > 15 ? `<button class="btn sm more" type="button" data-more="1">Mostra tutti (${NV.length})</button>` : ""}`
+      : '<p class="vuoto">Nessuna visita saltata: tutte le visite dei giorni passati sono segnate come fatte.</p>'}</section>`;
+  // persone (solo amministratori, tutto il team)
+  const pers = CTX.admin && !F.chi && rU.length > 1 ? `<section class="panel"><div class="ph"><h2>Per persona</h2><a class="mini" href="#" data-csv="per">Scarica per Excel</a></div><div class="pgrid">${rU.map(r => `<div class="pcard"><b>${esc(r.k)}</b><span>${r.giri} ${r.giri === 1 ? "viaggio" : "viaggi"} · ${r.giorni} ${r.giorni === 1 ? "giorno" : "giorni"} · ${r.visite} visite</span>${barra(r)}<span>${r.fatte} fatte · <span class="${r.mancate ? "ko" : ""}">${r.mancate} non visitate</span> · completamento ${pcTxt(r.pc)}</span></div>`).join("")}</div></section>` : "";
+  // elenco dei viaggi
+  const viaggi = `<section class="panel"><div class="ph"><h2>Elenco dei viaggi (${V.length})</h2><a class="mini" href="#" data-csv="via">Scarica per Excel</a></div><div class="tw"><table class="tb"><thead><tr><th>Date</th><th>Giro</th><th>Esito</th><th>Fatte · non visitate · da fare</th><th>Regioni</th><th class="n">Giorni</th></tr></thead><tbody>
+    ${V.map(v => `<tr><td class="nw">${esc(periodo(v.g))} ${esc(String(v.g.dal).slice(0, 4))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a><small>${esc(RT.cartelleDi(v.g).join(", "))}</small></td><td><span class="es ${v.esito[0]}">${v.esito[1]}</span></td><td>${barra({ visite: v.nv, fatte: v.nf, mancate: v.nm })}<small>${v.nf} · <span class="${v.nm ? "ko" : ""}">${v.nm}</span> · ${v.nv - v.nf - v.nm} di ${v.nv}</small></td><td>${esc(v.regs)}</td><td class="n">${v.gg}</td></tr>`).join("") || '<tr><td colspan="6" class="hint">Nessun giro in questo periodo.</td></tr>'}
     </tbody></table></div></section>`;
-  const CSV = { reg: ["Regione", rR], per: ["Persona", rU], prov: ["Provincia", rP], cit: ["Città", rC] };
-  $("#st-out").onclick = e => {
-    const m = e.target.closest("[data-more]"); if (m) { m.closest("section").querySelectorAll("tr.xtra").forEach(r => r.hidden = false); m.remove(); return; }
-    const a = e.target.closest("[data-csv]"); if (!a) return; e.preventDefault();
-    const q = v => '"' + String(v ?? "").replace(/"/g, '""') + '"'; let rows;
-    if (a.dataset.csv === "via") rows = [["Dal", "Al", "Giro", "Per", "Regioni", "Province", "Giorni", "Visite", "Fatte"], ...V.map(v => [v.g.dal, v.g.al || v.g.dal, v.g.titolo, RT.cartelleDi(v.g).join(", "), v.regs, v.provs, v.gg, v.nv, v.nf])];
-    else { const [n, rr] = CSV[a.dataset.csv]; rows = [[n, ...(a.dataset.csv === "prov" || a.dataset.csv === "cit" ? ["Regione"] : []), "Viaggi", "Giorni", "Visite", "Fatte", "Clienti", "Ultima volta"],
-      ...rr.map(r => [r.k, ...(a.dataset.csv === "prov" || a.dataset.csv === "cit" ? [r.extra] : []), r.giri, r.giorni, r.visite, r.fatte, r.clienti, r.ultima])]; }
-    const blob = new Blob(["﻿" + rows.map(r => r.map(q).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" });
-    const u = URL.createObjectURL(blob), l = document.createElement("a"); l.href = u; l.download = "statistiche-" + a.dataset.csv + "-" + iso(d0) + ".csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+  $("#st-out").innerHTML = kpi + `<div class="s2">${trend}${nonv}</div>` + luoghi + pers + viaggi;
+  if (STATMAP) mappaStat();
+  const O = $("#st-out");
+  $("#st-q").oninput = e => { STATF.q = e.target.value; const pos = e.target.selectionStart; calcolaStat(); const n = $("#st-q"); n.focus(); try { n.setSelectionRange(pos, pos); } catch(x) {} };
+  O.onclick = e => {
+    const tb = e.target.closest("#st-tab button[data-t]"); if (tb) { STATF.tab = tb.dataset.t; STATF.q = ""; calcolaStat(); return; }
+    if (e.target.closest("#st-map-b")) { mappaStat(); return; }
+    const m = e.target.closest("[data-more]"); if (m) { m.closest("section").querySelectorAll(".xtra").forEach(r => r.hidden = false); m.remove(); return; }
+    const a = e.target.closest("[data-csv]"); if (!a) return; e.preventDefault(); scaricaStat(a.dataset.csv);
   };
+}
+let STATDATI = null;
+function scaricaStat(k){
+  const D = STATDATI, q = v => '"' + String(v ?? "").replace(/"/g, '""') + '"'; let rows;
+  const testa = ["Viaggi", "Giorni", "Visite", "Fatte", "Non visitate", "Completamento %", "Clienti", "Ultima volta"];
+  const riga = r => [r.giri, r.giorni, r.visite, r.fatte, r.mancate, r.pc ?? "", r.clienti, r.ultima];
+  if (k === "via") rows = [["Dal", "Al", "Giro", "Per", "Esito", "Visite", "Fatte", "Non visitate", "Regioni", "Province", "Giorni"], ...D.V.map(v => [v.g.dal, v.g.al || v.g.dal, v.g.titolo, RT.cartelleDi(v.g).join(", "), v.esito[1], v.nv, v.nf, v.nm, v.regs, v.provs, v.gg])];
+  else if (k === "nv") rows = [["Data", "Cliente", "Città", "Indirizzo", "Giro", "Per"], ...D.NV.map(x => [x.d, x.t.azienda, x.citta, x.t.indirizzo || "", x.g.titolo, RT.cartelleDi(x.g).join(", ")])];
+  else { const [n, rr, conReg] = { reg: ["Regione", D.rR], prov: ["Provincia", D.rP, 1], cit: ["Città", D.rC, 1], per: ["Persona", D.rU] }[k];
+    rows = [[n, ...(conReg ? ["Regione"] : []), ...testa], ...rr.map(r => [r.k, ...(conReg ? [r.extra] : []), ...riga(r)])]; }
+  const blob = new Blob(["﻿" + rows.map(r => r.map(q).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const u = URL.createObjectURL(blob), l = document.createElement("a"); l.href = u; l.download = "statistiche-" + k + "-" + iso(d0) + ".csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 2000);
+}
+// mappa delle città: un cerchio per città (posizione media delle sue visite), grande quanto le visite
+async function mappaStat(){
+  const box = $("#st-map"); if (!box || !STATDATI) return;
+  box.hidden = false;
+  try {
+    await caricaMaps(CTX.config.gmaps_key);
+    const { Map, Circle } = await google.maps.importLibrary("maps");
+    if (!STATMAP || STATMAP.getDiv() !== box) STATMAP = new Map(box, { center: { lat: 43.5, lng: 12 }, zoom: 6, mapTypeControl: false, streetViewControl: false, fullscreenControl: true, gestureHandling: "cooperative" });
+    (STATMAP._c || []).forEach(c => c.setMap(null)); STATMAP._c = [];
+    const b = new google.maps.LatLngBounds(), max = Math.max(1, ...STATDATI.rC.map(r => r.visite));
+    for (const r of STATDATI.rC) { if (!r.pos.length) continue;
+      const c = { lat: r.pos.reduce((s, p) => s + p.lat, 0) / r.pos.length, lng: r.pos.reduce((s, p) => s + p.lng, 0) / r.pos.length };
+      const col = r.mancate ? "#ea580c" : r.fatte ? "#16a34a" : "#8a8b92";
+      const k = new Circle({ map: STATMAP, center: c, radius: 2500 + 14000 * Math.sqrt(r.visite / max), strokeColor: col, strokeWeight: 1.5, fillColor: col, fillOpacity: .35 });
+      const iw = new google.maps.InfoWindow({ content: `<b>${esc(r.k)}</b><br>${r.giri} viaggi · ${r.visite} visite<br>${r.fatte} fatte · ${r.mancate} non visitate`, position: c });
+      k.addListener("click", () => iw.open({ map: STATMAP })); STATMAP._c.push(k); b.extend(c); }
+    if (!b.isEmpty()) STATMAP.fitBounds(b, 40);
+    const bt = $("#st-map-b"); if (bt) bt.textContent = "Aggiorna la mappa";
+  } catch(e) { box.innerHTML = '<p class="hint" style="padding:16px">La mappa non si carica (rete o limite giornaliero Google raggiunto).</p>'; }
 }
 function disegnaCartelle(G){
   const tutteL = LISTE.filter(l => !l.archiviato), ap = cartelleAperte();
@@ -907,7 +999,6 @@ function disegnaCartelle(G){
     const px = att[0];
     return `<a class="cf${sh ? " sh" : ""}" href="#cartella/${esc(encodeURIComponent(c))}"><span class="av">${sh ? "↗" : esc(nome.charAt(0).toUpperCase())}</span><b>${esc(nome)}</b>
       <span>${att.length} ${att.length === 1 ? "giro attivo" : "giri attivi"} · ${g.length - att.length} ${g.length - att.length === 1 ? "concluso" : "conclusi"} · ${l.length} ${l.length === 1 ? "lista" : "liste"}</span>
-      ${px ? `<span class="px">Prossimo: ${esc(periodo(px))} · ${esc(px.titolo)}</span>` : '<span>Nessun giro in programma</span>'}
       ${nct ? `<span class="ct">${nct} ${nct === 1 ? "appuntamento" : "appuntamenti"} da prendere</span>` : ""}</a>`; };
   const ordine = [CTX.nome, ...ap.filter(n => n !== CTX.nome)];
   const shG = G.filter(x => nellaCartella(x, SH)).length + tutteL.filter(x => nellaCartella(x, SH)).length;
