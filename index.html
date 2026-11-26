@@ -242,6 +242,9 @@ textarea.in{min-height:64px;resize:vertical;line-height:1.4}
 .stp>.hd{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 10px 10px 12px;cursor:pointer}
 .stp .n{width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:13px;font-weight:800;display:grid;place-items:center}
 .stp .n.gr{background:#26272b}
+.stp .n.ok{background:var(--ok)}
+.stp.app{border-color:var(--ok);box-shadow:inset 5px 0 0 var(--ok);background:rgba(29,138,75,.06)}
+.stp.app.open{border-color:var(--ok)}
 .stp .tt{font-weight:700;font-size:15px;line-height:1.25}
 .stp .ss{font-size:12px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .stp .mv{display:flex;gap:4px}
@@ -768,8 +771,9 @@ function pannello(bozza){
 }
 function scheda(t, i){
   const ap = i === OPEN, alt = P.giorni.map((d,k) => k === CUR ? "" : `<option value="${k}">${esc(etDay(d))}</option>`).join("");
-  return `<div class="stp${ap ? " open" : ""}" data-i="${i}">
-    <div class="hd" data-act="toggle"><span class="n">${i+1}</span><div><div class="tt">${esc(t.ora || "--:--")} · ${esc(t.azienda || "Nuova visita")}</div><div class="ss">${esc(t.indirizzo || t.ricerca || "Indirizzo da inserire")}</div></div>
+  const isApp = tipo(t) === "appuntamento";
+  return `<div class="stp${ap ? " open" : ""}${isApp ? " app" : ""}" data-i="${i}">
+    <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : ""}">${i+1}</span><div><div class="tt">${esc(t.ora || "--:--")} · ${esc(t.azienda || "Nuova visita")}</div><div class="ss">${isApp ? '<b style="color:var(--ok)">Appuntamento</b> · ' : ""}${esc(t.indirizzo || t.ricerca || "Indirizzo da inserire")}</div></div>
       <div class="mv"><button type="button" data-act="su" aria-label="Sposta su" ${i === 0 ? "disabled" : ""}>↑</button><button type="button" data-act="giu" aria-label="Sposta giù" ${i === (P.giorni[CUR].tappe.length - 1) ? "disabled" : ""}>↓</button></div></div>
     ${ap ? `<div class="bd">
       <div class="two"><label class="fl"><span>Ora</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>Tipo visita</span><select class="in" data-k="tipo">${TIPI.map(([v,l]) => `<option value="${v}" ${tipo(t) === v ? "selected" : ""}>${l}</option>`).join("")}</select></label></div>
@@ -803,7 +807,7 @@ $("#pp").addEventListener("input", e => {
   const k = x.dataset.k; if (!k) return;
   const i = +x.closest(".stp").dataset.i, t = P.giorni[CUR].tappe[i];
   if (k === "ora") t.ora = oraBella(x.value);
-  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => e !== "appuntamento" && e !== "prospezione"); if (x.value) t.etichette.unshift(x.value); }
+  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => e !== "appuntamento" && e !== "prospezione"); if (x.value) t.etichette.unshift(x.value); salvaBozza(); pannello(); return; }
   else if (k === "att") { t.etichette = (t.etichette || []).filter(e => e !== "attenzione"); if (x.checked) t.etichette.push("attenzione"); }
   else t[k] = x.value;
   if (k === "ora" || k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
@@ -937,8 +941,8 @@ function pannelloL(bozza){
 function schedaL(c, i){
   const ap = i === LOPEN, ro = LEDIT ? "" : "disabled";
   const app = c.appuntamento ? "Appuntamento" + (c.app_data ? " " + dataBreve(c.app_data) + (c.app_ora ? " " + c.app_ora : "") : "") : "";
-  return `<div class="stp${ap ? " open" : ""}" data-i="${i}">
-    <div class="hd" data-act="toggle"><span class="n${c.appuntamento ? "" : " gr"}">${i+1}</span><div><div class="tt">${esc(c.azienda || "Nuovo cliente")}</div><div class="ss">${esc(c.indirizzo || "Indirizzo da inserire")}${c.pos ? "" : " · senza posizione"}</div></div><span class="ap">${esc(app)} <span class="cv" aria-hidden="true">${ap ? "▲" : "▼"}</span></span></div>
+  return `<div class="stp${ap ? " open" : ""}${c.appuntamento ? " app" : ""}" data-i="${i}">
+    <div class="hd" data-act="toggle"><span class="n${c.appuntamento ? " ok" : " gr"}">${i+1}</span><div><div class="tt">${esc(c.azienda || "Nuovo cliente")}</div><div class="ss">${esc(c.indirizzo || "Indirizzo da inserire")}${c.pos ? "" : " · senza posizione"}</div></div><span class="ap">${esc(app)} <span class="cv" aria-hidden="true">${ap ? "▲" : "▼"}</span></span></div>
     ${ap ? `<div class="bd">
       <label class="fl"><span>Azienda</span><input class="in" data-c="azienda" value="${esc(c.azienda)}" ${ro}></label>
       <label class="fl"><span>Indirizzo</span><input class="in" data-c="indirizzo" value="${esc(c.indirizzo)}" ${ro}></label>
@@ -1326,8 +1330,9 @@ function segnaposti(centra){
   if (!P) return;
   const pts = [];
   P.giorni.forEach((g, k) => g.tappe.forEach((t, i) => { if (!t.pos) return;
-    const att = k === CUR, col = att ? getComputedStyle(document.documentElement).getPropertyValue("--red").trim() || "#e41519" : "#8a8b92";
-    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: t.pos, title: (i+1) + ". " + t.azienda + " · " + etDay(g), content: pin(i + 1, col, att ? "#7f0d0f" : "#5f6066"), zIndex: att ? 10 : 1 });
+    const att = k === CUR, isApp = tipo(t) === "appuntamento";
+    const col = !att ? "#8a8b92" : isApp ? "#16a34a" : (getComputedStyle(document.documentElement).getPropertyValue("--red").trim() || "#e41519");
+    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: t.pos, title: (i+1) + ". " + t.azienda + (isApp ? " · APPUNTAMENTO" : "") + " · " + etDay(g), content: pin(i + 1, col, !att ? "#5f6066" : isApp ? "#14532d" : "#7f0d0f"), zIndex: att ? (isApp ? 12 : 10) : 1 });
     m.addListener("click", () => { CUR = k; OPEN = i; pannello(); const el = $(`#pp .stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
     MK.push(m); if (att) pts.push(t.pos); }));
   if (centra) adatta(pts);
@@ -1338,8 +1343,9 @@ function segnapostiL(centra){
   if (PREV) PREV.r.giorni.forEach((g, gi) => g.visite.forEach((v, j) => posto.set(PREV.sel[v.k - 1], { gi, j })));
   L.clienti.forEach((c, i) => { if (!c.pos) return;
     const p = posto.get(c);
-    const content = PREV ? (p ? pin(p.j + 1, COLG[p.gi % COLG.length], "#1118") : pin("×", "#8a8b92", "#5f6066")) : pin(i + 1, c.appuntamento ? "#1d8a4b" : "#26272b", c.appuntamento ? "#14532d" : "#000");
-    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: c.pos, title: c.azienda + (p ? " · " + dataBreve(PREV.r.giorni[p.gi].iso) : ""), content, zIndex: p ? 10 : 2 });
+    const content = PREV ? (p ? pin(p.j + 1, COLG[p.gi % COLG.length], c.appuntamento ? "#22c55e" : "#1118") : pin("×", "#8a8b92", "#5f6066")) : pin(i + 1, c.appuntamento ? "#16a34a" : "#26272b", c.appuntamento ? "#14532d" : "#000");
+    if (c.appuntamento) content.style.borderWidth = "3px";
+    const m = new LIB.mk.AdvancedMarkerElement({ map: MAP, position: c.pos, title: c.azienda + (c.appuntamento ? " · APPUNTAMENTO" : "") + (p ? " · " + dataBreve(PREV.r.giorni[p.gi].iso) : ""), content, zIndex: (p ? 10 : 2) + (c.appuntamento ? 2 : 0) });
     m.addListener("click", () => { LOPEN = i; pannelloL(); const el = $(`#lp .stp[data-i="${i}"]`); if (el) el.scrollIntoView({ block: "nearest" }); });
     MK.push(m); pts.push(c.pos); });
   if (PREV && PREV.part) { MK.push(new LIB.mk.AdvancedMarkerElement({ map: MAP, position: PREV.part.pos, title: "Partenza: " + PREV.part.nome, content: pin("P", "#0c0c0d", "#000"), zIndex: 20 })); pts.push(PREV.part.pos); }
