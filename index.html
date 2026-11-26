@@ -175,7 +175,8 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .ph{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .ph h2{margin:2px 0 6px;font-size:17px;color:var(--ink)}
 .mini{font-size:13px;font-weight:700;color:var(--red);text-decoration:none}
-.panel .tabs{margin:6px 0 4px}
+.panel .tabs{margin:6px 0 4px;flex-wrap:wrap;overflow:visible}
+.panel .tabs button{min-height:36px;padding:6px 12px}
 .panel .gw:last-child{border-bottom:0}
 .vuoto{display:grid;gap:10px;justify-items:start;padding:8px 0 12px;color:var(--mut);font-size:14px}
 .vuoto a{font-weight:700;color:var(--red);text-decoration:none}
@@ -510,7 +511,8 @@ function toast(t, errore){ const x = $("#toast"); x.textContent = t; x.classList
    Lista: c.stato = "passaggio" | "contattare" | "appuntamento" (c.appuntamento resta allineato per «Genera giro»).
    Giro: etichetta della visita "prospezione" (= appuntamento senza orario) | "contattare" | "appuntamento". */
 // i nomi interni (passaggio / prospezione) restano per non toccare i dati già salvati: oggi significano «appuntamento senza orario»
-const STATI = [["passaggio", "Senza appuntamento"], ["contattare", "Da contattare per appuntamento"], ["appuntamento", "Appuntamento"]];
+// due bottoni che si escludono a vicenda; toccando quello già scelto si toglie (= senza appuntamento, «passaggio»)
+const STATI = [["appuntamento", "Appuntamento"], ["contattare", "Da contattare per appuntamento"]];
 /* «appuntamento» resta allineato allo stato (verde con o senza orario; giorno e orario facoltativi) */
 const syncL = c => { c.appuntamento = c.stato === "appuntamento"; };
 /* orario dell'appuntamento: «Orario fisso» (un'ora) o «Fascia oraria» (dalle… alle…), facoltativo */
@@ -522,7 +524,7 @@ const bloccoOra = (nome, fa, k, kDa, kA, vDa, vA, ro) => `<div class="fl"><span>
   <p class="hint" style="margin:-6px 0 10px">Se l'orario non è ancora deciso lascialo vuoto. Con l'orario «Genera giro» lo rispetta${fa ? " (arriva tra le due ore)" : ""}.</p>`;
 const statoC = c => ["passaggio", "contattare", "appuntamento"].includes(c.stato) ? c.stato : (c.appuntamento ? "appuntamento" : "passaggio");
 const radioStati = (nome, val, attr, voci, ro) => `<div class="stati" role="radiogroup" aria-label="Stato">${voci.map(([v, l]) => { const k = v === "appuntamento" || v === "app" ? "ap" : v === "contattare" ? "ct" : "pa";
-  return `<label class="${k}${val === v ? " on" : ""}${ro ? " ro" : ""}"><input type="radio" name="${esc(nome)}" value="${v}" ${attr} ${val === v ? "checked" : ""} ${ro}>${esc(l)}</label>`; }).join("")}</div>`;
+  return `<label class="${k}${val === v ? " on" : ""}${ro ? " ro" : ""}"><input type="checkbox" name="${esc(nome)}" value="${v}" ${attr} ${val === v ? "checked" : ""} ${ro}>${esc(l)}</label>`; }).join("")}</div>${ro ? "" : '<p class="hint" style="margin:-4px 0 10px">Tocca di nuovo il bottone scelto per toglierlo (visita senza appuntamento).</p>'}`;
 
 /* salvataggio con controllo: se un collega ha salvato la stessa cosa dopo che l'hai aperta, chiede se sovrascrivere */
 async function salvaSicuro(fn, base, cosa){
@@ -779,7 +781,7 @@ function apriPiano(id){
 }
 // stato della visita nel giro: etichetta "prospezione" (= appuntamento senza orario), "contattare" o "appuntamento" (con orario)
 // stati della visita: «prospezione» = senza appuntamento, «contattare», «appuntamento» (verde, orario facoltativo)
-const TIPI = [["prospezione", "Senza appuntamento"], ["contattare", "Da contattare per appuntamento"], ["appuntamento", "Appuntamento"]];
+const TIPI = [["appuntamento", "Appuntamento"], ["contattare", "Da contattare per appuntamento"]];
 const syncT = t => {};
 const ETI_T = ["appuntamento", "contattare", "prospezione"];
 const tipo = t => ETI_T.find(e => (t.etichette || []).includes(e)) || "";
@@ -864,7 +866,7 @@ $("#pp").addEventListener("input", e => {
     const card = x.closest(".stp"), ti = tipo(t); card.classList.toggle("app", ti === "appuntamento"); card.querySelector(".n").classList.toggle("ok", ti === "appuntamento"); }
   else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => !ETI_T.includes(e));
     // da contattare: niente orario; appuntamento: verde solo quando c'è l'orario
-    t.etichette.unshift(x.value); if (x.value !== "appuntamento") { t.ora = ""; delete t.ora_a; delete t._fa; }
+    const v = x.checked ? x.value : "prospezione"; t.etichette.unshift(v); if (v !== "appuntamento") { t.ora = ""; delete t.ora_a; delete t._fa; }
     salvaBozza(); pannello(); return; }
   else if (k === "omodo") { if (x.value === "fascia") t._fa = true; else { delete t.ora_a; t._fa = false; } syncT(t); salvaBozza(); pannello(); return; }
   else if (k === "att") { t.etichette = (t.etichette || []).filter(e => e !== "attenzione"); if (x.checked) t.etichette.push("attenzione"); }
@@ -1039,7 +1041,7 @@ $("#lp").addEventListener("input", e => {
   if (x.dataset.l) { L[x.dataset.l] = x.value; salvaBozzaL(); return; }
   const k = x.dataset.c; if (!k) return;
   const i = +x.closest(".stp").dataset.i, c = L.clienti[i];
-  if (k === "stato") { c.stato = x.value; if (x.value !== "appuntamento") { c.app_data = c.app_ora = ""; delete c.app_ora_a; delete c._fa; }
+  if (k === "stato") { c.stato = x.checked ? x.value : "passaggio"; if (c.stato !== "appuntamento") { c.app_data = c.app_ora = ""; delete c.app_ora_a; delete c._fa; }
     c.appuntamento = c.stato === "appuntamento"; PREV = null; salvaBozzaL(); pannelloL(); return; }
   if (k === "omodo") { if (x.value === "fascia") c._fa = true; else { delete c.app_ora_a; c._fa = false; } syncL(c); PREV = null; salvaBozzaL(); pannelloL(); return; }
   c[k] = k === "app_ora" || k === "app_ora_a" ? oraBella(x.value) : x.value;
