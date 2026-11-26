@@ -7,7 +7,9 @@ window.RT = (() => {
   const S = crypto.subtle, enc = new TextEncoder(), dec = new TextDecoder();
   const ITER = 600000, K = "rt-sess", CACHE_DATI = "rapid-team-dati";
   const COLORI = { accento: "#e41519", scuro: "#0c0c0d" };
-  const BUSTE = ["dati/giri.json", "dati/liste.json"];
+  // dati/spunte.json: avanzamento dei giri (visite fatte), una busta per giro con gli stessi destinatari del giro
+  const SPUNTE = "dati/spunte.json";
+  const BUSTE = ["dati/giri.json", "dati/liste.json", SPUNTE];
   const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
   const tob64 = buf => { const u = buf instanceof Uint8Array ? buf : new Uint8Array(buf); let s = "";
     for (let i = 0; i < u.length; i += 0x8000) s += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(s); };
@@ -181,11 +183,92 @@ window.RT = (() => {
       return lista;
     }, messaggio);
   }
-  const salvaGiro = (ctx, G, base) => salvaBusta(ctx, "dati/giri.json", G, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")", base);
+  async function salvaGiro(ctx, G, base) {
+    await salvaBusta(ctx, "dati/giri.json", G, (G.creato === G.modificato ? "Nuovo giro: " : "Giro aggiornato: ") + G.titolo + " (" + ctx.nome + ")", base);
+    try { await destSpunte(ctx, G); } catch (e) {} // l'avanzamento segue la condivisione del giro
+  }
   const salvaLista = (ctx, L, base) => salvaBusta(ctx, "dati/liste.json", L, (L.creato === L.modificato ? "Nuova lista clienti: " : "Lista clienti aggiornata: ") + L.titolo + " (" + ctx.nome + ")", base);
-  const eliminaGiro = (ctx, id, titolo) => modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
+  async function eliminaGiro(ctx, id, titolo) {
+    await modifica("dati/giri.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Giro eliminato: " + titolo + " (" + ctx.nome + ")");
+    try { const { data } = await daAPI(SPUNTE, ctx.tok); if (Array.isArray(data) && data.some(b => b.id === id))
+      await modifica(SPUNTE, ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Avanzamento eliminato: " + titolo + " (" + ctx.nome + ")"); } catch (e) {}
+  }
+
+  /* ---------- avanzamento condiviso del giro (visite fatte) ----------
+     Ogni visita ha una chiave stabile: t.uid (assegnato al salvataggio del giro) oppure, per i giri vecchi, indirizzo + azienda.
+     Contenuto della busta: { id, autore, per, condiviso, spunte: { chiave: { da, quando } }, modificato, modificato_da }.
+     Le spunte toccate si mettono in una coda sul dispositivo (funziona anche senza rete) e si inviano appena possibile. */
+  const chiaveContenuto = t => "p:" + String(t.place_id || t.indirizzo || t.ricerca || "").trim().toLowerCase() + "|" + String(t.azienda || "").trim().toLowerCase();
+  const chiaveVisita = t => t.uid || chiaveContenuto(t);
+  let SP_ETAG = null, SP_ULT = null;
+  function apriSpunte(lista, ctx) {
+    return (async () => { const out = {};
+      for (const b of (Array.isArray(lista) ? lista : [])) { try { const x = await apre(b, ctx.pk, ctx.nome); if (x) out[b.id] = x.spunte || {}; } catch (e) {} }
+      return out; })();
+  }
+  // legge l'avanzamento di tutti i giri visibili: { idGiro: { chiave: { da, quando } } }.
+  // Con la chiave GitHub usa la richiesta «condizionata» (se non è cambiato nulla GitHub risponde 304 e non conta nel limite orario).
+  async function spunte(ctx, forza) {
+    if (ctx.tok && navigator.onLine !== false) {
+      try {
+        const h = hdr(ctx.tok); if (SP_ETAG && SP_ULT && !forza) h["If-None-Match"] = SP_ETAG;
+        const r = await fetch(API + SPUNTE + "?ref=" + BRANCH, { headers: h, cache: "no-store" });
+        if (r.status === 304 && SP_ULT) return SP_ULT;
+        if (r.status === 404) { SP_ETAG = null; SP_ULT = {}; return SP_ULT; }
+        if (r.ok) {
+          const j = await r.json(); let testo;
+          if (j.content && j.encoding === "base64") testo = dec.decode(b64(j.content.replace(/\n/g, "")));
+          else { const r2 = await fetch(API + SPUNTE + "?ref=" + BRANCH + "&t=" + Date.now(), { headers: Object.assign(hdr(ctx.tok), { Accept: "application/vnd.github.raw+json" }), cache: "no-store" }); if (!r2.ok) throw errore(r2.status); testo = await r2.text(); }
+          salvaCache(SPUNTE, testo);
+          SP_ULT = await apriSpunte(JSON.parse(testo), ctx); SP_ETAG = r.headers.get("ETag"); return SP_ULT;
+        }
+      } catch (e) {}
+    }
+    const d = await daSito(SPUNTE); if (d) SP_ULT = await apriSpunte(d, ctx);
+    return SP_ULT || {};
+  }
+  // aggiunge (v: true) o toglie (v: false) le spunte della coda e restituisce l'avanzamento aggiornato del giro
+  async function salvaSpunte(ctx, G, ops) {
+    const dest = destinatariGiro(G, ctx.utenti); let fin = {};
+    await modifica(SPUNTE, ctx.tok, async lista => {
+      lista = Array.isArray(lista) ? lista : [];
+      const i = lista.findIndex(b => b.id === G.id);
+      let cur = null; if (i >= 0) { try { cur = await apre(lista[i], ctx.pk, ctx.nome); } catch (e) {} }
+      // avanzamento già salvato ma non leggibile da me: non lo sovrascrivo (si perderebbero le spunte dei colleghi)
+      if (i >= 0 && !cur) { const e = new Error("L'avanzamento di questo giro non è ancora condiviso con " + ctx.nome + ": chiedi a chi ha creato il giro di salvarlo di nuovo."); e.bloccato = true; throw e; }
+      const S =Object.assign({}, cur && cur.spunte);
+      for (const o of ops) { if (o.v) S[o.k] = { da: o.da, quando: o.quando }; else delete S[o.k]; }
+      fin = S;
+      const obj = { id: G.id, autore: G.autore || "", per: G.per || [], condiviso: G.condiviso || [], spunte: S, modificato: new Date().toISOString(), modificato_da: ctx.nome };
+      const b = Object.assign({ id: G.id }, await chiude(obj, dest));
+      if (i >= 0) lista[i] = b; else lista.push(b);
+      return lista;
+    }, "Avanzamento: " + (G.titolo || G.id) + " (" + ctx.nome + ")");
+    SP_ETAG = null; if (SP_ULT) SP_ULT[G.id] = fin;
+    return fin;
+  }
+  // dopo il salvataggio di un giro: se è cambiato chi lo vede, l'avanzamento viene riconsegnato alle stesse persone
+  async function destSpunte(ctx, G) {
+    const { data } = await daAPI(SPUNTE, ctx.tok); if (!Array.isArray(data)) return;
+    const b = data.find(x => x.id === G.id); if (!b) return;
+    const dest = destinatariGiro(G, ctx.utenti).map(u => u.nome).sort();
+    if (JSON.stringify(Object.keys(b.wraps || {}).sort()) === JSON.stringify(dest)) return;
+    await salvaSpunte(ctx, G, []);
+  }
+  // coda delle spunte non ancora inviate, sul dispositivo: { idGiro: [ { k, v, da, quando } ] }
+  const CODA = "rt-coda-spunte";
+  const coda = {
+    tutte() { try { return JSON.parse(localStorage.getItem(CODA) || "{}") || {}; } catch (e) { return {}; } },
+    get(id) { return this.tutte()[id] || []; },
+    set(id, ops) { try { const c = this.tutte(); if (ops && ops.length) c[id] = ops; else delete c[id]; localStorage.setItem(CODA, JSON.stringify(c)); } catch (e) {} }
+  };
+  const applica = (S, ops) => { const o = Object.assign({}, S || {}); for (const x of (ops || [])) { if (x.v) o[x.k] = { da: x.da, quando: x.quando }; else delete o[x.k]; } return o; };
+  // quante visite del giro risultano fatte (avanzamento condiviso + spunte di questo dispositivo non ancora inviate)
+  const fatteGiro = (G, M) => { const S = applica((M || {})[G.id], coda.get(G.id));
+    return (G.giorni || []).reduce((n, d) => n + (d.tappe || []).filter(t => S[chiaveVisita(t)]).length, 0); };
   const eliminaLista = (ctx, id, titolo) => modifica("dati/liste.json", ctx.tok, lista => (lista || []).filter(b => b.id !== id), "Lista clienti eliminata: " + titolo + " (" + ctx.nome + ")");
 
   return { REPO, BRANCH, COLORI, BUSTE, ok, esc, b64, tob64, sess, apriChiave, privata, password, nuovoUtente, ricifraChiave, chiude, apre, riconsegna,
-    destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori };
+    destinatariGiro, leggi, daAPI, daSito, modifica, carica, giri, liste, salvaGiro, salvaLista, eliminaGiro, eliminaLista, colori,
+    SPUNTE, chiaveVisita, chiaveContenuto, spunte, salvaSpunte, coda, applica, fatteGiro };
 })();
