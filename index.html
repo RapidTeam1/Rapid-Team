@@ -212,7 +212,18 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .cl{display:grid;grid-template-rows:auto auto auto auto minmax(0,1fr);min-height:0;border-right:1px solid var(--line);padding:12px 12px 0}
 .crm:not(.con) .cs2{display:none}
 .cbar{display:flex;gap:8px}.cbar .in{flex:1;font-size:15px}
-.cfil{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}.cfil .in{min-height:36px;padding:5px 8px;font-size:13px}
+.cfil{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}
+.cinfo a{color:var(--red);font-weight:700}
+.tc2 tr.grp td{background:var(--card);font-weight:800;font-size:12px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);border-top:2px solid var(--line)}.tc2 tr.grp em{font-style:normal;color:var(--mut);margin-left:4px}
+.tc2 .nt1{font-weight:600}
+.sco{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:end}.sco .hint{margin:0 0 6px}
+.pct{display:flex;align-items:center;gap:4px}.pct .in{width:90px}
+.scp{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:6px;margin-top:8px}
+.sp1{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;padding:4px 8px}.sp1 label{flex:1 0 auto;display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px;cursor:pointer}.sp1 input[type=checkbox]{flex:none;width:17px;height:17px;margin:0;accent-color:var(--red)}.sp1 .in{flex:none;width:62px;min-height:30px;padding:3px 6px}.sp1.on{border-color:var(--red);background:rgba(228,21,25,.06)}
+.nnew{display:grid;gap:6px;border:1px dashed var(--line);border-radius:10px;padding:10px;margin-bottom:10px}.nq{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.nq .btn{min-height:30px;padding:3px 9px}.sg{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}.sg .in{width:70px;min-height:30px;padding:3px 6px}
+.nlist{display:grid;gap:4px}.nlist li{border:1px solid var(--line);border-radius:8px;overflow:hidden}.nlist li.open{border-color:var(--ink)}
+.nh{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:10px;align-items:center;text-align:left;border:0;background:var(--bg);padding:8px 10px;cursor:pointer;font-size:14px}.nh:hover{background:var(--card)}.nh span{font-size:12px;color:var(--mut)}.nh em{font-style:normal;font-size:12px;font-weight:700;color:var(--red)}
+.nb{padding:8px 12px 10px;white-space:pre-wrap;font-size:14px;background:var(--card);border-top:1px solid var(--line)}.cfil .in{min-height:36px;padding:5px 8px;font-size:13px}
 .cinfo{margin:8px 2px 6px;font-size:13px;color:var(--mut)}
 .cimp{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.3);border-radius:10px;padding:8px 10px;margin-bottom:8px;font-size:13px}
 .ctab{overflow:auto;min-height:0;border-top:2px solid var(--ink)}
@@ -240,7 +251,7 @@ main.dash{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);
 .nst{display:grid;grid-template-columns:140px 130px 1fr 1.4fr auto;gap:6px;margin-bottom:8px}
 .sto td{font-size:13px}.sto a{color:var(--ink)}
 .fkeys{display:flex;flex-wrap:wrap;gap:4px 16px;padding:6px 12px;background:var(--blk);color:#c4c5cb;font-size:12px}.fkeys b{color:#fff;background:#26272d;border-radius:3px;padding:0 5px;margin-right:4px}
-@media(max-width:900px){#crm-body{height:auto}.crm.con{grid-template-columns:1fr}.crm.con .cl{display:none}.cl{border-right:0}.ctab{max-height:none}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g4 .cf2{grid-column:span 2!important}.rif,.nst{grid-template-columns:1fr 1fr}.fkeys{display:none}}
+@media(max-width:900px){.cfil{grid-template-columns:repeat(2,minmax(0,1fr))}.sco{grid-template-columns:1fr}#crm-body{height:auto}.crm.con{grid-template-columns:1fr}.crm.con .cl{display:none}.cl{border-right:0}.ctab{max-height:none}.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.g4 .cf2{grid-column:span 2!important}.rif,.nst{grid-template-columns:1fr 1fr}.fkeys{display:none}}
 
 /* ---------- statistiche ---------- */
 .sh-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:14px;background:linear-gradient(160deg,#1a1b20,#0c0c0d);color:#fff;border-radius:20px;padding:20px 22px}
@@ -1049,20 +1060,37 @@ async function mappaStat(){
   } catch(e) { box.innerHTML = '<p class="hint" style="padding:16px">La mappa non si carica (rete o limite giornaliero Google raggiunto).</p>'; }
 }
 /* ---------------- CRM: anagrafica clienti condivisa con tutto il team ----------------
-   Stile «AS400»: elenco denso a sinistra, scheda a campi a destra, tutto da tastiera
-   (/ cerca, ↑↓ scorre, Invio apre, Alt+N nuovo, Ctrl+S salva, Esc chiude). */
-let CLI = [], CLI_OK = false, CRM = { q: "", stato: "", tipo: "", resp: "", sel: -1, aperto: null, bozza: null, dirtyC: false };
+   Stile «AS400»: elenco denso a sinistra, scheda corta a destra, tutto da tastiera
+   (/ cerca, ↑↓ scorre, Invio apre, Alt+N nuovo, Ctrl+S salva, Esc chiude).
+   Clienti di tutto il mondo: nazione e regione per ogni cliente (in Italia la regione si ricava dalla provincia).
+   Note separate: ognuna con titolo («Viaggio PGU», «Chiamata PGU»), data e autore; si apre per leggerla intera. */
+let CLI = [], CLI_OK = false, CRM = { q: "", naz: "", reg: "", prov: "", cap: "", stato: "", grp: "", sel: -1, aperto: null, dirtyC: false, notaAperta: "" };
 const CRM_TIPI = ["Rivenditore", "Serramentista", "Ferramenta", "Distributore", "Impresa edile", "Progettista / studio tecnico", "Ente pubblico", "Privato", "Altro"];
 const CRM_STATI = [["potenziale", "Potenziale"], ["cliente", "Cliente"], ["partner", "Partner"], ["non-interessato", "Non interessato"], ["ex", "Ex cliente"]];
 const CRM_PROD = ["CLICK", "MODERNA", "CLOSE", "FULL", "CLEAR", "GATE", "MOD", "MODU", "TORRICELLI"];
-const CRM_CONT = ["Visita", "Telefonata", "Email", "Offerta", "Ordine", "Fiera", "Altro"];
+const CRM_NOTE = ["Viaggio", "Visita", "Chiamata", "Email", "Offerta", "Ordine", "Fiera"];
+const CRM_NAZ = ["Italia", "San Marino", "Svizzera", "Francia", "Germania", "Austria", "Spagna", "Portogallo", "Belgio", "Paesi Bassi", "Lussemburgo", "Regno Unito", "Irlanda", "Slovenia", "Croazia", "Grecia", "Polonia", "Repubblica Ceca", "Romania", "Stati Uniti", "Canada", "Emirati Arabi Uniti"];
 const normC = s => String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\b(s\.?r\.?l\.?s?|s\.?p\.?a\.?|s\.?n\.?c\.?|s\.?a\.?s\.?|di|e|&)\b/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
 const chiaveCli = c => c.place_id ? "p:" + c.place_id : "n:" + normC(c.ragione || c.azienda) + "|" + normC(c.comune || (luogo(c).citta || ""));
-const nuovoCli = () => ({ id: "c-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), codice: "", ragione: "", tipo: "", stato: "potenziale", piva: "", cf: "", sdi: "", pec: "",
-  indirizzo: "", cap: "", comune: "", prov: "", nazione: "Italia", tel: "", cell: "", email: "", sito: "", resp: CTX.nome, fonte: "", prodotti: [], condizioni: "", note: "",
-  referenti: [], storico: [], prossima: { data: "", cosa: "" }, creato: "", modificato: "", modificato_da: "" });
-async function caricaCRM(forza){ if (CLI_OK && !forza) return; try { CLI = await RT.clienti(CTX); CLI_OK = true; } catch(e) { if (!CLI_OK) CLI = []; } }
-// visite dei giri che riguardano questo cliente (stesso luogo Google, oppure stesso nome e stessa città)
+const regioneDi = c => c.regione || ((c.nazione || "Italia") === "Italia" && PROVINCE[String(c.prov || "").toUpperCase()] ? PROVINCE[String(c.prov).toUpperCase()].reg : "");
+const sigla = () => { try { return localStorage.getItem("rt-sigla-" + CTX.nome) || CTX.nome.slice(0, 3).toUpperCase(); } catch(e) { return CTX.nome.slice(0, 3).toUpperCase(); } };
+const nuovaId = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const nuovoCli = () => ({ id: nuovaId("c-"), codice: "", ragione: "", tipo: "", stato: "potenziale", piva: "", sdi: "", indirizzo: "", cap: "", comune: "", prov: "", regione: "", nazione: "Italia",
+  tel: "", email: "", resp: CTX.nome, referenti: [], sconto: "", scontoProd: {}, note: [], creato: "", modificato: "", modificato_da: "" });
+// porta le schede salvate con la prima versione del CRM al formato attuale (note in un solo campo, storico contatti, cellulare…)
+function normaCli(c){
+  const x = Object.assign(nuovoCli(), c);
+  if (!Array.isArray(x.note)) { const t = String(x.note || "").trim(); x.note = t ? [{ id: nuovaId("n-"), titolo: x.fonte ? x.fonte.replace(/^Giro: /, "Viaggio ").replace(/^Lista: /, "Lista ") : "Note", testo: t, data: String(x.creato || "").slice(0, 10), chi: x.modificato_da || "" }] : []; }
+  (x.storico || []).forEach(s => x.note.push({ id: nuovaId("n-"), titolo: [s.tipo, s.esito].filter(Boolean).join(" · ") || "Contatto", testo: s.note || s.esito || "", data: s.data || "", chi: s.chi || "" }));
+  if (x.condizioni) x.note.push({ id: nuovaId("n-"), titolo: "Condizioni commerciali", testo: x.condizioni, data: String(x.modificato || "").slice(0, 10), chi: x.modificato_da || "" });
+  if (!x.tel && x.cell) x.tel = x.cell;
+  ["storico", "condizioni", "cell", "cf", "pec", "sito", "fonte", "prodotti", "prossima"].forEach(k => delete x[k]);
+  x.scontoProd = x.scontoProd && typeof x.scontoProd === "object" ? x.scontoProd : {};
+  if (!x.regione) x.regione = regioneDi(x);
+  x.note.sort((a, b) => String(b.data).localeCompare(String(a.data)));
+  return x;
+}
+async function caricaCRM(forza){ if (CLI_OK && !forza) return; try { CLI = (await RT.clienti(CTX)).map(normaCli); CLI_OK = true; } catch(e) { if (!CLI_OK) CLI = []; } }
 function visiteCli(c){
   const k1 = c.place_id || "", k2 = normC(c.ragione) + "|" + normC(c.comune), out = [];
   for (const g of GIRI) { const S = RT.applica((SPUNTE || {})[g.id], RT.coda.get(g.id));
@@ -1070,33 +1098,43 @@ function visiteCli(c){
       if ((k1 && t.place_id === k1) || normC(t.azienda) + "|" + normC(L.citta) === k2) out.push({ g, d: d.iso || g.dal, t, fatta: !!S[RT.chiaveVisita(t)] }); })); }
   return out.sort((a, b) => String(b.d).localeCompare(String(a.d)));
 }
-const scaduta = c => c.prossima && c.prossima.data && c.prossima.data <= iso(d0);
 function crm(id){
   $("#crm-body").innerHTML = '<p class="hint" style="padding:20px">Carico i clienti…</p>';
   caricaCRM(true).then(() => { if (id) { const c = CLI.find(x => x.id === id); if (c) apriCli(c); } disegnaCRM(); });
 }
+const nazDi = c => c.nazione || "Italia";
 function filtraCli(){
   const q = normC(CRM.q);
-  return CLI.filter(c => (!CRM.stato || c.stato === CRM.stato) && (!CRM.tipo || c.tipo === CRM.tipo) && (!CRM.resp || c.resp === CRM.resp)
-    && (!q || normC([c.codice, c.ragione, c.comune, c.prov, c.piva, c.tel, c.cell, c.email, (c.referenti || []).map(r => r.nome).join(" "), c.note].join(" ")).includes(q)))
-    .sort((a, b) => String(a.ragione).localeCompare(String(b.ragione), "it"));
+  return CLI.filter(c => (!CRM.naz || nazDi(c) === CRM.naz) && (!CRM.reg || regioneDi(c) === CRM.reg) && (!CRM.prov || String(c.prov).toUpperCase() === CRM.prov)
+    && (!CRM.cap || String(c.cap || "").replace(/\s/g, "").startsWith(CRM.cap.replace(/\s/g, ""))) && (!CRM.stato || c.stato === CRM.stato)
+    && (!q || normC([c.codice, c.ragione, c.comune, c.prov, c.cap, regioneDi(c), nazDi(c), c.piva, c.tel, c.email, (c.referenti || []).map(r => r.nome).join(" "), (c.note || []).map(n => n.titolo + " " + n.testo).join(" ")].join(" ")).includes(q)))
+    .sort((a, b) => { const g = gruppoDi(a).localeCompare(gruppoDi(b), "it"); return g || String(a.ragione).localeCompare(String(b.ragione), "it"); });
 }
+const gruppoDi = c => CRM.grp === "naz" ? nazDi(c) : CRM.grp === "reg" ? nazDi(c) + " · " + (regioneDi(c) || "Regione non indicata") : CRM.grp === "prov" ? (regioneDi(c) || nazDi(c)) + " · " + (c.prov ? (PROVINCE[c.prov] ? PROVINCE[c.prov].nome + " (" + c.prov + ")" : c.prov) : "Provincia non indicata") : CRM.grp === "stato" ? ((CRM_STATI.find(s => s[0] === c.stato) || ["", "—"])[1]) : "";
+const opz = (vals, cur, tutti) => `<option value="">${tutti}</option>` + vals.map(v => `<option value="${esc(v)}"${cur === v ? " selected" : ""}>${esc(v)}</option>`).join("");
 function disegnaCRM(){
-  const L = filtraCli(), nScad = CLI.filter(scaduta).length, resp = [...new Set(CLI.map(c => c.resp).filter(Boolean))].sort();
+  const L = filtraCli(), uniq = a => [...new Set(a.filter(Boolean))].sort((x, y) => x.localeCompare(y, "it"));
+  const base = CLI.filter(c => !CRM.naz || nazDi(c) === CRM.naz), baseR = base.filter(c => !CRM.reg || regioneDi(c) === CRM.reg);
   if (CRM.sel >= L.length) CRM.sel = L.length - 1;
   const daImp = clientiDaImportare();
+  let gPrec = null;
+  const righe = L.map((c, i) => { const g = gruppoDi(c), n0 = (c.note || [])[0];
+    const testa = CRM.grp && g !== gPrec ? `<tr class="grp"><td colspan="5">${esc(g)} <em>${L.filter(x => gruppoDi(x) === g).length}</em></td></tr>` : ""; gPrec = g;
+    return testa + `<tr data-id="${esc(c.id)}" class="${i === CRM.sel ? "sel" : ""}${CRM.aperto && CRM.aperto.id === c.id ? " on" : ""}"><td class="mono">${esc(c.codice || "—")}</td><td><b>${esc(c.ragione || "(senza nome)")}</b>${c.tipo ? `<small>${esc(c.tipo)}</small>` : ""}</td><td>${esc(c.comune)}${c.prov ? ` <span class="mono">(${esc(c.prov)})</span>` : ""}<small>${esc([c.cap, regioneDi(c), nazDi(c) !== "Italia" ? nazDi(c) : ""].filter(Boolean).join(" · "))}</small></td><td><span class="cs ${esc(c.stato)}">${esc((CRM_STATI.find(s => s[0] === c.stato) || ["", "—"])[1])}</span></td><td>${n0 ? `<b class="nt1">${esc(n0.titolo)}</b><small>${esc(n0.data ? n0.data.split("-").reverse().join("/") : "")}${(c.note || []).length > 1 ? " · " + c.note.length + " note" : ""}</small>` : ""}</td></tr>`; }).join("");
   $("#crm-body").innerHTML = `<div class="crm${CRM.aperto ? " con" : ""}">
    <div class="cl">
-    <div class="cbar"><input id="crm-q" class="in mono" type="search" placeholder="Cerca: nome, comune, P.IVA, telefono, referente…  ( / )" value="${esc(CRM.q)}" autocomplete="off">
+    <div class="cbar"><input id="crm-q" class="in mono" type="search" placeholder="Cerca: nome, comune, P.IVA, telefono, referente, note…  ( / )" value="${esc(CRM.q)}" autocomplete="off">
       <button class="btn red sm" type="button" id="crm-new" title="Alt+N">+ Nuovo</button></div>
     <div class="cfil">
-      <select class="in" id="crm-st"><option value="">Tutti gli stati</option>${CRM_STATI.map(([v, l]) => `<option value="${v}"${CRM.stato === v ? " selected" : ""}>${l}</option>`).join("")}</select>
-      <select class="in" id="crm-tp"><option value="">Tutti i tipi</option>${CRM_TIPI.map(t => `<option${CRM.tipo === t ? " selected" : ""}>${esc(t)}</option>`).join("")}</select>
-      <select class="in" id="crm-rs"><option value="">Tutti i responsabili</option>${resp.map(r => `<option${CRM.resp === r ? " selected" : ""}>${esc(r)}</option>`).join("")}</select></div>
-    <p class="cinfo">${L.length} di ${CLI.length} clienti${nScad ? ` · <b class="ko">${nScad} ${nScad === 1 ? "azione scaduta" : "azioni scadute"}</b>` : ""}</p>
+      <select class="in" id="crm-naz" aria-label="Nazione">${opz(uniq(CLI.map(nazDi)), CRM.naz, "Tutte le nazioni")}</select>
+      <select class="in" id="crm-reg" aria-label="Regione">${opz(uniq(base.map(regioneDi)), CRM.reg, "Tutte le regioni")}</select>
+      <select class="in" id="crm-prov" aria-label="Provincia">${opz(uniq(baseR.map(c => String(c.prov || "").toUpperCase())), CRM.prov, "Tutte le prov.")}</select>
+      <input class="in mono" id="crm-cap" placeholder="CAP" value="${esc(CRM.cap)}" aria-label="CAP (anche solo l'inizio)">
+      <select class="in" id="crm-st" aria-label="Stato del cliente"><option value="">Tutti gli stati</option>${CRM_STATI.map(([v, l]) => `<option value="${v}"${CRM.stato === v ? " selected" : ""}>${l}</option>`).join("")}</select>
+      <select class="in" id="crm-grp" aria-label="Raggruppa"><option value="">Non raggruppare</option>${[["naz", "Per nazione"], ["reg", "Per regione"], ["prov", "Per provincia"], ["stato", "Per stato"]].map(([v, l]) => `<option value="${v}"${CRM.grp === v ? " selected" : ""}>${l}</option>`).join("")}</select></div>
+    <p class="cinfo">${L.length} di ${CLI.length} clienti${CRM.naz || CRM.reg || CRM.prov || CRM.cap || CRM.stato || CRM.q ? ' · <a href="#" id="crm-reset">togli i filtri</a>' : ""}</p>
     ${daImp.length ? `<div class="cimp"><b>${daImp.length} ${daImp.length === 1 ? "azienda dei giri e delle liste non è" : "aziende dei giri e delle liste non sono"} ancora nel CRM.</b><button class="btn sm dk" type="button" id="crm-imp">Caricale nel CRM</button></div>` : ""}
-    <div class="ctab" role="listbox" aria-label="Clienti">${L.length ? `<table class="tc2"><thead><tr><th>Cod.</th><th>Ragione sociale</th><th>Comune</th><th>Pr.</th><th>Stato</th><th>Prossima azione</th></tr></thead><tbody>
-      ${L.map((c, i) => `<tr data-id="${esc(c.id)}" class="${i === CRM.sel ? "sel" : ""}${CRM.aperto && CRM.aperto.id === c.id ? " on" : ""}" tabindex="-1"><td class="mono">${esc(c.codice || "—")}</td><td><b>${esc(c.ragione || "(senza nome)")}</b>${c.tipo ? `<small>${esc(c.tipo)}</small>` : ""}</td><td>${esc(c.comune)}</td><td class="mono">${esc(c.prov)}</td><td><span class="cs ${esc(c.stato)}">${esc((CRM_STATI.find(s => s[0] === c.stato) || ["", "—"])[1])}</span></td><td class="${scaduta(c) ? "ko" : ""}">${c.prossima && c.prossima.data ? esc(dataBreve(c.prossima.data)) + (c.prossima.cosa ? " · " + esc(c.prossima.cosa) : "") : ""}</td></tr>`).join("")}</tbody></table>`
+    <div class="ctab">${L.length ? `<table class="tc2"><thead><tr><th>Cod.</th><th>Ragione sociale</th><th>Località</th><th>Stato</th><th>Ultima nota</th></tr></thead><tbody>${righe}</tbody></table>`
       : `<p class="vuoto">${CLI.length ? "Nessun cliente con questi filtri." : "Il CRM è vuoto. Carica le aziende dei giri e delle liste, oppure crea un cliente con «+ Nuovo»."}</p>`}</div>
    </div>
    <div class="cs2" id="crm-sch">${CRM.aperto ? schedaCli(CRM.aperto) : '<p class="hint" style="padding:20px">Scegli un cliente dall\'elenco (frecce ↑↓ e Invio) o creane uno nuovo.</p>'}</div>
@@ -1104,104 +1142,119 @@ function disegnaCRM(){
   <div class="fkeys mono"><span><b>/</b> Cerca</span><span><b>↑↓</b> Scorri</span><span><b>Invio</b> Apri</span><span><b>Alt+N</b> Nuovo</span><span><b>Ctrl+S</b> Salva</span><span><b>Esc</b> Chiudi</span></div>`;
   $("#crm-msg").textContent = "";
 }
-function campoC(k, et, v, o = {}){ const t = o.tipo || "text", w = o.w ? ` style="grid-column:span ${o.w}"` : "";
-  if (o.sel) return `<label class="cf2"${w}><span>${et}</span><select class="in" data-f="${k}"><option value=""></option>${o.sel.map(x => { const [val, lab] = Array.isArray(x) ? x : [x, x]; return `<option value="${esc(val)}"${String(v) === val ? " selected" : ""}>${esc(lab)}</option>`; }).join("")}</select></label>`;
-  if (o.area) return `<label class="cf2"${w}><span>${et}</span><textarea class="in" rows="${o.area}" data-f="${k}">${esc(v)}</textarea></label>`;
-  return `<label class="cf2"${w}><span>${et}</span><input class="in${o.mono ? " mono" : ""}" type="${t}" data-f="${k}" value="${esc(v)}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ""}></label>`; }
+function campoC(k, et, v, o = {}){ const w = o.w ? ` style="grid-column:span ${o.w}"` : "";
+  if (o.sel) return `<label class="cf2"${w}><span>${et}</span><select class="in" data-f="${k}">${o.vuoto === false ? "" : '<option value=""></option>'}${o.sel.map(x => { const [val, lab] = Array.isArray(x) ? x : [x, x]; return `<option value="${esc(val)}"${String(v) === val ? " selected" : ""}>${esc(lab)}</option>`; }).join("")}</select></label>`;
+  return `<label class="cf2"${w}><span>${et}</span><input class="in${o.mono ? " mono" : ""}" type="${o.tipo || "text"}" data-f="${k}" value="${esc(v)}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ""}${o.list ? ` list="${o.list}"` : ""}${o.extra || ""}></label>`; }
+const dataIt2 = s => s ? String(s).slice(0, 10).split("-").reverse().join("/") : "";
 function schedaCli(c){
-  const V = c.id && CLI.some(x => x.id === c.id) ? visiteCli(c) : [];
+  const V = CLI.some(x => x.id === c.id) ? visiteCli(c) : [], ita = nazDi(c) === "Italia", sp = c.scontoProd || {};
   const tel = n => n ? `<a class="btn sm" href="tel:${esc(String(n).replace(/[^\d+]/g, ""))}">Chiama</a>` : "";
+  const nProd = CRM_PROD.filter(p => p in sp);
   return `<div class="sh2"><div><span class="mono cod">${esc(c.codice || "NUOVO")}</span><h2>${esc(c.ragione || "Nuovo cliente")}</h2>
       <p class="hint">${c.modificato ? "Ultima modifica: " + esc(c.modificato_da || "") + " il " + esc(new Date(c.modificato).toLocaleString("it-IT", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })) : "Non ancora salvato"}</p></div>
-    <div class="acts2">${tel(c.tel || c.cell)}${c.email ? `<a class="btn sm" href="mailto:${esc(c.email)}">Email</a>` : ""}${c.indirizzo || c.comune ? `<a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([c.ragione, c.indirizzo, c.cap, c.comune, c.prov].filter(Boolean).join(" "))}">Mappa</a>` : ""}
+    <div class="acts2">${tel(c.tel)}${c.email ? `<a class="btn sm" href="mailto:${esc(c.email)}">Email</a>` : ""}${c.indirizzo || c.comune ? `<a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([c.ragione, c.indirizzo, c.cap, c.comune, c.prov, ita ? "" : nazDi(c)].filter(Boolean).join(" "))}">Mappa</a>` : ""}
       <button class="btn red sm" type="button" id="crm-save" title="Ctrl+S">Salva</button><button class="btn sm" type="button" id="crm-x" title="Esc">Chiudi</button></div></div>
   <form class="cfm" id="crm-f" autocomplete="off" onsubmit="return false">
-    <fieldset><legend>01 · Anagrafica</legend><div class="g4">
+    <fieldset><legend>01 · Cliente</legend><div class="g4">
       ${campoC("ragione", "Ragione sociale", c.ragione, { w: 4 })}
-      ${campoC("tipo", "Tipo", c.tipo, { sel: CRM_TIPI, w: 2 })}${campoC("stato", "Stato", c.stato, { sel: CRM_STATI, w: 2 })}
-      ${campoC("piva", "Partita IVA", c.piva, { mono: 1 })}${campoC("cf", "Codice fiscale", c.cf, { mono: 1 })}${campoC("sdi", "Codice SDI", c.sdi, { mono: 1 })}${campoC("pec", "PEC", c.pec)}</div></fieldset>
-    <fieldset><legend>02 · Sede e recapiti</legend><div class="g4">
+      ${campoC("tipo", "Tipo", c.tipo, { sel: CRM_TIPI })}${campoC("stato", "Stato", c.stato, { sel: CRM_STATI, vuoto: false })}
+      ${campoC("piva", ita ? "Partita IVA" : "Partita IVA / VAT", c.piva, { mono: 1 })}${campoC("sdi", "Codice SDI", c.sdi, { mono: 1, ph: ita ? "" : "solo Italia" })}</div></fieldset>
+    <fieldset><legend>02 · Sede e contatti</legend><div class="g4">
       ${campoC("indirizzo", "Indirizzo", c.indirizzo, { w: 4 })}
-      ${campoC("cap", "CAP", c.cap, { mono: 1 })}${campoC("comune", "Comune", c.comune, { w: 2 })}${campoC("prov", "Prov.", c.prov, { mono: 1 })}
-      ${campoC("nazione", "Nazione", c.nazione)}${campoC("tel", "Telefono", c.tel, { tipo: "tel" })}${campoC("cell", "Cellulare", c.cell, { tipo: "tel" })}${campoC("email", "Email", c.email, { tipo: "email" })}
-      ${campoC("sito", "Sito web", c.sito, { w: 4 })}</div></fieldset>
+      ${campoC("cap", "CAP", c.cap, { mono: 1 })}${campoC("comune", "Comune / città", c.comune, { w: 2 })}${campoC("prov", ita ? "Prov." : "Prov. / contea", c.prov, { mono: 1 })}
+      ${campoC("regione", ita ? "Regione" : "Regione / stato federale", c.regione, { w: 2, ph: ita ? "si compila dalla provincia" : "" })}${campoC("nazione", "Nazione", c.nazione, { w: 2, list: "crm-nazl" })}
+      ${campoC("tel", "Telefono", c.tel, { tipo: "tel" })}${campoC("email", "Email", c.email, { tipo: "email", w: 2 })}${campoC("resp", "Responsabile", c.resp, { sel: CTX.utenti.map(u => u.nome) })}</div>
+      <datalist id="crm-nazl">${CRM_NAZ.map(n => `<option value="${n}">`).join("")}</datalist></fieldset>
     <fieldset><legend>03 · Referenti</legend>
-      ${(c.referenti || []).map((r, i) => `<div class="rif" data-r="${i}"><input class="in" data-rf="nome" placeholder="Nome e cognome" value="${esc(r.nome)}"><input class="in" data-rf="ruolo" placeholder="Ruolo" value="${esc(r.ruolo)}"><input class="in" type="tel" data-rf="tel" placeholder="Telefono" value="${esc(r.tel)}"><input class="in" type="email" data-rf="email" placeholder="Email" value="${esc(r.email)}"><button class="btn sm dang" type="button" data-rdel="${i}" aria-label="Togli referente">✕</button></div>`).join("") || '<p class="hint">Nessun referente.</p>'}
+      ${(c.referenti || []).map((r, i) => `<div class="rif" data-r="${i}"><input class="in" data-rf="nome" placeholder="Nome e cognome" value="${esc(r.nome)}"><input class="in" data-rf="ruolo" placeholder="Ruolo" value="${esc(r.ruolo)}"><input class="in" type="tel" data-rf="tel" placeholder="Telefono" value="${esc(r.tel)}"><input class="in" type="email" data-rf="email" placeholder="Email" value="${esc(r.email)}"><button class="btn sm dang" type="button" data-rdel="${i}" aria-label="Togli referente">✕</button></div>`).join("")}
       <button class="btn sm" type="button" id="crm-radd">+ Referente</button></fieldset>
-    <fieldset><legend>04 · Commerciale</legend><div class="g4">
-      ${campoC("resp", "Responsabile nel team", c.resp, { sel: CTX.utenti.map(u => u.nome), w: 2 })}${campoC("fonte", "Come ci ha conosciuto", c.fonte, { w: 2, ph: "Es. fiera, sito, passaparola, giro" })}</div>
-      <div class="cf2"><span>Prodotti di interesse</span><div class="share" id="crm-prod">${CRM_PROD.map(p => `<label class="${(c.prodotti || []).includes(p) ? "on" : ""}"><input type="checkbox" value="${p}" ${(c.prodotti || []).includes(p) ? "checked" : ""}>${p}</label>`).join("")}</div></div>
-      <div class="g4">${campoC("condizioni", "Condizioni commerciali (sconti, pagamento, trasporto)", c.condizioni, { area: 2, w: 4 })}${campoC("note", "Note", c.note, { area: 4, w: 4 })}</div></fieldset>
-    <fieldset><legend>05 · Prossima azione</legend><div class="g4">
-      <label class="cf2"><span>Entro il</span><input class="in" type="date" data-p="data" value="${esc(c.prossima && c.prossima.data)}"></label>
-      <label class="cf2" style="grid-column:span 3"><span>Cosa fare</span><input class="in" data-p="cosa" value="${esc(c.prossima && c.prossima.cosa)}" placeholder="Es. richiamare per l'offerta, mandare il catalogo"></label></div></fieldset>
-    <fieldset><legend>06 · Storico contatti (${(c.storico || []).length})</legend>
-      <div class="nst"><input class="in" type="date" id="st-d" value="${iso(d0)}"><select class="in" id="st-t">${CRM_CONT.map(t => `<option>${t}</option>`).join("")}</select><input class="in" id="st-e" placeholder="Esito"><input class="in" id="st-n" placeholder="Note"><button class="btn sm dk" type="button" id="crm-sadd">Aggiungi</button></div>
-      ${(c.storico || []).length ? `<table class="tc2 sto"><tbody>${c.storico.map((x, i) => `<tr><td class="mono nw">${esc(x.data ? x.data.split("-").reverse().join("/") : "")}</td><td><b>${esc(x.tipo)}</b><small>${esc(x.chi || "")}</small></td><td>${esc(x.esito || "")}${x.note ? `<small>${esc(x.note)}</small>` : ""}</td><td class="a"><button class="btn sm dang" type="button" data-sdel="${i}" aria-label="Togli">✕</button></td></tr>`).join("")}</tbody></table>` : '<p class="hint">Nessun contatto registrato.</p>'}</fieldset>
-    <fieldset><legend>07 · Visite nei giri (${V.length})</legend>
-      ${V.length ? `<table class="tc2 sto"><tbody>${V.map(v => `<tr><td class="mono nw">${esc(String(v.d).split("-").reverse().join("/"))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a><small>${esc(RT.cartelleDi(v.g).join(", "))}${v.t.note ? " · " + esc(v.t.note) : ""}</small></td><td>${v.fatta ? '<span class="cs cliente">Fatta</span>' : String(v.d) < iso(d0) ? '<span class="cs ex">Non visitata</span>' : '<span class="cs potenziale">Da fare</span>'}</td></tr>`).join("")}</tbody></table>` : '<p class="hint">Nessuna visita trovata nei giri (si cercano lo stesso luogo Google, oppure lo stesso nome nello stesso comune).</p>'}</fieldset>
-    ${CTX.admin && c.id && CLI.some(x => x.id === c.id) ? '<div class="pfoot"><button class="btn sm dang" type="button" id="crm-del">Elimina cliente</button></div>' : ""}
+    <fieldset><legend>04 · Scontistica</legend>
+      <div class="sco"><label class="cf2"><span>Sconto generale</span><div class="pct"><input class="in mono" type="number" min="0" max="100" step="0.5" data-f="sconto" value="${esc(c.sconto)}" placeholder="0"><b>%</b></div></label>
+      <p class="hint">Spunta i prodotti a cui si applica. Se per un prodotto lo sconto è diverso, scrivilo accanto; vuoto = sconto generale.</p></div>
+      <div class="scp">${CRM_PROD.map(p => { const on = p in sp; return `<div class="sp1${on ? " on" : ""}"><label><input type="checkbox" data-sp="${p}" ${on ? "checked" : ""}>${p}</label><input class="in mono" type="number" min="0" max="100" step="0.5" data-spv="${p}" value="${on && sp[p] != null ? esc(sp[p]) : ""}" placeholder="${esc(c.sconto || "—")}" ${on ? "" : "disabled"} aria-label="Sconto ${p}"><b>%</b></div>`; }).join("")}</div>
+      ${nProd.length ? `<p class="hint">In sintesi: ${nProd.map(p => p + " " + (sp[p] != null && sp[p] !== "" ? sp[p] : (c.sconto || 0)) + "%").join(" · ")}</p>` : ""}</fieldset>
+    <fieldset><legend>05 · Note (${(c.note || []).length})</legend>
+      <div class="nnew"><div class="nq">${CRM_NOTE.map(t => `<button class="btn sm" type="button" data-nt="${t}">${t}</button>`).join("")}<label class="sg">Sigla <input class="in mono" id="crm-sg" value="${esc(sigla())}" maxlength="6"></label></div>
+        <input class="in" id="crm-nt" placeholder="Titolo della nota (es. Viaggio ${esc(sigla())}, Chiamata ${esc(sigla())})">
+        <textarea class="in" id="crm-nx" rows="3" placeholder="Testo della nota"></textarea>
+        <div class="pfoot" style="margin:0"><input class="in" type="date" id="crm-nd" value="${iso(d0)}" style="max-width:170px"><button class="btn dk sm" type="button" id="crm-nsave">Salva nota</button></div></div>
+      ${(c.note || []).length ? `<ul class="nlist">${c.note.map(n => `<li class="${CRM.notaAperta === n.id ? "open" : ""}"><button type="button" class="nh" data-nopen="${esc(n.id)}" aria-expanded="${CRM.notaAperta === n.id}"><b>${esc(n.titolo || "Nota")}</b><span class="mono">${esc(dataIt2(n.data))}</span><span>${esc(n.chi || "")}</span><em>${CRM.notaAperta === n.id ? "Chiudi" : "Apri"}</em></button>
+        ${CRM.notaAperta === n.id ? `<div class="nb">${esc(n.testo || "(nessun testo)")}${CTX.admin || n.chi === CTX.nome ? `<div class="pfoot"><button class="btn sm dang" type="button" data-ndel="${esc(n.id)}">Elimina nota</button></div>` : ""}</div>` : ""}</li>`).join("")}</ul>` : '<p class="hint">Nessuna nota.</p>'}</fieldset>
+    <fieldset><legend>06 · Visite nei giri (${V.length})</legend>
+      ${V.length ? `<table class="tc2 sto"><tbody>${V.map(v => `<tr><td class="mono nw">${esc(dataIt2(v.d))}</td><td><a href="${esc(link(v.g))}"><b>${esc(v.g.titolo)}</b></a><small>${esc(RT.cartelleDi(v.g).join(", "))}${v.t.note ? " · " + esc(v.t.note) : ""}</small></td><td>${v.fatta ? '<span class="cs cliente">Fatta</span>' : String(v.d) < iso(d0) ? '<span class="cs ex">Non visitata</span>' : '<span class="cs potenziale">Da fare</span>'}</td></tr>`).join("")}</tbody></table>` : '<p class="hint">Nessuna visita trovata nei giri.</p>'}</fieldset>
+    ${CTX.admin && CLI.some(x => x.id === c.id) ? '<div class="pfoot"><button class="btn sm dang" type="button" id="crm-del">Elimina cliente</button></div>' : ""}
   </form>`;
 }
-function apriCli(c){ CRM.aperto = JSON.parse(JSON.stringify(Object.assign(nuovoCli(), c))); CRM.dirtyC = false; dirty = false; }
+function apriCli(c){ CRM.aperto = normaCli(JSON.parse(JSON.stringify(c))); CRM.dirtyC = false; CRM.notaAperta = ""; dirty = false; }
 const chiudiCli = () => { if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate a questo cliente. Chiudere lo stesso?")) return false; CRM.aperto = null; CRM.dirtyC = false; dirty = false; disegnaCRM(); return true; };
-async function salvaCli(){
-  const c = CRM.aperto; if (!c) return;
-  if (!String(c.ragione || "").trim()) { toast("Scrivi la ragione sociale.", true); const x = $('[data-f="ragione"]'); if (x) x.focus(); return; }
-  if (!CTX.tok) { toast("Il salvataggio non è attivo: manca la chiave GitHub.", true); return; }
-  const dop = CLI.find(x => x.id !== c.id && chiaveCli(x) === chiaveCli(c));
-  if (dop && !confirm("Esiste già «" + dop.ragione + "» (" + (dop.codice || "") + ") nello stesso comune. Salvare lo stesso questo cliente?")) return;
-  const ora = new Date().toISOString(), base = c.modificato || null, nuovo = !CLI.some(x => x.id === c.id);
-  c.ragione = c.ragione.trim(); c.prov = String(c.prov || "").toUpperCase().trim(); c.referenti = (c.referenti || []).filter(r => [r.nome, r.ruolo, r.tel, r.email].some(Boolean));
+const ridisegnaScheda = () => { const y = $("#crm-sch").scrollTop; $("#crm-sch").innerHTML = schedaCli(CRM.aperto); $("#crm-sch").scrollTop = y; };
+async function salvaCli(msgOk){
+  const c = CRM.aperto; if (!c) return false;
+  if (!String(c.ragione || "").trim()) { toast("Scrivi la ragione sociale.", true); const x = $('[data-f="ragione"]'); if (x) x.focus(); return false; }
+  if (!CTX.tok) { toast("Il salvataggio non è attivo: manca la chiave GitHub.", true); return false; }
+  const nuovo = !CLI.some(x => x.id === c.id), dop = nuovo && CLI.find(x => chiaveCli(x) === chiaveCli(c));
+  if (dop && !confirm("Esiste già «" + dop.ragione + "» (" + (dop.codice || "") + ") nello stesso comune. Salvare lo stesso questo cliente?")) return false;
+  const ora = new Date().toISOString(), base = c.modificato || null;
+  c.ragione = c.ragione.trim(); c.prov = String(c.prov || "").toUpperCase().trim(); c.nazione = String(c.nazione || "").trim() || "Italia"; if (!c.regione) c.regione = regioneDi(c);
+  c.referenti = (c.referenti || []).filter(r => [r.nome, r.ruolo, r.tel, r.email].some(Boolean));
   const X = Object.assign({}, c, { creato: c.creato || ora, modificato: ora, modificato_da: CTX.nome });
   const b = $("#crm-save"); if (b) { b.disabled = true; b.textContent = "Salvataggio…"; }
+  let ok = false;
   try {
     let fatto = null;
     await salvaSicuro(async bs => { fatto = await RT.salvaClienti(CTX, [X], nuovo ? null : bs); }, base, "questo cliente");
-    const s = fatto[0], i = CLI.findIndex(x => x.id === s.id); if (i >= 0) CLI[i] = s; else CLI.push(s);
-    apriCli(s); toast("Cliente salvato" + (nuovo ? " con il codice " + s.codice : "") + ": lo vede tutto il team."); history.replaceState(null, "", "#crm/" + encodeURIComponent(s.id));
+    const s = normaCli(fatto[0]), i = CLI.findIndex(x => x.id === s.id); if (i >= 0) CLI[i] = s; else CLI.push(s);
+    const na = CRM.notaAperta; apriCli(s); CRM.notaAperta = na; ok = true;
+    toast(msgOk || ("Cliente salvato" + (nuovo ? " con il codice " + s.codice : "") + ": lo vede tutto il team.")); history.replaceState(null, "", "#crm/" + encodeURIComponent(s.id));
   } catch(x) { toast(x.message || "Salvataggio non riuscito.", true); }
-  disegnaCRM();
+  disegnaCRM(); return ok;
 }
-// aziende dei giri e delle liste che non sono ancora nel CRM (una sola volta per luogo/nome+comune)
 function clientiDaImportare(){
   const gia = new Set(CLI.map(chiaveCli)), visti = new Map();
-  const prendi = (t, chi, fonte) => { if (!String(t.azienda || "").trim()) return; const L = luogo(t);
-    // indirizzo senza CAP, comune e provincia (vanno nei loro campi); se resta solo il comune, l'indirizzo rimane vuoto
+  const prendi = (t, chi, fonte, data) => { if (!String(t.azienda || "").trim()) return; const L = luogo(t);
     let via = String(t.indirizzo || "").replace(/,\s*\d{5}\s.*$/, "").split(",").map(x => x.trim()).filter(Boolean);
     if (via.length > 1 && normC(via[via.length - 1]).includes(normC(L.citta))) via.pop();
     if (via.length === 1 && normC(via[0]) === normC(L.citta)) via = [];
-    const c = { ragione: String(t.azienda).trim(), indirizzo: via.join(", "), comune: L.citta !== "—" ? L.citta : "", prov: L.prov || "", nazione: L.paese || "Italia",
-      cap: (String(t.indirizzo || "").match(/\b(\d{5})\b/) || [])[1] || "", tel: t.telefono || "", place_id: t.place_id || "", note: t.note || "", referente: t.referente || "", fonte, resp: chi };
+    const ita = L.paese === "Italia";
+    const c = { ragione: String(t.azienda).trim(), indirizzo: via.join(", "), comune: L.citta !== "—" ? L.citta : "", prov: L.prov || "", nazione: L.paese || "Italia", regione: ita ? (L.reg !== "Non riconosciuta" ? L.reg : "") : "",
+      cap: (String(t.indirizzo || "").match(/\b(\d{5})\b/) || [])[1] || "", tel: t.telefono || "", place_id: t.place_id || "", referente: t.referente || "", resp: chi, note: [] };
+    const nota = t.note ? { id: nuovaId("n-"), titolo: fonte, testo: t.note, data: data || "", chi } : null;
     const k = chiaveCli(c); if (gia.has(k)) return;
-    const v = visti.get(k); if (v) { if (c.note && !v.note.includes(c.note)) v.note = (v.note ? v.note + "\n" : "") + c.note; if (!v.tel && c.tel) v.tel = c.tel; return; }
-    visti.set(k, c); };
-  for (const g of GIRI) (g.giorni || []).forEach(d => (d.tappe || []).forEach(t => prendi(t, RT.cartelleDi(g)[0] || g.autore, "Giro: " + g.titolo)));
-  for (const l of LISTE) (l.clienti || []).forEach(t => prendi(t, l.autore, "Lista: " + l.titolo));
+    const v = visti.get(k); if (v) { if (nota && !v.note.some(n => n.testo === nota.testo)) v.note.push(nota); if (!v.tel && c.tel) v.tel = c.tel; return; }
+    if (nota) c.note.push(nota); visti.set(k, c); };
+  const sg = n => (n || "").slice(0, 3).toUpperCase();
+  for (const g of GIRI) { const chi = RT.cartelleDi(g)[0] || g.autore; (g.giorni || []).forEach(d => (d.tappe || []).forEach(t => prendi(t, chi, "Viaggio " + sg(chi) + " · " + g.titolo, d.iso || g.dal))); }
+  for (const l of LISTE) (l.clienti || []).forEach(t => prendi(t, l.autore, "Lista " + sg(l.autore) + " · " + l.titolo, String(l.creato || "").slice(0, 10)));
   return [...visti.values()];
 }
 async function importaCRM(){
   const A = clientiDaImportare(); if (!A.length) return;
-  if (!confirm("Caricare nel CRM " + A.length + " aziende prese dai giri e dalle liste?\n\nOgnuna riceve un codice cliente, stato «Potenziale», il responsabile del giro e le note delle visite. I doppioni (stesso luogo Google, oppure stesso nome nello stesso comune) vengono uniti.")) return;
+  if (!confirm("Caricare nel CRM " + A.length + " aziende prese dai giri e dalle liste?\n\nOgnuna riceve un codice cliente, stato «Potenziale», nazione e regione, il responsabile del giro e le note delle visite (una nota per giro). I doppioni (stesso luogo Google, oppure stesso nome nello stesso comune) vengono uniti.")) return;
   const ora = new Date().toISOString();
-  const N = A.map(a => Object.assign(nuovoCli(), a, { referenti: a.referente ? [{ nome: a.referente, ruolo: "", tel: "", email: "" }] : [], creato: ora, modificato: ora, modificato_da: CTX.nome }));
-  N.forEach(n => delete n.referente);
+  const N = A.map(a => { const x = Object.assign(nuovoCli(), a, { referenti: a.referente ? [{ nome: a.referente, ruolo: "", tel: "", email: "" }] : [], creato: ora, modificato: ora, modificato_da: CTX.nome }); delete x.referente; return x; });
   const b = $("#crm-imp"); if (b) { b.disabled = true; b.textContent = "Carico…"; }
-  try { const fatto = await RT.salvaClienti(CTX, N, null, "CRM: caricati " + N.length + " clienti dai giri e dalle liste (" + CTX.nome + ")"); CLI.push(...fatto); toast(fatto.length + " clienti caricati nel CRM."); }
+  try { const fatto = await RT.salvaClienti(CTX, N, null, "CRM: caricati " + N.length + " clienti dai giri e dalle liste (" + CTX.nome + ")"); CLI.push(...fatto.map(normaCli)); toast(fatto.length + " clienti caricati nel CRM."); }
   catch(x) { toast(x.message || "Caricamento non riuscito.", true); }
   disegnaCRM();
 }
+const segna = () => { CRM.dirtyC = true; dirty = true; };
 $("#crm-body").addEventListener("input", e => { const x = e.target, c = CRM.aperto;
-  if (x.id === "crm-q") { CRM.q = x.value; CRM.sel = 0; const p = x.selectionStart; disegnaCRM(); const n = $("#crm-q"); n.focus(); try { n.setSelectionRange(p, p); } catch(y) {} return; }
+  if (x.id === "crm-q" || x.id === "crm-cap") { CRM[x.id === "crm-q" ? "q" : "cap"] = x.value; CRM.sel = 0; const p = x.selectionStart, id = x.id; disegnaCRM(); const n = $("#" + id); n.focus(); try { n.setSelectionRange(p, p); } catch(y) {} return; }
+  if (x.id === "crm-sg") { try { localStorage.setItem("rt-sigla-" + CTX.nome, x.value.trim().toUpperCase()); } catch(y) {} return; }
   if (!c) return;
-  if (x.dataset.f) { c[x.dataset.f] = x.value; } else if (x.dataset.p) { c.prossima = Object.assign({ data: "", cosa: "" }, c.prossima, { [x.dataset.p]: x.value }); }
-  else if (x.dataset.rf) { c.referenti[+x.closest(".rif").dataset.r][x.dataset.rf] = x.value; } else return;
-  CRM.dirtyC = true; dirty = true; });
+  if (x.dataset.f) { c[x.dataset.f] = x.value; if (x.dataset.f === "prov" && (c.nazione || "Italia") === "Italia") { const r = PROVINCE[x.value.toUpperCase().trim()]; if (r) { c.regione = r.reg; const f = $('[data-f="regione"]'); if (f) f.value = r.reg; } } }
+  else if (x.dataset.rf) { c.referenti[+x.closest(".rif").dataset.r][x.dataset.rf] = x.value; }
+  else if (x.dataset.spv) { c.scontoProd[x.dataset.spv] = x.value === "" ? null : +x.value; }
+  else return;
+  segna(); });
 $("#crm-body").addEventListener("change", e => { const x = e.target, c = CRM.aperto;
-  if (x.id === "crm-st") { CRM.stato = x.value; CRM.sel = 0; disegnaCRM(); return; } if (x.id === "crm-tp") { CRM.tipo = x.value; CRM.sel = 0; disegnaCRM(); return; } if (x.id === "crm-rs") { CRM.resp = x.value; CRM.sel = 0; disegnaCRM(); return; }
-  if (c && x.closest("#crm-prod")) { c.prodotti = $$("#crm-prod input:checked").map(i => i.value); $$("#crm-prod label").forEach(l => l.classList.toggle("on", l.querySelector("input").checked)); CRM.dirtyC = true; dirty = true; }
-  if (c && x.dataset.f) { c[x.dataset.f] = x.value; CRM.dirtyC = true; dirty = true; } });
-$("#crm-body").addEventListener("click", e => { const b = e.target.closest("button,tr[data-id]"); if (!b) return; const c = CRM.aperto;
+  const F = { "crm-naz": "naz", "crm-reg": "reg", "crm-prov": "prov", "crm-st": "stato", "crm-grp": "grp" }[x.id];
+  if (F) { CRM[F] = x.value; if (F === "naz") { CRM.reg = ""; CRM.prov = ""; } if (F === "reg") CRM.prov = ""; CRM.sel = 0; disegnaCRM(); return; }
+  if (!c) return;
+  if (x.dataset.sp) { if (x.checked) c.scontoProd[x.dataset.sp] = null; else delete c.scontoProd[x.dataset.sp]; segna(); ridisegnaScheda(); return; }
+  if (x.dataset.f) { c[x.dataset.f] = x.value; segna(); if (x.dataset.f === "nazione") ridisegnaScheda(); } });
+$("#crm-body").addEventListener("click", async e => { const b = e.target.closest("button,tr[data-id],#crm-reset"); if (!b) return; const c = CRM.aperto;
+  if (b.id === "crm-reset") { e.preventDefault(); Object.assign(CRM, { q: "", naz: "", reg: "", prov: "", cap: "", stato: "", sel: 0 }); disegnaCRM(); return; }
   if (b.matches("tr[data-id]")) { if (CRM.aperto && CRM.aperto.id === b.dataset.id) return; if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate. Aprire un altro cliente?")) return;
     const L = filtraCli(); CRM.sel = L.findIndex(x => x.id === b.dataset.id); apriCli(L[CRM.sel]); history.replaceState(null, "", "#crm/" + encodeURIComponent(b.dataset.id)); disegnaCRM(); return; }
   if (b.id === "crm-new") { if (CRM.dirtyC && !confirm("Ci sono modifiche non salvate. Creare un nuovo cliente?")) return; apriCli(nuovoCli()); disegnaCRM(); const r = $('[data-f="ragione"]'); if (r) r.focus(); return; }
@@ -1209,12 +1262,16 @@ $("#crm-body").addEventListener("click", e => { const b = e.target.closest("butt
   if (b.id === "crm-save") { salvaCli(); return; }
   if (b.id === "crm-x") { chiudiCli(); return; }
   if (!c) return;
-  if (b.id === "crm-radd") { c.referenti = (c.referenti || []).concat([{ nome: "", ruolo: "", tel: "", email: "" }]); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); const r = $$("#crm-sch .rif input[data-rf=nome]").pop(); if (r) r.focus(); return; }
-  if (b.dataset.rdel != null) { c.referenti.splice(+b.dataset.rdel, 1); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); return; }
-  if (b.id === "crm-sadd") { const v = { data: $("#st-d").value, tipo: $("#st-t").value, esito: $("#st-e").value.trim(), note: $("#st-n").value.trim(), chi: CTX.nome };
-    if (!v.esito && !v.note) { toast("Scrivi almeno l'esito o una nota del contatto.", true); $("#st-e").focus(); return; }
-    c.storico = [v, ...(c.storico || [])].sort((a, z) => String(z.data).localeCompare(String(a.data))); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); toast("Contatto aggiunto: premi «Salva» per confermare."); return; }
-  if (b.dataset.sdel != null) { c.storico.splice(+b.dataset.sdel, 1); CRM.dirtyC = true; dirty = true; $("#crm-sch").innerHTML = schedaCli(c); return; }
+  if (b.id === "crm-radd") { c.referenti = (c.referenti || []).concat([{ nome: "", ruolo: "", tel: "", email: "" }]); segna(); ridisegnaScheda(); const r = $$("#crm-sch .rif input[data-rf=nome]").pop(); if (r) r.focus(); return; }
+  if (b.dataset.rdel != null) { c.referenti.splice(+b.dataset.rdel, 1); segna(); ridisegnaScheda(); return; }
+  if (b.dataset.nt) { const t = $("#crm-nt"); t.value = b.dataset.nt + " " + sigla(); t.focus(); return; }
+  if (b.dataset.nopen) { CRM.notaAperta = CRM.notaAperta === b.dataset.nopen ? "" : b.dataset.nopen; ridisegnaScheda(); return; }
+  if (b.id === "crm-nsave") { const n = { id: nuovaId("n-"), titolo: $("#crm-nt").value.trim(), testo: $("#crm-nx").value.trim(), data: $("#crm-nd").value || iso(d0), chi: CTX.nome };
+    if (!n.titolo) { toast("Scrivi il titolo della nota (es. «Chiamata " + sigla() + "»).", true); $("#crm-nt").focus(); return; }
+    const prima = c.note.slice(); c.note = [n, ...c.note].sort((a, z) => String(z.data).localeCompare(String(a.data)));
+    if (!(await salvaCli("Nota salvata."))) { c.note = prima; } return; }
+  if (b.dataset.ndel) { if (!confirm("Eliminare questa nota?")) return; const prima = c.note.slice(); c.note = c.note.filter(n => n.id !== b.dataset.ndel); CRM.notaAperta = "";
+    if (!(await salvaCli("Nota eliminata."))) c.note = prima; return; }
   if (b.id === "crm-del") { if (!confirm("Eliminare definitivamente «" + c.ragione + "» dal CRM?")) return;
     RT.eliminaCliente(CTX, c.id, c.ragione).then(() => { CLI = CLI.filter(x => x.id !== c.id); CRM.aperto = null; CRM.dirtyC = false; dirty = false; toast("Cliente eliminato."); disegnaCRM(); }).catch(x => toast(x.message || "Eliminazione non riuscita.", true)); }
 });
