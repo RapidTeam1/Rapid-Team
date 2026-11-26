@@ -333,24 +333,25 @@ table.t td.a .btn{margin:2px}
 .imp-rq{display:flex;gap:6px;margin-top:8px}.imp-rq .in{min-height:36px;padding:6px 10px;font-size:14px}.imp-rq .btn{flex:none}
 details.imp-sk{margin-top:12px;font-size:13px}details.imp-sk summary{cursor:pointer;font-weight:700}
 details.imp-sk ul{margin:6px 0 0;padding-left:18px;list-style:disc;color:var(--mut)}
-/* ---------- stato del cliente / della visita: Solo passaggio · Da contattare (arancione) · Appuntamento fissato (verde) ---------- */
+/* ---------- stato del cliente / della visita: Appuntamento (verde quando ha l'orario: fisso o fascia) · Da contattare (arancione) ---------- */
 .chip.ct{color:var(--or);border-color:var(--or)}
 .g p .ct{color:var(--or);font-weight:700}
 .stp .n.ct{background:#ea580c}
 .stp.ctt{border-color:#ea580c;box-shadow:inset 5px 0 0 #ea580c;background:rgba(234,88,12,.07)}
 .stp.ctt.open{border-color:#ea580c}
 .stp .ap.ct{color:var(--or)}
-.stati{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:2px 0 10px}
-.stati label{display:flex;align-items:center;gap:7px;border:1.5px solid var(--line);border-radius:10px;padding:7px 9px;font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;background:var(--bg)}
+.stati{display:grid;grid-template-columns:1fr;gap:6px;margin:2px 0 10px}
+.stati label{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;font-weight:700;line-height:1.2;cursor:pointer;background:var(--bg)}
 .stati input{width:17px;height:17px;margin:0;flex:none}
 .stati .pa input{accent-color:var(--ink)}.stati .ct input{accent-color:#ea580c}.stati .ap input{accent-color:var(--ok)}
 .stati label.on.pa{border-color:var(--ink)}
 .stati label.on.ct{border-color:#ea580c;background:rgba(234,88,12,.1);color:var(--or)}
 .stati label.on.ap{border-color:var(--ok);background:rgba(29,138,75,.1);color:var(--ok)}
 .stati label.ro{cursor:default}
+.stati.due{grid-template-columns:1fr 1fr}
+.stati label.ap,.stati label.ct,.stati label.pa{font-size:14px;white-space:normal}
 .pday li .ct{color:var(--or);font-weight:700}
 .collab{background:rgba(29,138,75,.08);border:1px solid rgba(29,138,75,.3);border-radius:12px;padding:10px 12px;font-size:14px;margin-bottom:12px}
-@media(max-width:420px){.stati{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -507,10 +508,20 @@ function toast(t, errore){ const x = $("#toast"); x.textContent = t; x.classList
 
 /* ---------------- stato del cliente (lista) e della visita (giro) ----------------
    Lista: c.stato = "passaggio" | "contattare" | "appuntamento" (c.appuntamento resta allineato per «Genera giro»).
-   Giro: etichetta della visita "prospezione" (= solo passaggio) | "contattare" | "appuntamento". */
-const STATI = [["passaggio", "Solo passaggio"], ["contattare", "Da contattare per appuntamento"], ["appuntamento", "Appuntamento fissato"]];
+   Giro: etichetta della visita "prospezione" (= appuntamento senza orario) | "contattare" | "appuntamento". */
+// i nomi interni (passaggio / prospezione) restano per non toccare i dati già salvati: oggi significano «appuntamento senza orario»
+const STATI = [["app", "Appuntamento"], ["contattare", "Da contattare per appuntamento"]];
+/* Appuntamento: senza giorno né orario resta «passaggio» (visita normale); con giorno o orario diventa «appuntamento» (verde, vincolo per Genera giro) */
+const syncL = c => { if (c.stato === "contattare") { c.appuntamento = false; return; } c.stato = (c.app_ora || c.app_data) ? "appuntamento" : "passaggio"; c.appuntamento = c.stato === "appuntamento"; };
+/* orario dell'appuntamento: «Orario fisso» (un'ora) o «Fascia oraria» (dalle… alle…), facoltativo */
+const bloccoOra = (nome, fa, k, kDa, kA, vDa, vA, ro) => `<div class="fl"><span>Orario dell'appuntamento</span><div class="stati due" role="radiogroup" aria-label="Orario">
+    <label class="pa${fa ? "" : " on"}${ro ? " ro" : ""}"><input type="radio" name="${esc(nome)}" value="fisso" ${k}="omodo" ${fa ? "" : "checked"} ${ro}>Orario fisso</label>
+    <label class="pa${fa ? " on" : ""}${ro ? " ro" : ""}"><input type="radio" name="${esc(nome)}" value="fascia" ${k}="omodo" ${fa ? "checked" : ""} ${ro}>Fascia oraria</label></div></div>
+  ${fa ? `<div class="two"><label class="fl"><span>Dalle</span><input class="in" type="time" ${k}="${kDa}" value="${esc(oraInput(vDa))}" ${ro}></label><label class="fl"><span>Alle</span><input class="in" type="time" ${k}="${kA}" value="${esc(oraInput(vA))}" ${ro}></label></div>`
+    : `<div class="two"><label class="fl"><span>Ore</span><input class="in" type="time" ${k}="${kDa}" value="${esc(oraInput(vDa))}" ${ro}></label><div></div></div>`}
+  <p class="hint" style="margin:-6px 0 10px">Se l'orario non è ancora deciso lascialo vuoto. Con l'orario la scheda diventa verde e «Genera giro» lo rispetta${fa ? " (arriva tra le due ore)" : ""}.</p>`;
 const statoC = c => ["passaggio", "contattare", "appuntamento"].includes(c.stato) ? c.stato : (c.appuntamento ? "appuntamento" : "passaggio");
-const radioStati = (nome, val, attr, voci, ro) => `<div class="stati" role="radiogroup" aria-label="Stato">${voci.map(([v, l]) => { const k = v === "appuntamento" ? "ap" : v === "contattare" ? "ct" : "pa";
+const radioStati = (nome, val, attr, voci, ro) => `<div class="stati" role="radiogroup" aria-label="Stato">${voci.map(([v, l]) => { const k = v === "appuntamento" || v === "app" ? "ap" : v === "contattare" ? "ct" : "pa";
   return `<label class="${k}${val === v ? " on" : ""}${ro ? " ro" : ""}"><input type="radio" name="${esc(nome)}" value="${v}" ${attr} ${val === v ? "checked" : ""} ${ro}>${esc(l)}</label>`; }).join("")}</div>`;
 
 /* salvataggio con controllo: se un collega ha salvato la stessa cosa dopo che l'hai aperta, chiede se sovrascrivere */
@@ -667,7 +678,7 @@ function cruscotto(){
     $("#prossimo").innerHTML = `<h2>${prox._s === "c" ? "Giro in corso" : "Prossimo giro"}</h2>
     <a class="next" href="${esc(link(prox))}"><span class="when">${esc(k)}${diAltri ? " · giro di " + esc(diAltri) : ""}</span>
       <h3 class="w">${esc(prox.titolo)}</h3><p>${esc(periodo(prox))}${prox.zona ? " · " + esc(prox.zona) : ""}${(prox.per || []).length && !diAltri ? " · per " + (prox.per.length === 1 ? "te" : esc(prox.per.join(", "))) : ""}</p>
-      <div class="chips"><span class="chip">${tot} ${tot === 1 ? "visita" : "visite"}</span>${na ? `<span class="chip ap">${na} ${na === 1 ? "appuntamento" : "appuntamenti"}</span>` : ""}${nct ? `<span class="chip ct">${nct} da contattare</span>` : ""}<span class="chip">${ng} ${ng === 1 ? "giorno" : "giorni"}</span></div>
+      <div class="chips"><span class="chip">${tot} ${tot === 1 ? "visita" : "visite"}</span>${na ? `<span class="chip ap">${na} con orario</span>` : ""}${nct ? `<span class="chip ct">${nct} da contattare</span>` : ""}<span class="chip">${ng} ${ng === 1 ? "giorno" : "giorni"}</span></div>
       <div class="giorni-pv">${(prox.giorni || []).map(d => { const n = (d.tappe || []).length; return `<span><b>${esc(d.nome || "")} ${esc(d.data || "")}</b>${n} ${n === 1 ? "visita" : "visite"}${d.notte ? " · notte" : ""}</span>`; }).join("")}</div>
       <div class="bar"><i><s style="width:${pc}%"></s></i>${f} di ${tot} fatte</div><span class="go">Apri il giro</span></a>`;
   } else $("#prossimo").innerHTML = '<h2>Prossimo giro</h2><p class="empty">Nessun giro in programma.</p>';
@@ -676,7 +687,7 @@ function cruscotto(){
   $("#liste").innerHTML = LV.length ? LV.map(l => { const C = l.clienti || [], nc = C.length, na = C.filter(c => statoC(c) === "appuntamento").length, nct = C.filter(c => statoC(c) === "contattare").length;
     const chi = l.autore === CTX.nome ? ((l.condiviso||[]).length ? "condivisa con " + l.condiviso.join(", ") : "creata da te") : "di " + (l.autore || "—") + ((l.condiviso || []).includes(CTX.nome) ? " · condivisa con te" : "");
     return `<li class="gw"><a class="g" href="#raccogli/${esc(encodeURIComponent(l.id))}"><div class="dt ls"><b>${nc}</b><span>${nc === 1 ? "cliente" : "clienti"}</span></div>
-      <div><h4>${esc(l.titolo)}</h4><p>${l.zona ? esc(l.zona) + " · " : ""}${na ? na + (na === 1 ? " appuntamento · " : " appuntamenti · ") : ""}${nct ? '<span class="ct">' + nct + " da contattare</span> · " : ""}${esc(chi)}</p></div><span class="st p">Lista</span></a></li>`; }).join("")
+      <div><h4>${esc(l.titolo)}</h4><p>${l.zona ? esc(l.zona) + " · " : ""}${na ? na + " con orario · " : ""}${nct ? '<span class="ct">' + nct + " da contattare</span> · " : ""}${esc(chi)}</p></div><span class="st p">Lista</span></a></li>`; }).join("")
     : '<li class="vuoto">Nessuna lista ancora. Raccogli sulla mappa i clienti da visitare (o importali da un file Excel), condividili con i colleghi e genera il giro.<a href="#raccogli">Crea la prima lista →</a></li>';
   const TABS = [["tutti","Tutti",G.length],["per","Per me",G.filter(mio).length],["c","In corso",n("c")],["p","In programma",n("p")],["f","Conclusi",n("f")],["miei","Creati da me",G.filter(g => g.autore === CTX.nome).length]];
   const disegna = () => {
@@ -766,8 +777,10 @@ function apriPiano(id){
   allineaGiorni(); if (P._generato) { delete P._generato; salvaBozza(); toast("Proposta pronta: controlla orari, note e notti, poi premi «Salva giro»."); }
   pannello(bozza); mappa();
 }
-// stato della visita nel giro: etichetta "prospezione" (= solo passaggio), "contattare" o "appuntamento"
-const TIPI = [["prospezione", "Solo passaggio"], ["contattare", "Da contattare per appuntamento"], ["appuntamento", "Appuntamento fissato"]];
+// stato della visita nel giro: etichetta "prospezione" (= appuntamento senza orario), "contattare" o "appuntamento" (con orario)
+const TIPI = [["app", "Appuntamento"], ["contattare", "Da contattare per appuntamento"]];
+// appuntamento con orario = etichetta «appuntamento» (verde); senza orario = «prospezione» (visita normale)
+const syncT = t => { if (tipo(t) === "contattare") return; t.etichette = (t.etichette || []).filter(e => !ETI_T.includes(e)); t.etichette.unshift(t.ora ? "appuntamento" : "prospezione"); };
 const ETI_T = ["appuntamento", "contattare", "prospezione"];
 const tipo = t => ETI_T.find(e => (t.etichette || []).includes(e)) || "";
 // ora dell'appuntamento: precisa («10:30») o fascia («10:00–12:00», cioè dalle 10 alle 12)
@@ -782,7 +795,7 @@ function pannello(bozza){
   const nCt = P.giorni.reduce((k, d) => k + d.tappe.filter(t => tipo(t) === "contattare").length, 0);
   $("#pp").innerHTML = `
   ${bozza ? `<div class="bozza" id="bz">Hai una bozza non salvata${bozza.titolo ? ": «" + esc(bozza.titolo) + "»" : ""}. <button class="btn sm" type="button" id="bz-si">Riprendi</button><button class="btn sm" type="button" id="bz-no">Scarta</button></div>` : ""}
-  ${PGEST ? "" : `<div class="collab">Giro di <b>${esc(P.autore)}</b>${(P.per || []).length ? " per " + esc(P.per.join(", ")) : ""}: puoi segnare lo stato delle visite (da contattare, appuntamento fissato), le ore, le note e aggiungere o spostare visite. A chi è assegnato e con chi è condiviso lo decide ${esc(P.autore)} (o un amministratore).</div>`}
+  ${PGEST ? "" : `<div class="collab">Giro di <b>${esc(P.autore)}</b>${(P.per || []).length ? " per " + esc(P.per.join(", ")) : ""}: puoi segnare lo stato delle visite (appuntamento con orario fisso o fascia, da contattare), le ore, le note e aggiungere o spostare visite. A chi è assegnato e con chi è condiviso lo decide ${esc(P.autore)} (o un amministratore).</div>`}
   <fieldset class="fs"><legend>Il giro</legend>
     <label class="fl"><span>Titolo</span><input class="in" data-p="titolo" value="${esc(P.titolo)}" placeholder="Es. Giro Liguria di Ponente"></label>
     <div class="two"><label class="fl"><span>Dal</span><input class="in" type="date" data-p="dal" value="${esc(P.dal)}"></label><label class="fl"><span>Al</span><input class="in" type="date" data-p="al" value="${esc(P.al)}"></label></div>
@@ -815,12 +828,9 @@ function scheda(t, i){
     <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : isCt ? " ct" : ""}">${i+1}</span><div><div class="tt">${oraT(t) ? esc(oraT(t)) + " · " : ""}${esc(t.azienda || "Nuova visita")}</div><div class="ss">${ssT(t)}</div></div>
       <div class="mv"><button type="button" data-act="su" aria-label="Sposta su" ${i === 0 ? "disabled" : ""}>↑</button><button type="button" data-act="giu" aria-label="Sposta giù" ${i === (P.giorni[CUR].tappe.length - 1) ? "disabled" : ""}>↓</button></div></div>
     ${ap ? `<div class="bd">
-      <div class="fl"><span>Stato della visita</span>${radioStati("tp-" + CUR + "-" + i, ti, 'data-k="tipo"', TIPI, "")}</div>
-      ${isCt ? '<p class="hint" style="margin:-6px 0 10px">Da chiamare per fissare l\'appuntamento. Quando è fissato scegli «Appuntamento fissato» e scrivi l\'ora (il giorno è quello della visita: per cambiarlo usa «Giorno: sposta a…»).</p>' : ""}
-      ${isApp ? (t.ora_a || t._fa ? `<div class="two"><label class="fl"><span>Appuntamento dalle</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><label class="fl"><span>alle</span><input class="in" type="time" data-k="ora_a" value="${esc(oraInput(t.ora_a))}"></label></div>
-      <div class="pfoot" style="margin:-4px 0 10px"><button class="btn sm" type="button" data-act="nofascia">Togli la fascia: ora precisa</button></div>`
-        : `<div class="two"><label class="fl"><span>Ora dell'appuntamento</span><input class="in" type="time" data-k="ora" value="${esc(oraInput(t.ora))}"></label><div style="align-self:end;margin-bottom:10px"><button class="btn sm" type="button" data-act="fascia">Fascia oraria (dalle… alle…)</button></div></div>
-      ${t.ora ? "" : '<p class="hint" style="margin:-6px 0 10px;color:var(--ok);font-weight:700">Scrivi l\'ora dell\'appuntamento.</p>'}`) : ""}
+      <div class="fl"><span>Stato della visita</span>${radioStati("tp-" + CUR + "-" + i, isCt ? "contattare" : "app", 'data-k="tipo"', TIPI, "")}</div>
+      ${isCt ? '<p class="hint" style="margin:-6px 0 10px">Da chiamare per fissare l\'appuntamento. Quando è fissato scegli «Appuntamento» e scrivi l\'orario (il giorno è quello della visita: per cambiarlo usa «Giorno: sposta a…»).</p>'
+        : bloccoOra("om-" + CUR + "-" + i, !!(t.ora_a || t._fa), "data-k", "ora", "ora_a", t.ora, t.ora_a, "")}
       <label class="chk"><input type="checkbox" data-k="att" ${(t.etichette||[]).includes("attenzione") ? "checked" : ""}> Attenzione (segnale giallo)</label>
       <label class="fl"><span>Azienda</span><input class="in" data-k="azienda" value="${esc(t.azienda)}"></label>
       <label class="fl"><span>Indirizzo</span><input class="in" data-k="indirizzo" value="${esc(t.indirizzo)}"></label>
@@ -850,10 +860,13 @@ $("#pp").addEventListener("input", e => {
   if (x.dataset.g) { P.giorni[CUR][x.dataset.g] = x.value; salvaBozza(); return; }
   const k = x.dataset.k; if (!k) return;
   const i = +x.closest(".stp").dataset.i, t = P.giorni[CUR].tappe[i];
-  if (k === "ora" || k === "ora_a") t[k] = oraBella(x.value);
-  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => !ETI_T.includes(e)); if (x.value) t.etichette.unshift(x.value);
-    // l'ora serve solo agli appuntamenti: cambiando stato si toglie
-    if (x.value !== "appuntamento") { t.ora = ""; delete t.ora_a; delete t._fa; } salvaBozza(); pannello(); return; }
+  if (k === "ora" || k === "ora_a") { t[k] = oraBella(x.value); if (k === "ora_a" && !t.ora_a) t._fa = true; syncT(t);
+    const card = x.closest(".stp"), ti = tipo(t); card.classList.toggle("app", ti === "appuntamento"); card.querySelector(".n").classList.toggle("ok", ti === "appuntamento"); }
+  else if (k === "tipo") { t.etichette = (t.etichette || []).filter(e => !ETI_T.includes(e));
+    // da contattare: niente orario; appuntamento: verde solo quando c'è l'orario
+    if (x.value === "contattare") { t.etichette.unshift("contattare"); t.ora = ""; delete t.ora_a; delete t._fa; } else syncT(t);
+    salvaBozza(); pannello(); return; }
+  else if (k === "omodo") { if (x.value === "fascia") t._fa = true; else { delete t.ora_a; t._fa = false; } syncT(t); salvaBozza(); pannello(); return; }
   else if (k === "att") { t.etichette = (t.etichette || []).filter(e => e !== "attenzione"); if (x.checked) t.etichette.push("attenzione"); }
   else t[k] = x.value;
   if (k === "ora" || k === "ora_a" || k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
@@ -956,7 +969,7 @@ function apriLista(id){
 function pannelloL(bozza){
   if (!L) return;
   // stato di ogni cliente sempre allineato (vale anche per le liste vecchie, le bozze e i clienti importati)
-  L.clienti.forEach(c => { c.stato = statoC(c); c.appuntamento = c.stato === "appuntamento"; });
+  L.clienti.forEach(c => { c.stato = statoC(c); syncL(c); });
   const ro = LEDIT ? "" : "disabled";
   const altri = CTX.utenti.filter(u => u.nome !== L.autore && !u.admin && !u.tutti);
   const sempre = CTX.utenti.filter(u => u.nome !== L.autore && (u.admin || u.tutti)).map(u => u.nome);
@@ -964,7 +977,7 @@ function pannelloL(bozza){
   $("#lp").innerHTML = `
   ${bozza ? `<div class="bozza" id="lbz">Hai una bozza non salvata${bozza.titolo ? ": «" + esc(bozza.titolo) + "»" : ""}. <button class="btn sm" type="button" id="lbz-si">Riprendi</button><button class="btn sm" type="button" id="lbz-no">Scarta</button></div>` : ""}
   ${LEDIT ? "" : `<div class="bozza">Lista di ${esc(L.autore)}: puoi vederla e generare un giro. Per segnare stati, appuntamenti e note chiedi a ${esc(L.autore)} di condividerla con te.</div>`}
-  ${LEDIT && !LGEST ? `<div class="collab">Lista di <b>${esc(L.autore)}</b> condivisa con te: puoi segnare lo stato dei clienti (da contattare, appuntamento fissato), le note e aggiungere clienti. La condivisione la decide ${esc(L.autore)}.</div>` : ""}
+  ${LEDIT && !LGEST ? `<div class="collab">Lista di <b>${esc(L.autore)}</b> condivisa con te: puoi segnare lo stato dei clienti (appuntamento con orario fisso o fascia, da contattare), le note e aggiungere clienti. La condivisione la decide ${esc(L.autore)}.</div>` : ""}
   <fieldset class="fs"><legend>La lista</legend>
     <label class="fl"><span>Nome della lista</span><input class="in" data-l="titolo" value="${esc(L.titolo)}" placeholder="Es. Serramentisti Romagna, dicembre" ${ro}></label>
     <label class="fl"><span>Zona (facoltativa)</span><input class="in" data-l="zona" value="${esc(L.zona)}" placeholder="Es. Forlì, Cesena, Rimini" ${ro}></label>
@@ -999,13 +1012,10 @@ function schedaL(c, i){
   return `<div class="stp${ap ? " open" : ""}${isApp ? " app" : isCt ? " ctt" : ""}" data-i="${i}">
     <div class="hd" data-act="toggle"><span class="n${isApp ? " ok" : isCt ? " ct" : " gr"}">${i+1}</span><div><div class="tt">${esc(c.azienda || "Nuovo cliente")}</div><div class="ss">${esc(c.indirizzo || "Indirizzo da inserire")}${c.pos ? "" : " · senza posizione"}</div></div><span class="ap${isCt ? " ct" : ""}"><span class="ax">${esc(badgeL(c))}</span> <span class="cv" aria-hidden="true">${ap ? "▲" : "▼"}</span></span></div>
     ${ap ? `<div class="bd">
-      <div class="fl"><span>Stato del cliente</span>${radioStati("st-" + i, st, 'data-c="stato"', STATI, ro)}</div>
-      ${isCt ? '<p class="hint" style="margin:-6px 0 10px">Da chiamare per fissare l\'appuntamento. Quando è fissato scegli «Appuntamento fissato» e scrivi giorno e ora.</p>' : ""}
-      ${isApp ? `<label class="fl"><span>Giorno fissato</span><input class="in" type="date" data-c="app_data" value="${esc(c.app_data)}" ${ro}></label>
-      ${c.app_ora_a || c._fa ? `<div class="two"><label class="fl"><span>Dalle</span><input class="in" type="time" data-c="app_ora" value="${esc(oraInput(c.app_ora))}" ${ro}></label><label class="fl"><span>alle</span><input class="in" type="time" data-c="app_ora_a" value="${esc(oraInput(c.app_ora_a))}" ${ro}></label></div>
-      ${LEDIT ? '<div class="pfoot" style="margin:-4px 0 10px"><button class="btn sm" type="button" data-act="nofascia">Togli la fascia: ora precisa</button></div>' : ""}`
-        : `<div class="two"><label class="fl"><span>Ora fissata</span><input class="in" type="time" data-c="app_ora" value="${esc(oraInput(c.app_ora))}" ${ro}></label>${LEDIT ? '<div style="align-self:end;margin-bottom:10px"><button class="btn sm" type="button" data-act="fascia">Fascia oraria (dalle… alle…)</button></div>' : "<div></div>"}</div>`}
-      <p class="hint" style="margin:-6px 0 10px">Giorno e ora sono facoltativi: senza, «Genera giro» lo tratta come una visita normale segnata come appuntamento. Con la fascia oraria il giro arriva tra le due ore.</p>` : ""}
+      <div class="fl"><span>Stato del cliente</span>${radioStati("st-" + i, isCt ? "contattare" : "app", 'data-c="stato"', STATI, ro)}</div>
+      ${isCt ? '<p class="hint" style="margin:-6px 0 10px">Da chiamare per fissare l\'appuntamento. Quando è fissato scegli «Appuntamento» e scrivi giorno e orario.</p>'
+        : `<label class="fl"><span>Giorno dell'appuntamento</span><input class="in" type="date" data-c="app_data" value="${esc(c.app_data)}" ${ro}></label>`
+          + bloccoOra("om-" + i, !!(c.app_ora_a || c._fa), "data-c", "app_ora", "app_ora_a", c.app_ora, c.app_ora_a, ro)}
       <label class="fl"><span>Azienda</span><input class="in" data-c="azienda" value="${esc(c.azienda)}" ${ro}></label>
       <label class="fl"><span>Indirizzo</span><input class="in" data-c="indirizzo" value="${esc(c.indirizzo)}" ${ro}></label>
       <div class="two"><label class="fl"><span>Telefono</span><input class="in" type="tel" data-c="telefono" value="${esc(c.telefono)}" ${ro}></label><label class="fl"><span>Referente</span><input class="in" data-c="referente" value="${esc(c.referente)}" ${ro}></label></div>
@@ -1029,9 +1039,13 @@ $("#lp").addEventListener("input", e => {
   if (x.dataset.l) { L[x.dataset.l] = x.value; salvaBozzaL(); return; }
   const k = x.dataset.c; if (!k) return;
   const i = +x.closest(".stp").dataset.i, c = L.clienti[i];
-  if (k === "stato") { c.stato = x.value; c.appuntamento = x.value === "appuntamento"; PREV = null; salvaBozzaL(); pannelloL(); return; }
+  if (k === "stato") { if (x.value === "contattare") { c.stato = "contattare"; c.app_data = c.app_ora = ""; delete c.app_ora_a; delete c._fa; } else { c.stato = "passaggio"; syncL(c); }
+    c.appuntamento = c.stato === "appuntamento"; PREV = null; salvaBozzaL(); pannelloL(); return; }
+  if (k === "omodo") { if (x.value === "fascia") c._fa = true; else { delete c.app_ora_a; c._fa = false; } syncL(c); PREV = null; salvaBozzaL(); pannelloL(); return; }
   c[k] = k === "app_ora" || k === "app_ora_a" ? oraBella(x.value) : x.value;
-  if (k === "app_data" || k === "app_ora" || k === "app_ora_a") { PREV = null; $("#genout").innerHTML = ""; x.closest(".stp").querySelector(".ap .ax").textContent = badgeL(c); }
+  if (k === "app_data" || k === "app_ora" || k === "app_ora_a") { if (k === "app_ora_a" && !c.app_ora_a) c._fa = true; syncL(c); PREV = null; $("#genout").innerHTML = "";
+    const card = x.closest(".stp"), on = c.stato === "appuntamento"; card.classList.toggle("app", on); const n = card.querySelector(".n"); n.classList.toggle("ok", on); n.classList.toggle("gr", !on);
+    card.querySelector(".ap .ax").textContent = badgeL(c); }
   if (k === "azienda" || k === "indirizzo") { const hd = x.closest(".stp").querySelector(".hd");
     hd.querySelector(".tt").textContent = c.azienda || "Nuovo cliente"; hd.querySelector(".ss").textContent = c.indirizzo || "Indirizzo da inserire";
     if (k === "indirizzo" && c.pos && !c.place_id) delete c.pos; }
@@ -1329,7 +1343,7 @@ function mostraPrev(){
       const da = vi ? sel[g.visite[vi - 1].k - 1].azienda : (gi === 0 ? nomeP : "la zona della notte"), partito = vi ? g.visite[vi - 1].fine : (GEN.min(opz.ora) ?? 510);
       const info = ["arrivo verso le " + hh(v.arrivo), v.viaggio + " min di viaggio da " + da, v.attesa > 0 ? "attesa " + v.attesa + " min" : "", "ripartenza verso le " + hh(v.fine)].filter(Boolean).join(" · ");
       const lim = v.fisso ? (v.z != null ? v.z : v.m) : null;
-      return `<li><b>${v.fisso ? hh(v.inizio) : (vi + 1) + "."}</b><div>${esc(c.azienda)}${v.fisso ? ` <span class="ap" style="display:inline">· APPUNTAMENTO ${v.z != null ? "DALLE " + esc(hh(v.m)) + " ALLE " + esc(hh(v.z)) : "ORE " + esc(hh(v.m))}</span>` : c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento</span>' : statoC(c) === "contattare" ? ' <span class="ct" style="display:inline">· da contattare</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span>${v.ritardo > 0 ? `<span class="ko">NON CI SI ARRIVA IN TEMPO: da ${esc(da)} si riparte verso le ${hh(partito)}, servono ${v.viaggio} min e si arriva verso le ${hh(v.arrivo)} invece che entro le ${hh(lim)} (${v.ritardo} min di ritardo). Anticipa la partenza, togli una visita prima o sposta l'appuntamento.</span>` : ""}${v.chiuso ? `<span class="ko">Di solito chiuso a quest'ora${c.orari ? " (" + esc(c.orari) + ")" : ""}</span>` : ""}</div></li>`; }).join("")}
+      return `<li><b>${v.fisso ? hh(v.inizio) : (vi + 1) + "."}</b><div>${esc(c.azienda)}${v.fisso ? ` <span class="ap" style="display:inline">· APPUNTAMENTO ${v.z != null ? "DALLE " + esc(hh(v.m)) + " ALLE " + esc(hh(v.z)) : "ORE " + esc(hh(v.m))}</span>` : c.appuntamento ? ' <span class="ap" style="display:inline">· appuntamento con orario (ora da inserire)</span>' : statoC(c) === "contattare" ? ' <span class="ct" style="display:inline">· da contattare</span>' : ""}<span>${esc(citta(c.indirizzo) || c.indirizzo || "")}${info ? " · " + esc(info) : ""}</span>${v.ritardo > 0 ? `<span class="ko">NON CI SI ARRIVA IN TEMPO: da ${esc(da)} si riparte verso le ${hh(partito)}, servono ${v.viaggio} min e si arriva verso le ${hh(v.arrivo)} invece che entro le ${hh(lim)} (${v.ritardo} min di ritardo). Anticipa la partenza, togli una visita prima o sposta l'appuntamento.</span>` : ""}${v.chiuso ? `<span class="ko">Di solito chiuso a quest'ora${c.orari ? " (" + esc(c.orari) + ")" : ""}</span>` : ""}</div></li>`; }).join("")}
     </ul><span class="end">${ult ? "Rientro a " + esc(nomeP) + " verso le " + hh(g.rientro.ora) + " (" + g.rientro.viaggio + " min)" : "Notte in zona " + esc(citta(last.indirizzo) || last.azienda) + ": da compilare nel pianificatore"}</span></div>`; }).join("")}
   ${r.fuori.length || senzaPos.length ? `<p class="tot"><b>Fuori dal giro</b></p><ul class="av">${r.fuori.map(f => `<li>${esc(sel[f.k - 1].azienda)}: ${esc(f.motivo)}</li>`).join("")}${senzaPos.map(c => `<li>${esc(c.azienda || "Cliente senza nome")}: non trovato sulla mappa, completa l'indirizzo</li>`).join("")}</ul>` : ""}
   ${r.giorni.length ? `<div class="pfoot"><button class="btn red" type="button" id="gen-apri" style="margin:0">Apri nel pianificatore</button></div>` : ""}
